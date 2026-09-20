@@ -16,7 +16,11 @@ an empty page to the first and a bare link to the second. Pages are therefore re
 The platform API must be running first (see `../kimlong-platform`):
 
 ```bash
-cd ../kimlong-platform && docker compose up -d && ./gradlew :platform-app:bootRun
+cd ../kimlong-platform
+docker compose up -d
+# Product photos are in S3; without these the pages render but every image 404s.
+export MEDIA_STORAGE_PROVIDER=s3 MEDIA_S3_BUCKET=kimlong-s3 MEDIA_S3_REGION=ap-southeast-2
+./gradlew :platform-app:bootRun
 ```
 
 Then:
@@ -29,15 +33,16 @@ npm run dev                    # http://localhost:3000
 
 ## Scripts
 
-| Command                           | What it does                                                    |
-| --------------------------------- | --------------------------------------------------------------- |
-| `npm run dev`                     | Development server                                              |
-| `npm run build` / `npm start`     | Production build and serve                                      |
-| `npm test`                        | Unit tests (Vitest); no API needed                              |
-| `npm run smoke`                   | Checks this app can read real catalogue data from a running API |
-| `npm run typecheck`               | `tsc --noEmit`                                                  |
-| `npm run lint` / `npm run format` | ESLint / Prettier                                               |
-| `npm run gen:api`                 | Regenerates `src/types/api.ts` from the API's OpenAPI document  |
+| Command                           | What it does                                                            |
+| --------------------------------- | ----------------------------------------------------------------------- |
+| `npm run dev`                     | Development server                                                      |
+| `npm run build` / `npm start`     | Production build and serve                                              |
+| `npm run build:offline`           | Same build with no API reachable — proves `next build` needs no backend |
+| `npm test`                        | Unit tests (Vitest); no API needed                                      |
+| `npm run smoke`                   | Checks this app can read real catalogue data from a running API         |
+| `npm run typecheck`               | `tsc --noEmit`                                                          |
+| `npm run lint` / `npm run format` | ESLint / Prettier                                                       |
+| `npm run gen:api`                 | Regenerates `src/types/api.ts` from the API's OpenAPI document          |
 
 ## Configuration
 

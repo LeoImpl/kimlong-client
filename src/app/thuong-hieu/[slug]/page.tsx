@@ -1,0 +1,149 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { connection } from "next/server";
+import Link from "next/link";
+import { ProductListing } from "@/components/catalog/ProductListing";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { Container } from "@/components/ui/Container";
+import { Skeleton } from "@/components/ui/Feedback";
+import { getBrands, listProducts } from "@/lib/api/catalog";
+import type { Facets } from "@/lib/api/types";
+import { routes } from "@/lib/routes";
+
+async function findBrand(slug: string) {
+  const brands = await getBrands();
+  return brands.find((brand) => brand.slug === slug) ?? null;
+}
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/thuong-hieu/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const brand = await findBrand(slug);
+  if (!brand) return { title: "Không tìm thấy thương hiệu" };
+
+  return {
+    title: brand.name,
+    description:
+      brand.description ??
+      `Phụ tùng và thiết bị ${brand.name} chính hãng. Tra cứu theo mã sản phẩm, báo giá nhanh.`,
+    alternates: { canonical: routes.brand(brand.slug) },
+  };
+}
+
+/** Static shell; `params` and the listing stream in (see the product page for why). */
+export default function BrandPage(props: PageProps<"/thuong-hieu/[slug]">) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <BrandContent {...props} />
+    </Suspense>
+  );
+}
+
+async function BrandContent({ params, searchParams }: PageProps<"/thuong-hieu/[slug]">) {
+  const { slug } = await params;
+  const brand = await findBrand(slug);
+  if (!brand) notFound();
+
+  return (
+    <Container className="py-6 lg:py-10">
+      <Breadcrumb
+        items={[
+          { name: "Trang chủ", href: routes.home },
+          { name: "Thương hiệu", href: routes.brands },
+          { name: brand.name },
+        ]}
+      />
+
+      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{brand.name}</h1>
+      {brand.description && <p className="mt-2 max-w-3xl text-body">{brand.description}</p>}
+      {brand.websiteUrl && (
+        <a
+          href={brand.websiteUrl}
+          target="_blank"
+          rel="noopener nofollow"
+          className="mt-2 inline-block text-sm text-brand-700 hover:underline"
+        >
+          Trang chủ hãng
+        </a>
+      )}
+
+      <Suspense fallback={<ListingSkeleton />}>
+        <Listing slug={slug} searchParams={searchParams} />
+      </Suspense>
+    </Container>
+  );
+}
+
+async function Listing({
+  slug,
+  searchParams,
+}: {
+  slug: string;
+  searchParams: PageProps<"/thuong-hieu/[slug]">["searchParams"];
+}) {
+  await connection();
+  const resolved = await searchParams;
+  const raw = Array.isArray(resolved.page) ? resolved.page[0] : resolved.page;
+  const page = Number(raw ?? 0) || 0;
+
+  const result = await listProducts({ brand: slug, page, facets: true });
+  const basePath = routes.brand(slug);
+
+  return (
+    <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]">
+      {/* Only the category facet is useful here: filtering this brand by this brand would be a no-op. */}
+      <CategoryFacets facets={result.facets} brandSlug={slug} />
+      <ProductListing
+        result={result}
+        basePath={basePath}
+        params={{}}
+        emptyTitle={`Chưa có sản phẩm ${slug} nào trên website`}
+      />
+    </div>
+  );
+}
+
+/** Where this brand's products sit in the catalogue; each link keeps the brand filter. */
+function CategoryFacets({ facets, brandSlug }: { facets: Facets | null; brandSlug: string }) {
+  if (!facets || facets.categories.length === 0) return null;
+  return (
+    <aside aria-label="Danh mục">
+      <h2 className="text-sm font-semibold text-ink">Danh mục</h2>
+      <ul className="mt-2 space-y-0.5">
+        {facets.categories.map((category) => (
+          <li key={category.slug}>
+            <Link
+              href={`${routes.category(category.slug)}?brand=${encodeURIComponent(brandSlug)}`}
+              className="flex items-center justify-between gap-2 rounded px-2 py-1.5 text-sm text-body hover:bg-surface hover:text-ink"
+            >
+              <span>{category.name}</span>
+              <span className="text-xs text-muted">{category.count}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
+function PageSkeleton() {
+  return (
+    <Container className="py-6 lg:py-10" aria-hidden>
+      <Skeleton className="h-4 w-56" />
+      <Skeleton className="mt-4 h-9 w-64" />
+      <ListingSkeleton />
+    </Container>
+  );
+}
+
+function ListingSkeleton() {
+  return (
+    <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4" aria-hidden>
+      {Array.from({ length: 8 }, (_, index) => (
+        <Skeleton key={index} className="h-64" />
+      ))}
+    </div>
+  );
+}

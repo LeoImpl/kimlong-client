@@ -68,6 +68,12 @@ export type ProductDetail = Omit<
 
 export type Facets = { categories: Facet[]; brands: Facet[] };
 
+/** Search results plus, when asked for with `facets=true`, the counts the filter sidebar renders. */
+export type ProductPage = Omit<Concrete<Schemas["ProductSearchResponse"]>, "items" | "facets"> & {
+  items: ProductSummary[];
+  facets: Facets | null;
+};
+
 export type ProductSlug = Concrete<Schemas["ProductSlugResponse"]>;
 
 export type Hotline = Concrete<Schemas["PublicHotline"]>;
@@ -85,14 +91,6 @@ export type CompanyProfile = Omit<
   highlights: CompanySection[];
   milestones: Milestone[];
   technicalDocuments: DocumentLink[];
-};
-
-export type Page<T> = {
-  items: T[];
-  page: number;
-  size: number;
-  totalItems: number;
-  totalPages: number;
 };
 
 /** Quote request submission. `website` is the honeypot and must always be sent empty. */

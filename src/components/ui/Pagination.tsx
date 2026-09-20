@@ -78,15 +78,20 @@ function Step({
   );
 }
 
-/** First, last, and the pages around the current one; `null` is a gap. */
-function pageWindow(page: number, totalPages: number): (number | null)[] {
+/** First, last, and the pages around the current one; `null` is a gap. Exported for its test. */
+export function pageWindow(page: number, totalPages: number): (number | null)[] {
   const shown = new Set<number>([0, totalPages - 1, page]);
   for (const offset of [-2, -1, 1, 2]) {
     const candidate = page + offset;
     if (candidate >= 0 && candidate < totalPages) shown.add(candidate);
   }
   const sorted = [...shown].sort((a, b) => a - b);
-  return sorted.flatMap((value, index) =>
-    index > 0 && value - sorted[index - 1] > 1 ? [null, value] : [value],
-  );
+  return sorted.flatMap((value, index) => {
+    if (index === 0) return [value];
+    const skipped = value - sorted[index - 1] - 1;
+    // A "…" that hides a single page is worse than the page itself: same width, one click more.
+    if (skipped === 0) return [value];
+    if (skipped === 1) return [value - 1, value];
+    return [null, value];
+  });
 }

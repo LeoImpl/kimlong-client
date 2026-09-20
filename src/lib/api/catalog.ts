@@ -1,6 +1,6 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { apiFetch, apiFetchOrNull } from "./client";
-import type { Brand, CategoryNode, Page, ProductDetail, ProductSummary } from "./types";
+import type { Brand, CategoryNode, ProductDetail, ProductPage, ProductSlug } from "./types";
 
 /**
  * Catalogue reads.
@@ -17,6 +17,8 @@ const TAGS = {
   categories: "catalog:categories",
   brands: "catalog:brands",
   product: (slug: string) => `catalog:product:${slug}`,
+  listings: "catalog:listings",
+  slugs: "catalog:slugs",
 } as const;
 
 export async function getCategories(): Promise<CategoryNode[]> {
@@ -48,39 +50,68 @@ export interface ProductSearch {
   brand?: string;
   page?: number;
   size?: number;
+  /** Ask for the counts the filter sidebar shows. One extra grouped query on the API side, so opt-in. */
+  facets?: boolean;
 }
 
-/** Uncached: driven by user input. Callers should stream it behind `<Suspense>`. */
-export async function searchProducts(criteria: ProductSearch = {}): Promise<Page<ProductSummary>> {
-  return apiFetch<Page<ProductSummary>>("/api/public/v1/catalog/products", {
-    query: {
-      q: criteria.q,
-      category: criteria.category,
-      brand: criteria.brand,
-      page: criteria.page ?? 0,
-      size: criteria.size ?? 20,
-    },
-  });
+const PAGE_SIZE = 24;
+
+function query(criteria: ProductSearch) {
+  return {
+    q: criteria.q,
+    category: criteria.category,
+    brand: criteria.brand,
+    page: criteria.page ?? 0,
+    size: criteria.size ?? PAGE_SIZE,
+    facets: criteria.facets ? true : undefined,
+  };
 }
 
 /**
- * Products of one category, cached because the listing is stable and linked from navigation.
- * `category` includes subcategories on the API side.
+ * Free-text search. Deliberately NOT cached: `?q=` is unbounded user input, so caching it would fill the cache
+ * with entries nobody asks for twice. Callers stream it behind `<Suspense>`.
  */
-export async function getCategoryProducts(
-  category: string,
-  page = 0,
-  size = 20,
-): Promise<Page<ProductSummary>> {
+export async function searchProducts(criteria: ProductSearch): Promise<ProductPage> {
+  return apiFetch<ProductPage>("/api/public/v1/catalog/products", { query: query(criteria) });
+}
+
+/**
+ * Browsing a category or a brand. The same endpoint, but the inputs are a closed set — sixteen categories,
+ * fourteen brands, a page number — so every combination is worth caching and is linked from navigation.
+ */
+export async function listProducts(criteria: ProductSearch): Promise<ProductPage> {
   "use cache";
   cacheLife("hours");
-  cacheTag(TAGS.categories, `catalog:category:${category}`);
-  return apiFetch<Page<ProductSummary>>("/api/public/v1/catalog/products", {
-    query: { category, page, size },
-  });
+  cacheTag(TAGS.listings);
+  return apiFetch<ProductPage>("/api/public/v1/catalog/products", { query: query(criteria) });
+}
+
+/**
+ * Every published product's slug and last change. Small (104 rows today) and cached, which is what lets the
+ * sitemap and `generateStaticParams` stay cheap as the catalogue grows.
+ */
+export async function getProductSlugs(): Promise<ProductSlug[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(TAGS.slugs);
+  return apiFetch<ProductSlug[]>("/api/public/v1/catalog/products/slugs");
 }
 
 /** Flattens the category tree, for navigation and for generating routes. */
 export function flattenCategories(nodes: CategoryNode[]): CategoryNode[] {
   return nodes.flatMap((node) => [node, ...flattenCategories(node.children ?? [])]);
+}
+
+/** The path from a root category down to [slug], for breadcrumbs built without a product. */
+export function categoryPath(nodes: CategoryNode[], slug: string): CategoryNode[] {
+  for (const node of nodes) {
+    if (node.slug === slug) return [node];
+    const below = categoryPath(node.children ?? [], slug);
+    if (below.length > 0) return [node, ...below];
+  }
+  return [];
+}
+
+export function findCategory(nodes: CategoryNode[], slug: string): CategoryNode | null {
+  return flattenCategories(nodes).find((node) => node.slug === slug) ?? null;
 }

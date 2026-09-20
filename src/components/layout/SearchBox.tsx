@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { cn } from "@/lib/cn";
 import { routes } from "@/lib/routes";
 
@@ -26,6 +26,8 @@ export function SearchBox({
 }) {
   const router = useRouter();
   const [value, setValue] = useState(defaultValue);
+  // The home page renders this twice (header and hero), so the id cannot be a constant.
+  const id = useId();
 
   return (
     <form
@@ -40,11 +42,11 @@ export function SearchBox({
       }}
       className={cn("relative flex w-full", className)}
     >
-      <label htmlFor="site-search" className="sr-only">
+      <label htmlFor={id} className="sr-only">
         Tìm sản phẩm
       </label>
       <input
-        id="site-search"
+        id={id}
         type="search"
         name="q"
         value={value}

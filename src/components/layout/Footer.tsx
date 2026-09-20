@@ -106,11 +106,16 @@ async function CategoryColumn() {
 async function ContactColumn() {
   await connection();
   const company = await getCompany();
+  // Sales and support may share a number, and listing it twice looks like a mistake rather than two lines.
+  const hotlines = company.hotlines.filter(
+    (hotline, index) =>
+      company.hotlines.findIndex((other) => other.phone === hotline.phone) === index,
+  );
   return (
     <div>
       <h2 className="text-sm font-semibold text-ink">Liên hệ</h2>
       <ul className="mt-3 space-y-2 text-sm text-body">
-        {company.hotlines.map((hotline) => (
+        {hotlines.map((hotline) => (
           <li key={hotline.phone}>
             <a href={telHref(hotline.phone)} className="font-medium text-brand-700 hover:underline">
               {formatPhone(hotline.phone)}
@@ -123,10 +128,10 @@ async function ContactColumn() {
             {company.email}
           </a>
         </li>
-        {company.hotlines[0] && (
+        {hotlines[0] && (
           <li>
             <a
-              href={zaloHref(company.hotlines[0].phone)}
+              href={zaloHref(hotlines[0].phone)}
               target="_blank"
               rel="noopener"
               className="hover:text-brand-700"

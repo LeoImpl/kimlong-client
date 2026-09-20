@@ -17,15 +17,19 @@ const nextConfig: NextConfig = {
   // fetch is uncached in Next 16 and every page view would hit the API.
   cacheComponents: true,
 
-  images: {
-    remotePatterns: [
+  /**
+   * Images keep the same-origin path the API returns (`/api/public/v1/media/{id}/content`) and are proxied to
+   * the platform from here. That keeps decision D8 intact — the browser never learns the API host, not even in
+   * the image optimizer's query string — and lets `next/image` treat them as local images. The responses carry a
+   * SHA-256 ETag and `immutable, max-age=31536000`, so the hop is cached away almost entirely.
+   */
+  async rewrites() {
+    return [
       {
-        protocol: mediaOrigin.protocol.replace(":", "") as "http" | "https",
-        hostname: mediaOrigin.hostname,
-        port: mediaOrigin.port || undefined,
-        pathname: "/api/public/v1/media/**",
+        source: "/api/public/v1/media/:path*",
+        destination: `${mediaOrigin.origin}/api/public/v1/media/:path*`,
       },
-    ],
+    ];
   },
 
   // The platform already sets its own security headers; these cover the pages this app serves.

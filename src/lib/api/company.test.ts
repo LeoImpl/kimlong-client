@@ -12,6 +12,7 @@ function company(hotlines: Hotline[]): CompanyProfile {
     tagline: null,
     foundedYear: null,
     headquarters: null,
+    taxCode: null,
     email: "sales@kimlong.vn",
     hotlines,
     domains: [],

@@ -199,6 +199,7 @@ export interface components {
             /** Format: int32 */
             foundedYear?: number | null;
             headquarters?: string | null;
+            taxCode?: string | null;
             email?: string;
             hotlines?: components["schemas"]["PublicHotline"][];
             domains?: string[];

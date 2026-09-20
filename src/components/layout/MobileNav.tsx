@@ -76,13 +76,22 @@ export function MobileNav({ categories }: { categories: CategoryNode[] }) {
               </li>
             ))}
           </ul>
-          <Link
-            href={routes.brands}
-            onClick={() => setOpen(false)}
-            className="mt-2 block border-t border-line px-2 pt-3 pb-1 text-sm font-medium text-brand-700"
-          >
-            Tất cả thương hiệu
-          </Link>
+          <div className="mt-2 border-t border-line pt-3">
+            <Link
+              href={routes.brands}
+              onClick={() => setOpen(false)}
+              className="block px-2 py-1.5 text-sm font-medium text-brand-700"
+            >
+              Tất cả thương hiệu
+            </Link>
+            <Link
+              href={routes.about}
+              onClick={() => setOpen(false)}
+              className="block px-2 py-1.5 text-sm font-medium text-brand-700"
+            >
+              Giới thiệu
+            </Link>
+          </div>
         </nav>
       )}
     </div>

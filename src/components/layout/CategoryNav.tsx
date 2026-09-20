@@ -33,6 +33,14 @@ export async function CategoryNav() {
             Thương hiệu
           </Link>
         </li>
+        <li>
+          <Link
+            href={routes.about}
+            className="flex h-11 items-center rounded-md px-3 text-sm font-medium text-body hover:bg-surface hover:text-brand-700"
+          >
+            Giới thiệu
+          </Link>
+        </li>
       </ul>
     </nav>
   );

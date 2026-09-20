@@ -7,6 +7,7 @@ export const routes = {
   about: "/gioi-thieu",
   contact: "/lien-he",
   quote: "/yeu-cau-bao-gia",
+  quoteSent: "/yeu-cau-bao-gia/da-gui",
   products: "/san-pham",
   product: (slug: string) => `/san-pham/${encodeURIComponent(slug)}`,
   categories: "/danh-muc",

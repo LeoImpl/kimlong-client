@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { formatPhone, primaryHotline, telHref, zaloHref } from "./company";
+import { primaryHotline } from "./company";
+import { formatPhone, telHref, zaloHref } from "@/lib/phone";
 import type { CompanyProfile, Hotline } from "./types";
 
 const hotline = (type: Hotline["type"], phone: string): Hotline => ({ type, phone, label: null });

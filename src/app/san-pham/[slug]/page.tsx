@@ -3,17 +3,19 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import { AddToQuote } from "@/components/quote/AddToQuote";
+import { QuickQuoteForm } from "@/components/quote/QuickQuoteForm";
 import { ProductGallery } from "@/components/catalog/ProductGallery";
 import { ProductGrid } from "@/components/catalog/ProductCard";
 import { VariantTable } from "@/components/catalog/VariantTable";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
-import { ButtonLink } from "@/components/ui/Button";
 import { Container, SectionHeading } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { PartNumber } from "@/components/ui/PartNumber";
 import { Price } from "@/components/ui/Price";
 import { SpecList } from "@/components/ui/Table";
 import { getProduct, listProducts } from "@/lib/api/catalog";
+import { getCompany, primaryHotline } from "@/lib/api/company";
 import type { ProductDetail } from "@/lib/api/types";
 import { routes } from "@/lib/routes";
 
@@ -57,6 +59,7 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
   if (!product) notFound();
 
   const category = product.categories.at(-1);
+  const partNumbers = product.variants.map((variant) => variant.partNumber);
 
   return (
     <Container className="py-6 lg:py-10">
@@ -117,16 +120,22 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
             <Price price={product.price} className="text-xl" />
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-3">
-            <ButtonLink
-              href={`${routes.quote}?san-pham=${encodeURIComponent(product.slug)}`}
-              size="lg"
-            >
-              Yêu cầu báo giá
-            </ButtonLink>
-            <ButtonLink href={routes.contact} variant="secondary" size="lg">
-              Tư vấn kỹ thuật
-            </ButtonLink>
+          {/* Two ways in, on purpose: the basket for a buyer collecting a service kit, the quick form for the
+              visitor after one part who would otherwise just close the tab. */}
+          <AddToQuote
+            product={{
+              slug: product.slug,
+              name: product.name,
+              imageUrl: product.images[0]?.url ?? null,
+            }}
+            partNumbers={partNumbers}
+            className="mt-5"
+          />
+
+          <div className="mt-4">
+            <Suspense fallback={<Skeleton className="h-12 w-56" />}>
+              <QuickQuote product={product} partNumbers={partNumbers} />
+            </Suspense>
           </div>
 
           {product.highlights.length > 0 && (
@@ -203,6 +212,25 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
         </Suspense>
       )}
     </Container>
+  );
+}
+
+/** The quick form needs the hotline for its "we could not send it, call instead" message. */
+async function QuickQuote({
+  product,
+  partNumbers,
+}: {
+  product: ProductDetail;
+  partNumbers: string[];
+}) {
+  await connection();
+  const company = await getCompany();
+  return (
+    <QuickQuoteForm
+      product={{ slug: product.slug, name: product.name }}
+      partNumbers={partNumbers}
+      hotline={primaryHotline(company)?.phone ?? null}
+    />
   );
 }
 

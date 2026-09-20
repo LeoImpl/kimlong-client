@@ -1,0 +1,28 @@
+# Runs the client next to the platform stack (decision D7 option "same Docker host").
+#
+#   cd ../kimlong-platform && docker compose up -d      # Postgres, Keycloak, Redis, Mailpit, API
+#   cd ../kimlong-client   && docker compose up -d --build
+#
+# The platform's compose project is named after its directory, so its default network is
+# `kimlong-platform_default`. Override with PLATFORM_NETWORK if yours differs.
+services:
+  client:
+    build:
+      context: .
+      args:
+        # NEXT_PUBLIC_* are baked into the browser bundle, so they are build arguments, not runtime env.
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8080}
+    environment:
+      # Server-side calls go over the shared Docker network, straight to the API container.
+      API_BASE_URL: ${API_BASE_URL:-http://app:8080}
+    ports:
+      - "${CLIENT_PORT:-3000}:3000"
+    networks:
+      - platform
+    restart: unless-stopped
+
+networks:
+  platform:
+    external: true
+    name: ${PLATFORM_NETWORK:-kimlong-platform_default}

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:offline": "API_BASE_URL=http://127.0.0.1:9 next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

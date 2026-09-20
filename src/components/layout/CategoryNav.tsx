@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 import { getCategories } from "@/lib/api/catalog";
 import type { CategoryNode } from "@/lib/api/types";
 import { routes } from "@/lib/routes";
@@ -8,6 +9,10 @@ import { routes } from "@/lib/routes";
  * needs no JavaScript and the links are in the HTML for crawlers.
  */
 export async function CategoryNav() {
+  // Without this the category tree is fetched during `next build` — the shell is in the root layout, so every
+  // page, including `/_not-found`, would be prerendered against a live API and a backend blip would fail a
+  // deploy. `npm run build:offline` is what catches a missing `connection()` here.
+  await connection();
   const categories = await getCategories();
 
   return (

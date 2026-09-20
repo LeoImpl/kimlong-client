@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -8,8 +9,10 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Container, SectionHeading } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { getCategories, listProducts } from "@/lib/api/catalog";
-import { getPartners } from "@/lib/api/company";
+import { getCompany, getPartners } from "@/lib/api/company";
+import { JsonLd, organizationJsonLd } from "@/lib/seo";
 import { routes } from "@/lib/routes";
+import { env } from "@/lib/env";
 
 /**
  * The home page is not where the money is — most visitors arrive on a product page from Google — but it is where
@@ -18,9 +21,26 @@ import { routes } from "@/lib/routes";
  *
  * The hero is static HTML in the build; everything that needs the API streams in behind its own boundary.
  */
+export const metadata: Metadata = {
+  alternates: { canonical: routes.home },
+  openGraph: {
+    type: "website",
+    title: "Kim Long — Phụ tùng máy nén khí & thiết bị tự động hóa",
+    description:
+      "Tra cứu phụ tùng máy nén khí và thiết bị tự động hóa theo mã sản phẩm. Báo giá nhanh, giao hàng toàn quốc.",
+    url: routes.home,
+    siteName: "Kim Long",
+    locale: "vi_VN",
+  },
+};
+
 export default function Home() {
   return (
     <>
+      <Suspense fallback={null}>
+        <StructuredData />
+      </Suspense>
+
       <section className="border-b border-line bg-linear-to-b from-surface to-page">
         <Container className="py-12 lg:py-20">
           <div className="mx-auto max-w-3xl text-center">
@@ -81,6 +101,39 @@ export default function Home() {
           </div>
         </Container>
       </section>
+    </>
+  );
+}
+
+/**
+ * `Organization` on the home page, plus a `WebSite` with a `SearchAction` — the part number box is the thing
+ * this site is for, and declaring it lets Google offer it directly in the result.
+ */
+async function StructuredData() {
+  await connection();
+  const company = await getCompany().catch(() => null);
+  if (!company) return null;
+
+  return (
+    <>
+      <JsonLd data={organizationJsonLd(company)} />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: company.shortName,
+          url: env.siteUrl,
+          inLanguage: "vi-VN",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: {
+              "@type": "EntryPoint",
+              urlTemplate: `${env.siteUrl}${routes.products}?q={search_term_string}`,
+            },
+            "query-input": "required name=search_term_string",
+          },
+        }}
+      />
     </>
   );
 }

@@ -20,7 +20,7 @@ export function ProductGallery({ images, name }: { images: MediaFile[]; name: st
         <ProductImage
           src={current?.url ?? null}
           alt={name}
-          priority
+          eager
           sizes="(max-width: 1024px) 100vw, 45vw"
           className="p-6"
         />

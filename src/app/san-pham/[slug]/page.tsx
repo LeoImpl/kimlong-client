@@ -17,6 +17,7 @@ import { SpecList } from "@/components/ui/Table";
 import { getProduct, listProducts } from "@/lib/api/catalog";
 import { getCompany, primaryHotline } from "@/lib/api/company";
 import type { ProductDetail } from "@/lib/api/types";
+import { JsonLd, breadcrumbJsonLd, productJsonLd } from "@/lib/seo";
 import { routes } from "@/lib/routes";
 
 /**
@@ -34,10 +35,31 @@ export async function generateMetadata({
   const product = await getProduct(slug);
   if (!product) return { title: "Không tìm thấy sản phẩm" };
 
+  const url = routes.product(product.slug);
+  const summary = description(product);
+  // Zalo and Facebook crawlers run no JavaScript, so everything a link preview shows has to be here. The image
+  // is served from this origin (the media rewrite), which also keeps the API host out of the shared URL.
+  const images = product.images.slice(0, 1).map((image) => ({ url: image.url, alt: product.name }));
+
   return {
     title: product.name,
-    description: description(product),
-    alternates: { canonical: routes.product(product.slug) },
+    description: summary,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      title: `${product.name} | Kim Long`,
+      description: summary,
+      url,
+      siteName: "Kim Long",
+      locale: "vi_VN",
+      images,
+    },
+    twitter: {
+      card: images.length > 0 ? "summary_large_image" : "summary",
+      title: product.name,
+      description: summary,
+      images,
+    },
   };
 }
 
@@ -63,6 +85,10 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
 
   return (
     <Container className="py-6 lg:py-10">
+      <Suspense fallback={null}>
+        <StructuredData product={product} />
+      </Suspense>
+
       <Breadcrumb
         items={[
           { name: "Trang chủ", href: routes.home },
@@ -212,6 +238,31 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
         </Suspense>
       )}
     </Container>
+  );
+}
+
+/**
+ * `Product` and `BreadcrumbList` for the search engines. Streamed with the rest of the page, so it is in the
+ * HTML response — a crawler never has to run JavaScript to find it.
+ */
+async function StructuredData({ product }: { product: ProductDetail }) {
+  await connection();
+  const company = await getCompany().catch(() => null);
+
+  return (
+    <>
+      <JsonLd data={productJsonLd(product, company)} />
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Trang chủ", path: routes.home },
+          ...product.categories.map((entry) => ({
+            name: entry.name,
+            path: routes.category(entry.slug),
+          })),
+          { name: product.name, path: routes.product(product.slug) },
+        ])}
+      />
+    </>
   );
 }
 

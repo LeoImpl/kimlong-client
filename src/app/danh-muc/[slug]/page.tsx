@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { categoryPath, findCategory, getCategories, listProducts } from "@/lib/api/catalog";
 import type { CategoryNode } from "@/lib/api/types";
+import { JsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { routes } from "@/lib/routes";
 
 /**
@@ -23,12 +24,22 @@ export async function generateMetadata({
   const category = findCategory(await getCategories(), slug);
   if (!category) return { title: "Không tìm thấy danh mục" };
 
+  const description =
+    category.description ??
+    `${category.name} chính hãng cho máy nén khí và hệ thống tự động hóa. Tra cứu theo mã sản phẩm, báo giá nhanh.`;
+
   return {
     title: category.name,
-    description:
-      category.description ??
-      `${category.name} chính hãng cho máy nén khí và hệ thống tự động hóa. Tra cứu theo mã sản phẩm, báo giá nhanh.`,
+    description,
     alternates: { canonical: routes.category(category.slug) },
+    openGraph: {
+      type: "website",
+      title: `${category.name} | Kim Long`,
+      description,
+      url: routes.category(category.slug),
+      siteName: "Kim Long",
+      locale: "vi_VN",
+    },
   };
 }
 
@@ -51,6 +62,13 @@ async function CategoryContent({ params, searchParams }: PageProps<"/danh-muc/[s
 
   return (
     <Container className="py-6 lg:py-10">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Trang chủ", path: routes.home },
+          ...path.map((entry) => ({ name: entry.name, path: routes.category(entry.slug) })),
+        ])}
+      />
+
       <Breadcrumb
         items={[
           { name: "Trang chủ", href: routes.home },

@@ -24,7 +24,7 @@ export function ProductCard({
         <ProductImage
           src={product.imageUrl}
           alt={product.name}
-          priority={priority}
+          eager={priority}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           className="p-3"
         />

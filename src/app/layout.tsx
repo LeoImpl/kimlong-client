@@ -25,6 +25,8 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.siteUrl),
+  // Vietnamese only in v1 (decision D5), but declared so the crawler does not have to guess.
+  other: { "content-language": "vi" },
   title: {
     default: "Kim Long — Phụ tùng máy nén khí & thiết bị tự động hóa",
     template: "%s | Kim Long",
@@ -32,6 +34,14 @@ export const metadata: Metadata = {
   description:
     "Cung cấp phụ tùng máy nén khí chính hãng và thiết bị tự động hóa công nghiệp: Atlas Copco, " +
     "Ingersoll Rand, Festo, IFM, B&R, Lenze, MAC. Báo giá nhanh, giao hàng toàn quốc.",
+  // Defaults for every page; individual pages override title, description and images.
+  openGraph: { type: "website", siteName: "Kim Long", locale: "vi_VN" },
+  twitter: { card: "summary_large_image" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

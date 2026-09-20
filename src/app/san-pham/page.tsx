@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   description:
     "Tra cứu phụ tùng máy nén khí và thiết bị tự động hóa theo tên hoặc mã sản phẩm: lọc dầu, lọc gió, " +
     "lọc tách dầu, van, xy lanh, cảm biến, biến tần.",
+  // One canonical for every `?q=`: the query space is unbounded and the same products are reachable through
+  // the categories, so a thousand near-duplicate URLs would only dilute the catalogue.
+  alternates: { canonical: routes.products },
 };
 
 export default function ProductsPage({ searchParams }: PageProps<"/san-pham">) {

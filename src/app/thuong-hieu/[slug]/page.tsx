@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { getBrands, listProducts } from "@/lib/api/catalog";
 import type { Facets } from "@/lib/api/types";
+import { JsonLd, breadcrumbJsonLd } from "@/lib/seo";
 import { routes } from "@/lib/routes";
 
 async function findBrand(slug: string) {
@@ -23,12 +24,22 @@ export async function generateMetadata({
   const brand = await findBrand(slug);
   if (!brand) return { title: "Không tìm thấy thương hiệu" };
 
+  const description =
+    brand.description ??
+    `Phụ tùng và thiết bị ${brand.name} chính hãng. Tra cứu theo mã sản phẩm, báo giá nhanh.`;
+
   return {
     title: brand.name,
-    description:
-      brand.description ??
-      `Phụ tùng và thiết bị ${brand.name} chính hãng. Tra cứu theo mã sản phẩm, báo giá nhanh.`,
+    description,
     alternates: { canonical: routes.brand(brand.slug) },
+    openGraph: {
+      type: "website",
+      title: `${brand.name} | Kim Long`,
+      description,
+      url: routes.brand(brand.slug),
+      siteName: "Kim Long",
+      locale: "vi_VN",
+    },
   };
 }
 
@@ -48,6 +59,14 @@ async function BrandContent({ params, searchParams }: PageProps<"/thuong-hieu/[s
 
   return (
     <Container className="py-6 lg:py-10">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Trang chủ", path: routes.home },
+          { name: "Thương hiệu", path: routes.brands },
+          { name: brand.name, path: routes.brand(brand.slug) },
+        ])}
+      />
+
       <Breadcrumb
         items={[
           { name: "Trang chủ", href: routes.home },

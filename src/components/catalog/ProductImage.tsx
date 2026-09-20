@@ -9,13 +9,14 @@ export function ProductImage({
   src,
   alt,
   sizes,
-  priority,
+  eager,
   className,
 }: {
   src: string | null;
   alt: string;
   sizes: string;
-  priority?: boolean;
+  /** The image above the fold. Next 16 deprecated `priority`, and it never set `fetchpriority` anyway. */
+  eager?: boolean;
   className?: string;
 }) {
   if (!src) {
@@ -41,7 +42,8 @@ export function ProductImage({
       alt={alt}
       fill
       sizes={sizes}
-      priority={priority}
+      loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : "auto"}
       className={cn("object-contain", className)}
     />
   );

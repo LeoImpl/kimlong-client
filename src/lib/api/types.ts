@@ -23,24 +23,88 @@ export type Brand = Concrete<Schemas["PublicBrandResponse"]>;
 export type Price = Concrete<Schemas["PriceResponse"]>;
 export type Ref = Concrete<Schemas["RefResponse"]>;
 export type Spec = Concrete<Schemas["SpecResponse"]>;
-export type Variant = Concrete<Schemas["VariantResponse"]>;
 export type Commercial = Concrete<Schemas["CommercialResponse"]>;
 export type MediaFile = Concrete<Schemas["MediaResponse"]>;
-export type ProductSummary = Concrete<Schemas["PublicProductSummaryResponse"]>;
-export type ProductDetail = Concrete<Schemas["PublicProductDetailResponse"]>;
+export type Facet = Concrete<Schemas["FacetResponse"]>;
 
-export type Page<T> = {
-  items: T[];
-  page: number;
-  size: number;
-  totalItems: number;
-  totalPages: number;
+/**
+ * `Concrete` only reaches the top level, so every nested object has to be restated. Tedious once, but it is what
+ * turns `product.variants[0].partNumber` from `string | undefined` into `string` everywhere it is read.
+ */
+export type Variant = Omit<Concrete<Schemas["VariantResponse"]>, "specifications" | "price"> & {
+  specifications: Spec[];
+  price: Price | null;
+};
+
+export type ProductSummary = Omit<
+  Concrete<Schemas["PublicProductSummaryResponse"]>,
+  "brand" | "category" | "price"
+> & {
+  brand: Ref | null;
+  category: Ref | null;
+  price: Price;
+};
+
+export type ProductDetail = Omit<
+  Concrete<Schemas["PublicProductDetailResponse"]>,
+  | "brand"
+  | "categories"
+  | "specifications"
+  | "variants"
+  | "price"
+  | "commercial"
+  | "images"
+  | "documents"
+> & {
+  brand: Ref | null;
+  categories: Ref[];
+  specifications: Spec[];
+  variants: Variant[];
+  price: Price;
+  commercial: Commercial;
+  images: MediaFile[];
+  documents: MediaFile[];
+};
+
+export type Facets = { categories: Facet[]; brands: Facet[] };
+
+/** Search results plus, when asked for with `facets=true`, the counts the filter sidebar renders. */
+export type ProductPage = Omit<Concrete<Schemas["ProductSearchResponse"]>, "items" | "facets"> & {
+  items: ProductSummary[];
+  facets: Facets | null;
+};
+
+export type ProductSlug = Concrete<Schemas["ProductSlugResponse"]>;
+
+export type Hotline = Concrete<Schemas["PublicHotline"]>;
+export type CompanySection = Concrete<Schemas["PublicSection"]>;
+export type Milestone = Concrete<Schemas["PublicMilestone"]>;
+export type DocumentLink = Concrete<Schemas["PublicDocumentLink"]>;
+export type PartnerBrand = Concrete<Schemas["PublicPartnerBrandResponse"]>;
+
+export type CompanyProfile = Omit<
+  Concrete<Schemas["PublicCompanyProfileResponse"]>,
+  "hotlines" | "aboutSections" | "highlights" | "milestones" | "technicalDocuments"
+> & {
+  hotlines: Hotline[];
+  aboutSections: CompanySection[];
+  highlights: CompanySection[];
+  milestones: Milestone[];
+  technicalDocuments: DocumentLink[];
 };
 
 /** Quote request submission. `website` is the honeypot and must always be sent empty. */
-export type SubmitQuoteRequest = Concrete<Schemas["SubmitQuoteRequestDto"]>;
-export type Submitted = Concrete<Schemas["SubmittedResponse"]>;
 export type Contact = Concrete<Schemas["ContactDto"]>;
+export type QuoteLine = Concrete<Schemas["LineRequest"]>;
+export type Submitted = Concrete<Schemas["SubmittedResponse"]>;
+
+export type SubmitQuoteRequest = Omit<
+  Concrete<Schemas["SubmitQuoteRequestDto"]>,
+  "contact" | "lines"
+> & {
+  contact: Contact;
+  lines: QuoteLine[];
+};
 
 /**
  * Most products are "contact for price"; a fixed price is the exception. Treating that as the normal case is a

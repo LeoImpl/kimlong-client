@@ -1,26 +1,74 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/**
+ * Design tokens. One accent on a neutral base, semantic colours only where they carry meaning — an industrial
+ * supplier's catalogue has to be legible and calm, not decorated. Dark mode is deliberately not supported in v1
+ * (the audience browses in daylight on factory desktops), so `color-scheme: light` stops browsers in dark mode
+ * from recolouring form controls.
+ */
+@theme {
+  /* Brand: Tailwind's blue scale, with the agreed accent #1D4ED8 at 700. */
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-200: #bfdbfe;
+  --color-brand-300: #93c5fd;
+  --color-brand-400: #60a5fa;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-700: #1d4ed8;
+  --color-brand-800: #1e40af;
+  --color-brand-900: #1e3a8a;
+
+  /* Neutrals, named by role so a component never has to pick a slate number. */
+  --color-page: #ffffff;
+  --color-surface: #f8fafc;
+  --color-ink: #0f172a;
+  --color-body: #475569;
+  --color-muted: #64748b;
+  --color-line: #e2e8f0;
+  --color-line-strong: #cbd5e1;
+
+  /* State. Never used for decoration. */
+  --color-success: #15803d;
+  --color-success-soft: #f0fdf4;
+  --color-warning: #b45309;
+  --color-warning-soft: #fffbeb;
+  --color-danger: #b91c1c;
+  --color-danger-soft: #fef2f2;
 }
 
+/* `inline` so the utility keeps the reference: next/font sets these variables on <html>, see app/layout.tsx. */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-page);
+  color: var(--color-body);
+}
+
+/**
+ * One focus style for the whole app. Keyboard users are a minority here but the sales team demos the site on a
+ * laptop, and an invisible focus ring is the fastest way to look unfinished.
+ */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--color-brand-700);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-100);
+    color: var(--color-brand-900);
+  }
+
+  /* Part numbers are compared digit by digit; tabular figures keep them aligned in tables. */
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
 }

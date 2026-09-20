@@ -106,6 +106,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/public/v1/catalog/products/slugs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Slug and last change of every published product, for sitemaps */
+        get: operations["productSlugs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/public/v1/catalog/categories": {
         parameters: {
             query?: never;
@@ -217,7 +234,24 @@ export interface components {
             websiteUrl?: string | null;
             logoUrl?: string | null;
         };
-        PageResponsePublicProductSummaryResponse: {
+        FacetResponse: {
+            slug?: string;
+            name?: string;
+            /** Format: int64 */
+            count?: number;
+        };
+        FacetsResponse: {
+            categories?: components["schemas"]["FacetResponse"][];
+            brands?: components["schemas"]["FacetResponse"][];
+        };
+        PriceResponse: {
+            /** @enum {string} */
+            type?: "CONTACT_FOR_PRICE" | "FIXED";
+            /** Format: int64 */
+            amount?: number | null;
+            currency?: string | null;
+        };
+        ProductSearchResponse: {
             items?: components["schemas"]["PublicProductSummaryResponse"][];
             /** Format: int32 */
             page?: number;
@@ -227,13 +261,7 @@ export interface components {
             totalItems?: number;
             /** Format: int32 */
             totalPages?: number;
-        };
-        PriceResponse: {
-            /** @enum {string} */
-            type?: "CONTACT_FOR_PRICE" | "FIXED";
-            /** Format: int64 */
-            amount?: number | null;
-            currency?: string | null;
+            facets?: components["schemas"]["FacetsResponse"] | null;
         };
         PublicProductSummaryResponse: {
             slug?: string;
@@ -246,6 +274,8 @@ export interface components {
             /** Format: int32 */
             variantCount?: number;
             price?: components["schemas"]["PriceResponse"];
+            /** Format: date-time */
+            updatedAt?: string;
         };
         RefResponse: {
             slug?: string;
@@ -276,6 +306,8 @@ export interface components {
             commercial?: components["schemas"]["CommercialResponse"];
             images?: components["schemas"]["MediaResponse"][];
             documents?: components["schemas"]["MediaResponse"][];
+            /** Format: date-time */
+            updatedAt?: string;
         };
         SpecResponse: {
             name?: string;
@@ -287,6 +319,11 @@ export interface components {
             orderCode?: string | null;
             specifications?: components["schemas"]["SpecResponse"][];
             price?: components["schemas"]["PriceResponse"] | null;
+        };
+        ProductSlugResponse: {
+            slug?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
         CategoryNodeResponse: {
             slug?: string;
@@ -404,6 +441,7 @@ export interface operations {
                 brand?: string;
                 page?: number;
                 size?: number;
+                facets?: boolean;
             };
             header?: never;
             path?: never;
@@ -417,7 +455,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["PageResponsePublicProductSummaryResponse"];
+                    "*/*": components["schemas"]["ProductSearchResponse"];
                 };
             };
         };
@@ -440,6 +478,26 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["PublicProductDetailResponse"];
+                };
+            };
+        };
+    };
+    productSlugs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductSlugResponse"][];
                 };
             };
         };

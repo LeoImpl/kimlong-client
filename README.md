@@ -29,26 +29,26 @@ npm run dev                    # http://localhost:3000
 
 ## Scripts
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Development server |
-| `npm run build` / `npm start` | Production build and serve |
-| `npm test` | Unit tests (Vitest); no API needed |
-| `npm run smoke` | Checks this app can read real catalogue data from a running API |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run lint` / `npm run format` | ESLint / Prettier |
-| `npm run gen:api` | Regenerates `src/types/api.ts` from the API's OpenAPI document |
+| Command                           | What it does                                                    |
+| --------------------------------- | --------------------------------------------------------------- |
+| `npm run dev`                     | Development server                                              |
+| `npm run build` / `npm start`     | Production build and serve                                      |
+| `npm test`                        | Unit tests (Vitest); no API needed                              |
+| `npm run smoke`                   | Checks this app can read real catalogue data from a running API |
+| `npm run typecheck`               | `tsc --noEmit`                                                  |
+| `npm run lint` / `npm run format` | ESLint / Prettier                                               |
+| `npm run gen:api`                 | Regenerates `src/types/api.ts` from the API's OpenAPI document  |
 
 ## Configuration
 
 All configuration is environment variables, so one image runs anywhere (see `.env.example`).
 
-| Variable | Used by | Notes |
-|---|---|---|
-| `API_BASE_URL` | server | Never exposed to the browser, so no CORS is needed for catalogue reads |
-| `NEXT_PUBLIC_API_BASE_URL` | browser | Only the quote request submission. Must be in the API's `CORS_ALLOWED_ORIGINS` |
-| `NEXT_PUBLIC_SITE_URL` | metadata, sitemap | The single canonical domain in production |
-| `NEXT_PUBLIC_LANGUAGE` | API client | `Accept-Language`; `vi` in v1 |
+| Variable                   | Used by           | Notes                                                                          |
+| -------------------------- | ----------------- | ------------------------------------------------------------------------------ |
+| `API_BASE_URL`             | server            | Never exposed to the browser, so no CORS is needed for catalogue reads         |
+| `NEXT_PUBLIC_API_BASE_URL` | browser           | Only the quote request submission. Must be in the API's `CORS_ALLOWED_ORIGINS` |
+| `NEXT_PUBLIC_SITE_URL`     | metadata, sitemap | The single canonical domain in production                                      |
+| `NEXT_PUBLIC_LANGUAGE`     | API client        | `Accept-Language`; `vi` in v1                                                  |
 
 `NEXT_PUBLIC_*` values are baked into the browser bundle at build time, which is why the Dockerfile takes them as
 build arguments rather than runtime environment.

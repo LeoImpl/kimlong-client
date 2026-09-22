@@ -5,12 +5,16 @@ type Variant = "primary" | "accent" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors " +
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 " +
   "disabled:pointer-events-none disabled:opacity-50 whitespace-nowrap [&_svg]:shrink-0";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-navy text-white shadow-card hover:bg-navy-hover active:bg-navy",
-  accent: "bg-brand-900 text-white shadow-card hover:bg-brand-800 active:bg-brand-900",
+  // Navy into indigo, lighter on hover, with the `shine` sweep: the one element on a page meant to be pressed.
+  primary:
+    "shine bg-linear-to-r from-navy to-brand-900 text-white shadow-card hover:from-brand-900 " +
+    "hover:to-brand-700 hover:shadow-glow active:scale-[0.98]",
+  accent:
+    "shine bg-linear-to-r from-brand-700 to-cyan-600 text-white shadow-card hover:shadow-glow active:scale-[0.98]",
   secondary:
     "border border-line-strong bg-page text-ink shadow-card hover:bg-surface active:bg-line",
   ghost: "text-brand-700 hover:bg-brand-50 active:bg-brand-100",

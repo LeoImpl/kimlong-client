@@ -120,11 +120,11 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
       />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-12 lg:gap-10">
-        <div className="lg:col-span-5">
+        <div className="animate-fade-up lg:col-span-5">
           <ProductGallery images={product.images} name={product.name} />
         </div>
 
-        <div className="lg:col-span-7">
+        <div className="animate-fade-up [animation-delay:100ms] lg:col-span-7">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-wide uppercase">
             {product.brand && (
               <Link
@@ -148,11 +148,18 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
 
           <TrustBadges product={product} />
 
-          <Card className="mt-6 p-5">
+          <Card className="relative mt-6 overflow-hidden p-5">
+            <span
+              className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-brand-700 via-brand-500 to-cyan-accent"
+              aria-hidden
+            />
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold tracking-wide text-muted uppercase">Đơn giá</p>
-                <Price price={product.price} className="mt-1 block text-2xl font-bold" />
+                <Price
+                  price={product.price}
+                  className="text-gradient-ink mt-1 block text-3xl font-bold"
+                />
               </div>
               <p className="max-w-64 text-xs leading-relaxed text-muted">
                 Giá sỉ theo số lượng và thời điểm đặt hàng. Gửi yêu cầu để nhận báo giá chính xác
@@ -240,7 +247,7 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
       </div>
 
       {product.variants.length > 0 && (
-        <section id="dat-hang" className="mt-12 scroll-mt-24">
+        <section id="dat-hang" className="reveal mt-12 scroll-mt-24">
           <SectionHeading
             title="Đặt hàng theo mã"
             description="Nhập số lượng cho từng mã — Tab hoặc Enter để sang mã kế tiếp. Mã được tra cứu không phân biệt hoa thường và dấu gạch."
@@ -252,7 +259,7 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
 
       <div className="mt-12 grid gap-8 lg:grid-cols-12">
         {product.specifications.length > 0 && (
-          <section className="lg:col-span-7">
+          <section className="reveal lg:col-span-7">
             <SectionHeading title="Thông số kỹ thuật" className="mb-4" />
             <Card className="px-4 py-1">
               <SpecList items={product.specifications} className="border-y-0" />
@@ -393,7 +400,7 @@ function CommercialTerms({ product }: { product: ProductDetail }) {
 
   if (terms.length === 0) return null;
   return (
-    <section className="lg:col-span-5">
+    <section className="reveal lg:col-span-5">
       <SectionHeading title="Điều kiện thương mại" className="mb-4" />
       <Card className="px-4 py-1">
         <SpecList items={terms} className="border-y-0" />

@@ -10,11 +10,11 @@ export function Logo({ className }: { className?: string }) {
   return (
     <Link
       href={routes.home}
-      className={cn("flex shrink-0 items-center gap-2.5", className)}
+      className={cn("group flex shrink-0 items-center gap-2.5", className)}
       aria-label="Kim Long — trang chủ"
     >
       <span
-        className="flex size-9 items-center justify-center rounded-md bg-navy font-mono text-sm font-semibold text-white"
+        className="flex size-9 items-center justify-center rounded-md bg-linear-to-br from-navy via-brand-900 to-brand-700 font-mono text-sm font-semibold text-white shadow-glow transition-transform duration-300 group-hover:-rotate-6"
         aria-hidden
       >
         KL

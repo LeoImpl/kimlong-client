@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { HTML_LIMITED_BOTS } from "./src/lib/crawlers";
 
 /**
  * The API host is only known at runtime, so image URLs are validated from the same environment variable the API
@@ -18,18 +19,17 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
 
   /**
-   * Render metadata before the HTML starts streaming, for every user agent.
+   * Render metadata before the HTML starts streaming for crawlers that read `<head>` without running JavaScript.
    *
-   * By default Next streams `<title>`, the description and the Open Graph tags after `</head>` and lets React
-   * move them into place on hydration, except for a built-in list of crawlers. Zalo's link preview crawler is
-   * not on that list and runs no JavaScript, so a product shared by a sales rep on Zalo showed a bare link —
-   * which is one of the two reasons this app is server-rendered at all.
+   * By default Next streams `<title>`, the description and the Open Graph tags after `</head>`, except for a
+   * built-in list of crawlers. Zalo's link preview crawler is not on that list, so a product shared by a sales
+   * rep on Zalo showed a bare link; `HTML_LIMITED_BOTS` adds it (and a few other Vietnamese crawlers).
    *
-   * Rather than maintain a list of every crawler that matters in Vietnam, metadata blocks for everyone. It is
-   * nearly free here: `generateMetadata` reads the same cached product the page renders, so it adds a cache
-   * lookup, not an API round trip. (Measured: ~8 ms TTFB on a product page in production mode.)
+   * It must never match a real browser. This used to be `/.*\/` (every user agent), which made Next render
+   * prefetches in full and the client router reuse the last prefetched product for every product link — see
+   * src/lib/crawlers.ts.
    */
-  htmlLimitedBots: /.*/,
+  htmlLimitedBots: HTML_LIMITED_BOTS,
 
   images: {
     // Product photos are large PNG scans of packaging. AVIF is typically 40% smaller than the WebP the

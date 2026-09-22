@@ -14,7 +14,7 @@ import { routes } from "@/lib/routes";
  */
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-line bg-surface">
+    <footer className="mt-16 border-t border-line/80 bg-page">
       <Container className="py-10">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <Suspense fallback={<ColumnSkeleton />}>
@@ -58,7 +58,7 @@ export function Footer() {
           </Suspense>
         </div>
       </Container>
-      <div className="border-t border-line">
+      <div className="border-t border-line/80 bg-canvas">
         <Container className="py-4">
           <Suspense fallback={<Skeleton className="h-3 w-72" />}>
             <Copyright />

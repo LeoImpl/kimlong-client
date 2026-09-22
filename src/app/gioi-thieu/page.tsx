@@ -37,7 +37,7 @@ export default function AboutPage() {
         <Partners />
       </Suspense>
 
-      <section className="mt-16 rounded-lg border border-line bg-surface p-6 text-center sm:p-10">
+      <section className="mt-16 rounded-lg border border-line/80 bg-page shadow-card p-6 text-center sm:p-10">
         <h2 className="text-xl font-semibold text-ink sm:text-2xl">
           Cần tìm đúng mã phụ tùng cho máy của bạn?
         </h2>
@@ -104,7 +104,10 @@ async function Profile() {
           <SectionHeading title="Vì sao khách hàng chọn Kim Long" className="mb-6" />
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {company.highlights.map((highlight) => (
-              <li key={highlight.title} className="rounded-lg border border-line bg-page p-5">
+              <li
+                key={highlight.title}
+                className="rounded-lg border border-line/80 bg-page shadow-card p-5"
+              >
                 <h3 className="text-base font-semibold text-ink">{highlight.title}</h3>
                 <p className="mt-2 text-sm text-body">{highlight.body}</p>
               </li>
@@ -122,7 +125,7 @@ async function Profile() {
               .map((milestone) => (
                 <li key={`${milestone.year}-${milestone.title}`} className="relative">
                   <span
-                    className="absolute top-1.5 -left-[31px] size-2.5 rounded-full border-2 border-page bg-brand-700"
+                    className="absolute top-1.5 -left-[31px] size-2.5 rounded-full border-2 border-page bg-brand-900"
                     aria-hidden
                   />
                   <p className="font-mono text-sm text-brand-700">{milestone.year}</p>
@@ -211,7 +214,10 @@ async function Partners() {
       />
       <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {partners.map((partner) => (
-          <li key={partner.slug} className="rounded-lg border border-line bg-page p-4">
+          <li
+            key={partner.slug}
+            className="rounded-lg border border-line/80 bg-page shadow-card p-4"
+          >
             <div className="relative flex h-14 items-center justify-center">
               {partner.logoUrl ? (
                 <Image

@@ -106,18 +106,19 @@ async function Listing({
   const resolved = await searchParams;
   const raw = Array.isArray(resolved.page) ? resolved.page[0] : resolved.page;
   const page = Number(raw ?? 0) || 0;
+  const view = Array.isArray(resolved.view) ? resolved.view[0] : resolved.view;
 
   const result = await listProducts({ brand: slug, page, facets: true });
   const basePath = routes.brand(slug);
 
   return (
-    <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]">
+    <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]">
       {/* Only the category facet is useful here: filtering this brand by this brand would be a no-op. */}
       <CategoryFacets facets={result.facets} brandSlug={slug} />
       <ProductListing
         result={result}
         basePath={basePath}
-        params={{}}
+        params={{ view }}
         emptyTitle={`Chưa có sản phẩm ${slug} nào trên website`}
       />
     </div>
@@ -128,17 +129,22 @@ async function Listing({
 function CategoryFacets({ facets, brandSlug }: { facets: Facets | null; brandSlug: string }) {
   if (!facets || facets.categories.length === 0) return null;
   return (
-    <aside aria-label="Danh mục">
-      <h2 className="text-sm font-semibold text-ink">Danh mục</h2>
-      <ul className="mt-2 space-y-0.5">
+    <aside
+      aria-label="Danh mục"
+      className="self-start overflow-hidden rounded-lg border border-line/80 bg-page shadow-card lg:sticky lg:top-24"
+    >
+      <h2 className="border-b border-line/80 px-4 py-3 text-xs font-semibold tracking-wide text-ink uppercase">
+        Danh mục
+      </h2>
+      <ul className="space-y-0.5 p-2">
         {facets.categories.map((category) => (
           <li key={category.slug}>
             <Link
               href={`${routes.category(category.slug)}?brand=${encodeURIComponent(brandSlug)}`}
-              className="flex items-center justify-between gap-2 rounded px-2 py-1.5 text-sm text-body hover:bg-surface hover:text-ink"
+              className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm text-body transition-colors hover:bg-slate-50/80 hover:text-ink"
             >
               <span>{category.name}</span>
-              <span className="text-xs text-muted">{category.count}</span>
+              <span className="font-mono text-[11px] text-muted">{category.count}</span>
             </Link>
           </li>
         ))}

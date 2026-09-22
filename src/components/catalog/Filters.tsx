@@ -1,12 +1,16 @@
 import Link from "next/link";
+import { ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type { CategoryNode, Facets } from "@/lib/api/types";
 import { routes } from "@/lib/routes";
 
 /**
- * Filter sidebar driven by the API's facet counts. Every option is a plain link to a real URL, so filtering is
- * crawlable, shareable and works without JavaScript — and a count of zero simply never appears, because the API
- * leaves empty facets out.
+ * Filter sidebar driven by the API's facet counts, as accordion groups. Every option is a plain link to a real
+ * URL and every group a native `<details>`, so filtering is crawlable, shareable and works without JavaScript —
+ * and a count of zero simply never appears, because the API leaves empty facets out.
+ *
+ * Only facets the catalogue records are offered. Standards (ISO/DIN), material or live stock would need data
+ * the API does not have yet; an empty filter group would only promise something the list cannot deliver.
  */
 export function Filters({
   facets,
@@ -44,8 +48,38 @@ export function Filters({
     return query ? `${basePath}?${query}` : basePath;
   };
 
+  const activeBrandName = brands.find((brand) => brand.slug === activeBrand)?.name;
+
   return (
-    <aside className="space-y-6" aria-label="Bộ lọc">
+    <aside
+      aria-label="Bộ lọc"
+      className="self-start overflow-hidden rounded-lg border border-line/80 bg-page shadow-card lg:sticky lg:top-24"
+    >
+      <div className="flex items-center justify-between border-b border-line/80 px-4 py-3">
+        <h2 className="text-xs font-semibold tracking-wide text-ink uppercase">Bộ lọc kỹ thuật</h2>
+        {activeBrand && (
+          <Link
+            href={href({ brand: undefined })}
+            className="text-xs font-medium text-brand-700 hover:underline"
+          >
+            Xóa lọc
+          </Link>
+        )}
+      </div>
+
+      {activeBrandName && (
+        <div className="flex flex-wrap gap-1.5 border-b border-line/80 px-4 py-3">
+          <Link
+            href={href({ brand: undefined })}
+            className="inline-flex items-center gap-1 rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-800 hover:bg-brand-100"
+            aria-label={`Bỏ lọc thương hiệu ${activeBrandName}`}
+          >
+            {activeBrandName}
+            <X className="size-3" strokeWidth={1.5} aria-hidden />
+          </Link>
+        </div>
+      )}
+
       {subcategories.length > 0 && (
         <Group title="Danh mục con">
           {subcategories.map(({ child, count }) => (
@@ -62,7 +96,6 @@ export function Filters({
 
       {brands.length > 0 && (
         <Group title="Thương hiệu">
-          {activeBrand && <Option href={href({ brand: undefined })} label="Tất cả thương hiệu" />}
           {brands.map((brand) => (
             <Option
               key={brand.slug}
@@ -70,6 +103,7 @@ export function Filters({
               label={brand.name}
               count={brand.count}
               active={brand.slug === activeBrand}
+              check
             />
           ))}
         </Group>
@@ -80,10 +114,17 @@ export function Filters({
 
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section>
-      <h2 className="text-sm font-semibold text-ink">{title}</h2>
-      <ul className="mt-2 space-y-0.5">{children}</ul>
-    </section>
+    <details open className="group border-b border-line/80 last:border-b-0">
+      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-semibold text-ink transition-colors select-none hover:bg-slate-50/80 [&::-webkit-details-marker]:hidden">
+        {title}
+        <ChevronDown
+          className="size-4 text-muted transition-transform group-open:rotate-180"
+          strokeWidth={1.5}
+          aria-hidden
+        />
+      </summary>
+      <ul className="space-y-0.5 px-2 pb-3">{children}</ul>
+    </details>
   );
 }
 
@@ -92,11 +133,14 @@ function Option({
   label,
   count,
   active,
+  check,
 }: {
   href: string;
   label: string;
   count?: number;
   active?: boolean;
+  /** Render a checkbox look: brand filters toggle, sub-categories navigate. */
+  check?: boolean;
 }) {
   return (
     <li>
@@ -104,14 +148,31 @@ function Option({
         href={href}
         aria-current={active ? "true" : undefined}
         className={cn(
-          "flex items-center justify-between gap-2 rounded px-2 py-1.5 text-sm",
+          "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors",
           active
-            ? "bg-brand-50 font-medium text-brand-800"
-            : "text-body hover:bg-surface hover:text-ink",
+            ? "bg-brand-50 font-medium text-brand-900"
+            : "text-body hover:bg-slate-50/80 hover:text-ink",
         )}
       >
-        <span>{label}</span>
-        {count !== undefined && <span className="text-xs text-muted">{count}</span>}
+        {check && (
+          <span
+            className={cn(
+              "flex size-4 shrink-0 items-center justify-center rounded border",
+              active ? "border-brand-900 bg-brand-900" : "border-line-strong bg-page",
+            )}
+            aria-hidden
+          >
+            {active && (
+              <svg viewBox="0 0 12 12" className="size-3 text-white" fill="none">
+                <path d="m2.5 6.5 2.5 2.5 4.5-5" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            )}
+          </span>
+        )}
+        <span className="flex-1">{label}</span>
+        {count !== undefined && (
+          <span className="font-mono text-[11px] text-muted tabular-nums">{count}</span>
+        )}
       </Link>
     </li>
   );

@@ -3,12 +3,26 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import {
+  ArrowDown,
+  BadgeCheck,
+  Check,
+  FileCheck2,
+  FileDown,
+  Globe2,
+  Layers,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 import { AddToQuote } from "@/components/quote/AddToQuote";
 import { QuickQuoteForm } from "@/components/quote/QuickQuoteForm";
 import { ProductGallery } from "@/components/catalog/ProductGallery";
 import { ProductGrid } from "@/components/catalog/ProductCard";
-import { VariantTable } from "@/components/catalog/VariantTable";
+import { VariantOrderMatrix } from "@/components/catalog/VariantOrderMatrix";
+import { Badge } from "@/components/ui/Badge";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { ButtonLink } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { Container, SectionHeading } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { PartNumber } from "@/components/ui/PartNumber";
@@ -82,9 +96,14 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
 
   const category = product.categories.at(-1);
   const partNumbers = product.variants.map((variant) => variant.partNumber);
+  const basketProduct = {
+    slug: product.slug,
+    name: product.name,
+    imageUrl: product.images[0]?.url ?? null,
+  };
 
   return (
-    <Container className="py-6 lg:py-10">
+    <Container className="py-6 lg:py-8">
       <Suspense fallback={null}>
         <StructuredData product={product} />
       </Suspense>
@@ -100,76 +119,116 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
         ]}
       />
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-2 lg:gap-12">
-        <ProductGallery images={product.images} name={product.name} />
+      <div className="mt-6 grid gap-8 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-5">
+          <ProductGallery images={product.images} name={product.name} />
+        </div>
 
-        <div>
-          {product.brand && (
-            <Link
-              href={routes.brand(product.brand.slug)}
-              className="text-sm font-medium text-brand-700 hover:underline"
-            >
-              {product.brand.name}
-            </Link>
-          )}
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+        <div className="lg:col-span-7">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-wide uppercase">
+            {product.brand && (
+              <Link
+                href={routes.brand(product.brand.slug)}
+                className="text-brand-700 hover:underline"
+              >
+                {product.brand.name}
+              </Link>
+            )}
+            {product.brand && category && <span className="text-line-strong">/</span>}
+            {category && (
+              <Link href={routes.category(category.slug)} className="text-muted hover:text-ink">
+                {category.name}
+              </Link>
+            )}
+          </div>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-balance text-ink sm:text-3xl">
             {product.name}
           </h1>
-          {product.summary && <p className="mt-3 text-body">{product.summary}</p>}
+          {product.summary && <p className="mt-3 max-w-2xl text-body">{product.summary}</p>}
 
-          {product.variants.length > 0 && (
-            <div className="mt-5 rounded-lg border border-line bg-surface p-4">
-              <p className="text-xs font-medium text-muted uppercase">
-                {product.variants.length > 1
-                  ? `${product.variants.length} mã sản phẩm`
-                  : "Mã sản phẩm"}
+          <TrustBadges product={product} />
+
+          <Card className="mt-6 p-5">
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold tracking-wide text-muted uppercase">Đơn giá</p>
+                <Price price={product.price} className="mt-1 block text-2xl font-bold" />
+              </div>
+              <p className="max-w-64 text-xs leading-relaxed text-muted">
+                Giá sỉ theo số lượng và thời điểm đặt hàng. Gửi yêu cầu để nhận báo giá chính xác
+                qua email.
               </p>
-              <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
-                {product.variants.slice(0, 6).map((variant) => (
-                  <li key={variant.partNumber}>
-                    <PartNumber value={variant.partNumber} />
-                  </li>
-                ))}
-                {product.variants.length > 6 && (
-                  <li className="self-center text-sm text-muted">
-                    <a href="#ma-san-pham" className="hover:text-brand-700 hover:underline">
-                      +{product.variants.length - 6} mã khác
-                    </a>
-                  </li>
-                )}
-              </ul>
             </div>
+
+            {product.variants.length > 0 && (
+              <div className="mt-5 border-t border-line/80 pt-4">
+                <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+                  {product.variants.length > 1
+                    ? `${product.variants.length} mã sản phẩm`
+                    : "Mã sản phẩm"}
+                </p>
+                <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
+                  {product.variants.slice(0, 6).map((variant) => (
+                    <li key={variant.partNumber}>
+                      <PartNumber value={variant.partNumber} />
+                    </li>
+                  ))}
+                  {product.variants.length > 6 && (
+                    <li className="self-center text-sm text-muted">
+                      <a href="#dat-hang" className="hover:text-brand-700 hover:underline">
+                        +{product.variants.length - 6} mã khác
+                      </a>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            {/* Two ways in, on purpose: the matrix for a buyer collecting a service kit, the quick form for the
+                visitor after one part who would otherwise just close the tab. */}
+            <div className="mt-5 flex flex-wrap items-start gap-3">
+              {product.variants.length > 0 ? (
+                <ButtonLink href="#dat-hang" size="lg">
+                  <ArrowDown className="size-4" strokeWidth={1.5} aria-hidden />
+                  Chọn mã &amp; số lượng
+                </ButtonLink>
+              ) : (
+                <AddToQuote product={basketProduct} />
+              )}
+              <Suspense fallback={<Skeleton className="h-12 w-44" />}>
+                <QuickQuote product={product} partNumbers={partNumbers} />
+              </Suspense>
+            </div>
+          </Card>
+
+          {product.documents.length > 0 && (
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {product.documents.map((document) => (
+                <li key={document.url}>
+                  <a
+                    href={document.url}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex h-9 items-center gap-2 rounded-md border border-line/80 bg-page px-3 text-sm font-medium text-ink shadow-card transition-colors hover:bg-surface"
+                  >
+                    <FileDown className="size-4 text-brand-700" strokeWidth={1.5} aria-hidden />
+                    Spec sheet
+                    <span className="max-w-48 truncate font-mono text-xs text-muted">
+                      {document.filename}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           )}
-
-          <div className="mt-6 flex items-baseline gap-3">
-            <span className="text-sm text-muted">Giá:</span>
-            <Price price={product.price} className="text-xl" />
-          </div>
-
-          {/* Two ways in, on purpose: the basket for a buyer collecting a service kit, the quick form for the
-              visitor after one part who would otherwise just close the tab. */}
-          <AddToQuote
-            product={{
-              slug: product.slug,
-              name: product.name,
-              imageUrl: product.images[0]?.url ?? null,
-            }}
-            partNumbers={partNumbers}
-            className="mt-5"
-          />
-
-          <div className="mt-4">
-            <Suspense fallback={<Skeleton className="h-12 w-56" />}>
-              <QuickQuote product={product} partNumbers={partNumbers} />
-            </Suspense>
-          </div>
 
           {product.highlights.length > 0 && (
             <ul className="mt-6 space-y-2">
               {product.highlights.map((highlight) => (
-                <li key={highlight} className="flex gap-2 text-sm text-body">
-                  <span
-                    className="mt-1.5 size-1.5 shrink-0 rounded-full bg-brand-700"
+                <li key={highlight} className="flex gap-2.5 text-sm text-body">
+                  <Check
+                    className="mt-0.5 size-4 shrink-0 text-success"
+                    strokeWidth={1.5}
                     aria-hidden
                   />
                   {highlight}
@@ -177,58 +236,40 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
               ))}
             </ul>
           )}
-
-          <CommercialTerms product={product} />
         </div>
       </div>
 
       {product.variants.length > 0 && (
-        <section id="ma-san-pham" className="mt-12 scroll-mt-20">
+        <section id="dat-hang" className="mt-12 scroll-mt-24">
           <SectionHeading
-            title="Mã sản phẩm"
-            description="Mã sản phẩm được tra cứu không phân biệt hoa thường và dấu gạch."
+            title="Đặt hàng theo mã"
+            description="Nhập số lượng cho từng mã — Tab hoặc Enter để sang mã kế tiếp. Mã được tra cứu không phân biệt hoa thường và dấu gạch."
             className="mb-4"
           />
-          <VariantTable variants={product.variants} />
+          <VariantOrderMatrix product={basketProduct} variants={product.variants} />
         </section>
       )}
 
-      {product.specifications.length > 0 && (
-        <section className="mt-12">
-          <SectionHeading title="Thông số kỹ thuật" className="mb-4" />
-          <SpecList items={product.specifications} className="max-w-3xl" />
-        </section>
-      )}
+      <div className="mt-12 grid gap-8 lg:grid-cols-12">
+        {product.specifications.length > 0 && (
+          <section className="lg:col-span-7">
+            <SectionHeading title="Thông số kỹ thuật" className="mb-4" />
+            <Card className="px-4 py-1">
+              <SpecList items={product.specifications} className="border-y-0" />
+            </Card>
+          </section>
+        )}
+        <CommercialTerms product={product} />
+      </div>
 
       {product.description && (
         <section className="mt-12 max-w-3xl">
           <SectionHeading title="Mô tả" className="mb-4" />
-          <div className="space-y-3 text-body">
+          <div className="space-y-3 leading-relaxed text-body">
             {product.description.split(/\n{2,}/).map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-        </section>
-      )}
-
-      {product.documents.length > 0 && (
-        <section className="mt-12 max-w-3xl">
-          <SectionHeading title="Tài liệu kỹ thuật" className="mb-4" />
-          <ul className="space-y-2">
-            {product.documents.map((document) => (
-              <li key={document.url}>
-                <a
-                  href={document.url}
-                  target="_blank"
-                  rel="noopener"
-                  className="inline-flex items-center gap-2 text-sm text-brand-700 hover:underline"
-                >
-                  <DocumentIcon />
-                  {document.filename}
-                </a>
-              </li>
-            ))}
-          </ul>
         </section>
       )}
 
@@ -238,6 +279,62 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
         </Suspense>
       )}
     </Container>
+  );
+}
+
+/**
+ * The facts a purchaser checks before asking for a price, as badges under the name. Only what the catalogue
+ * actually records is shown — no invented stock levels or minimum order quantities.
+ */
+function TrustBadges({ product }: { product: ProductDetail }) {
+  const { commercial } = product;
+  const badges: { icon: React.ReactNode; text: string; tone: "neutral" | "success" | "brand" }[] =
+    [];
+  const icon = { strokeWidth: 1.5, "aria-hidden": true } as const;
+
+  if (product.variants.length > 1) {
+    badges.push({
+      icon: <Layers {...icon} />,
+      text: `${product.variants.length} mã`,
+      tone: "neutral",
+    });
+  }
+  if (commercial.condition) {
+    badges.push({ icon: <BadgeCheck {...icon} />, text: commercial.condition, tone: "success" });
+  }
+  if (commercial.warranty) {
+    badges.push({
+      icon: <ShieldCheck {...icon} />,
+      text: `Bảo hành: ${commercial.warranty}`,
+      tone: "neutral",
+    });
+  }
+  if (commercial.origin) {
+    badges.push({
+      icon: <Globe2 {...icon} />,
+      text: `Xuất xứ: ${commercial.origin}`,
+      tone: "neutral",
+    });
+  }
+  if (commercial.documents) {
+    badges.push({ icon: <FileCheck2 {...icon} />, text: commercial.documents, tone: "neutral" });
+  }
+  if (commercial.delivery) {
+    badges.push({ icon: <Truck {...icon} />, text: commercial.delivery, tone: "brand" });
+  }
+
+  if (badges.length === 0) return null;
+  return (
+    <ul className="mt-4 flex flex-wrap gap-2">
+      {badges.map((badge) => (
+        <li key={badge.text}>
+          <Badge tone={badge.tone} className="py-1">
+            {badge.icon}
+            {badge.text}
+          </Badge>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -295,7 +392,14 @@ function CommercialTerms({ product }: { product: ProductDetail }) {
   ].filter((term): term is { name: string; value: string } => Boolean(term.value));
 
   if (terms.length === 0) return null;
-  return <SpecList items={terms} className="mt-6" />;
+  return (
+    <section className="lg:col-span-5">
+      <SectionHeading title="Điều kiện thương mại" className="mb-4" />
+      <Card className="px-4 py-1">
+        <SpecList items={terms} className="border-y-0" />
+      </Card>
+    </section>
+  );
 }
 
 /**
@@ -364,20 +468,4 @@ function description(product: ProductDetail): string {
     .filter(Boolean)
     .join(" ")
     .slice(0, 300);
-}
-
-function DocumentIcon() {
-  return (
-    <svg
-      viewBox="0 0 16 16"
-      className="size-4"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      aria-hidden
-    >
-      <path d="M9 1.5H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5.5L9 1.5Z" />
-      <path d="M9 1.5v4h4" />
-    </svg>
-  );
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 /**
@@ -21,7 +22,7 @@ export function Pagination({
   return (
     <nav aria-label="Phân trang" className="flex items-center justify-center gap-1">
       <Step href={buildHref(page - 1)} disabled={page === 0} label="Trang trước">
-        ‹
+        <ChevronLeft className="size-4" strokeWidth={1.5} aria-hidden />
       </Step>
       {pages.map((entry, index) =>
         entry === null ? (
@@ -34,10 +35,10 @@ export function Pagination({
             href={buildHref(entry)}
             aria-current={entry === page ? "page" : undefined}
             className={cn(
-              "inline-flex h-9 min-w-9 items-center justify-center rounded-md px-2 text-sm",
+              "inline-flex h-9 min-w-9 items-center justify-center rounded-md px-2 font-mono text-sm",
               entry === page
-                ? "bg-brand-700 font-medium text-white"
-                : "border border-line text-body hover:bg-surface",
+                ? "bg-navy font-medium text-white"
+                : "border border-line bg-page text-body shadow-card hover:bg-surface",
             )}
           >
             {entry + 1}
@@ -45,7 +46,7 @@ export function Pagination({
         ),
       )}
       <Step href={buildHref(page + 1)} disabled={page >= totalPages - 1} label="Trang sau">
-        ›
+        <ChevronRight className="size-4" strokeWidth={1.5} aria-hidden />
       </Step>
     </nav>
   );
@@ -63,7 +64,7 @@ function Step({
   children: React.ReactNode;
 }) {
   const className =
-    "inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-line text-base";
+    "inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-line bg-page shadow-card";
   if (disabled) {
     return (
       <span className={cn(className, "text-line-strong")} aria-disabled>

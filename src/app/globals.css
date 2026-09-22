@@ -1,25 +1,31 @@
 @import "tailwindcss";
 
 /**
- * Design tokens. One accent on a neutral base, semantic colours only where they carry meaning — an industrial
- * supplier's catalogue has to be legible and calm, not decorated. Dark mode is deliberately not supported in v1
- * (the audience browses in daylight on factory desktops), so `color-scheme: light` stops browsers in dark mode
- * from recolouring form controls.
+ * Design tokens — "data-dense minimalist". A cool off-white canvas, white cards with hairline borders, one navy
+ * for actions and one industrial indigo for accents; everything else is slate. An industrial supplier's catalogue
+ * has to read like a datasheet: legible, calm and trustworthy, never like a B2C sale page. Colour carries meaning
+ * only (in stock, pending, error). Dark mode is deliberately not supported in v1 (the audience browses in daylight
+ * on factory desktops), so `color-scheme: light` stops browsers in dark mode from recolouring form controls.
  */
 @theme {
-  /* Brand: Tailwind's blue scale, with the agreed accent #1D4ED8 at 700. */
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-200: #bfdbfe;
-  --color-brand-300: #93c5fd;
-  --color-brand-400: #60a5fa;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --color-brand-800: #1e40af;
-  --color-brand-900: #1e3a8a;
+  /* Accent: Tailwind's indigo scale; the "industrial indigo" #312E81 is 900, links and focus use 700. */
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-300: #a5b4fc;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  /* Primary actions: deep navy. */
+  --color-navy: #0f172a;
+  --color-navy-hover: #1e293b;
 
   /* Neutrals, named by role so a component never has to pick a slate number. */
+  --color-canvas: #f8fafc;
   --color-page: #ffffff;
   --color-surface: #f8fafc;
   --color-ink: #0f172a;
@@ -28,18 +34,22 @@
   --color-line: #e2e8f0;
   --color-line-strong: #cbd5e1;
 
-  /* State. Never used for decoration. */
-  --color-success: #15803d;
-  --color-success-soft: #f0fdf4;
+  /* State. Never used for decoration: emerald = available, amber = pending, red = failed. */
+  --color-success: #047857;
+  --color-success-soft: #ecfdf5;
   --color-warning: #b45309;
   --color-warning-soft: #fffbeb;
   --color-danger: #b91c1c;
   --color-danger-soft: #fef2f2;
+
+  /* One elevation. Cards sit on the canvas with a hairline and a breath of shadow, never a floating drop. */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  --shadow-pop: 0 8px 24px -6px rgb(15 23 42 / 0.12), 0 1px 3px 0 rgb(0 0 0 / 0.05);
 }
 
 /* `inline` so the utility keeps the reference: next/font sets these variables on <html>, see app/layout.tsx. */
 @theme inline {
-  --font-sans: var(--font-be-vietnam-pro), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
@@ -48,7 +58,7 @@
 }
 
 body {
-  background-color: var(--color-page);
+  background-color: var(--color-canvas);
   color: var(--color-body);
 }
 

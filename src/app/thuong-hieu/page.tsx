@@ -45,7 +45,7 @@ async function BrandGrid() {
         <li key={brand.slug}>
           <Link
             href={routes.brand(brand.slug)}
-            className="flex h-full flex-col items-center gap-3 rounded-lg border border-line bg-page p-5 text-center hover:border-brand-300 hover:shadow-sm"
+            className="flex h-full flex-col items-center gap-3 rounded-lg border border-line/80 bg-page shadow-card p-5 text-center hover:border-brand-300 transition-colors"
           >
             <div className="relative flex h-12 w-full items-center justify-center">
               {brand.logoUrl ? (

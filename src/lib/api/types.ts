@@ -75,6 +75,7 @@ export type ProductPage = Omit<Concrete<Schemas["ProductSearchResponse"]>, "item
 };
 
 export type ProductSlug = Concrete<Schemas["ProductSlugResponse"]>;
+export type PartNumberMatch = Concrete<Schemas["PartNumberMatchResponse"]>;
 
 export type Hotline = Concrete<Schemas["PublicHotline"]>;
 export type CompanySection = Concrete<Schemas["PublicSection"]>;

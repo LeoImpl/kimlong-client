@@ -78,6 +78,13 @@ describe("parseBasket", () => {
     expect(parseBasket('[{"productSlug":"x"}]')).toEqual([]);
   });
 
+  it("keeps a part number the catalogue does not list, but not a line with nothing to quote", () => {
+    const unlisted = line({ productSlug: null, productName: "XYZ-1", partNumber: "XYZ-1" });
+    expect(parseBasket(JSON.stringify([unlisted]))).toEqual([unlisted]);
+    const empty = line({ productSlug: null, partNumber: null });
+    expect(parseBasket(JSON.stringify([empty]))).toEqual([]);
+  });
+
   it("repairs a quantity that would be rejected by the API", () => {
     const stored = JSON.stringify([line({ quantity: 0 })]);
     expect(parseBasket(stored)[0].quantity).toBe(1);

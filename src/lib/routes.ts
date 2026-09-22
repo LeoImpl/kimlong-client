@@ -8,6 +8,7 @@ export const routes = {
   contact: "/lien-he",
   quote: "/yeu-cau-bao-gia",
   quoteSent: "/yeu-cau-bao-gia/da-gui",
+  quickOrder: "/dat-hang-nhanh",
   products: "/san-pham",
   product: (slug: string) => `/san-pham/${encodeURIComponent(slug)}`,
   categories: "/danh-muc",

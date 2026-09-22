@@ -2,115 +2,77 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ArrowRight, Check, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Select } from "@/components/ui/Field";
-import { DEFAULT_UNIT, MAX_LINES, type BasketLine } from "@/lib/basket";
+import { DEFAULT_UNIT, MAX_LINES, MAX_QUANTITY } from "@/lib/basket";
 import { basket, useBasket } from "@/lib/basket-store";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/cn";
 
-const UNITS = ["cái", "bộ", "chiếc", "mét", "kg", "lít", "hộp"];
-
 /**
- * Adds one line to the quote basket. On a product with several part numbers the buyer picks which one — that is
- * the whole point for a maintenance engineer, who needs the exact size, not the family.
+ * Adds a product without part numbers to the quote basket, as a family. Products with part numbers are ordered
+ * through the variant matrix instead, where each size gets its own quantity.
  *
- * After adding, the button turns into a link to the basket rather than a toast that disappears: a buyer who
- * added three filters wants to know where they went.
+ * After adding, a link to the basket replaces the hint rather than a toast that disappears: a buyer who added
+ * three filters wants to know where they went.
  */
 export function AddToQuote({
   product,
-  partNumbers,
   className,
 }: {
   product: { slug: string; name: string; imageUrl: string | null };
-  partNumbers: string[];
   className?: string;
 }) {
   const lines = useBasket();
-  const [partNumber, setPartNumber] = useState(partNumbers[0] ?? "");
   const [quantity, setQuantity] = useState(1);
-  const [unit, setUnit] = useState(DEFAULT_UNIT);
   const [added, setAdded] = useState(false);
 
   const full = lines.length >= MAX_LINES;
 
   function add() {
-    const line: BasketLine = {
+    basket.add({
       productSlug: product.slug,
       productName: product.name,
-      partNumber: partNumber || null,
+      partNumber: null,
       quantity,
-      unit,
+      unit: DEFAULT_UNIT,
       imageUrl: product.imageUrl,
-    };
-    basket.add(line);
+    });
     setAdded(true);
   }
 
   return (
-    <div className={cn("rounded-lg border border-line bg-surface p-4", className)}>
-      <p className="text-sm font-medium text-ink">Thêm vào yêu cầu báo giá</p>
-
-      <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-        {partNumbers.length > 1 && (
-          <label className="block text-sm">
-            <span className="mb-1 block text-muted">Mã sản phẩm</span>
-            <Select
-              value={partNumber}
-              onChange={(event) => {
-                setPartNumber(event.target.value);
-                setAdded(false);
-              }}
-              className="font-mono"
-            >
-              {partNumbers.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </Select>
-          </label>
-        )}
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">Số lượng</span>
-          <input
-            type="number"
-            min={1}
-            max={9999}
-            value={quantity}
-            onChange={(event) => {
-              setQuantity(Number(event.target.value));
-              setAdded(false);
-            }}
-            className="h-10 w-24 rounded-md border border-line-strong bg-page px-3 text-sm text-ink"
-          />
-        </label>
-
-        <label className="block text-sm">
-          <span className="mb-1 block text-muted">Đơn vị</span>
-          <Select value={unit} onChange={(event) => setUnit(event.target.value)} className="w-28">
-            {UNITS.map((value) => (
-              <option key={value} value={value}>
-                {value}
-              </option>
-            ))}
-          </Select>
-        </label>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <Button onClick={add} disabled={full} size="lg">
-          Thêm vào yêu cầu
-        </Button>
-        {added && (
-          <Link href={routes.quote} className="text-sm font-medium text-brand-700 hover:underline">
-            Đã thêm · Xem yêu cầu ({lines.length})
-          </Link>
-        )}
-        {full && <span className="text-sm text-warning">Danh sách đã đủ {MAX_LINES} dòng.</span>}
-      </div>
+    <div className={cn("flex flex-wrap items-end gap-3", className)}>
+      <label className="block text-sm">
+        <span className="mb-1 block text-xs font-medium text-muted">Số lượng ({DEFAULT_UNIT})</span>
+        <input
+          type="number"
+          inputMode="numeric"
+          min={1}
+          max={MAX_QUANTITY}
+          value={quantity}
+          onChange={(event) => {
+            setQuantity(Number(event.target.value));
+            setAdded(false);
+          }}
+          className="h-12 w-28 rounded-md border border-line-strong bg-page px-3 text-right font-mono text-sm text-ink shadow-card focus:border-brand-700"
+        />
+      </label>
+      <Button onClick={add} disabled={full} size="lg">
+        <ClipboardList className="size-4" strokeWidth={1.5} aria-hidden />
+        Thêm vào yêu cầu báo giá
+      </Button>
+      {added && (
+        <Link
+          href={routes.quote}
+          className="inline-flex items-center gap-1.5 self-center text-sm font-semibold text-success hover:underline"
+        >
+          <Check className="size-4" strokeWidth={2} aria-hidden />
+          Đã thêm · Xem yêu cầu ({lines.length})
+          <ArrowRight className="size-3.5" strokeWidth={1.5} aria-hidden />
+        </Link>
+      )}
+      {full && <span className="text-sm text-warning">Danh sách đã đủ {MAX_LINES} dòng.</span>}
     </div>
   );
 }

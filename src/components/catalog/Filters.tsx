@@ -1,41 +1,30 @@
 import Link from "next/link";
 import { ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/cn";
-import type { CategoryNode, Facets } from "@/lib/api/types";
-import { routes } from "@/lib/routes";
+import type { Facets } from "@/lib/api/types";
 
 /**
  * Filter sidebar driven by the API's facet counts, as accordion groups. Every option is a plain link to a real
  * URL and every group a native `<details>`, so filtering is crawlable, shareable and works without JavaScript —
  * and a count of zero simply never appears, because the API leaves empty facets out.
  *
+ * Product types are chosen with the tabs above the listing (`CategoryTabs`), so the sidebar only filters.
  * Only facets the catalogue records are offered. Standards (ISO/DIN), material or live stock would need data
  * the API does not have yet; an empty filter group would only promise something the list cannot deliver.
  */
 export function Filters({
   facets,
-  subcategories: subcategoryNodes,
   activeBrand,
-  activeCategory,
   basePath,
   params,
 }: {
   facets: Facets | null;
-  subcategories?: CategoryNode[];
   activeBrand?: string;
-  activeCategory?: string;
   basePath: string;
   params: Record<string, string | undefined>;
 }) {
   const brands = facets?.brands ?? [];
-  const subcategories = (subcategoryNodes ?? [])
-    .map((child) => ({
-      child,
-      count: facets?.categories.find((c) => c.slug === child.slug)?.count ?? 0,
-    }))
-    .filter((entry) => entry.count > 0);
-
-  if (brands.length === 0 && subcategories.length === 0) return null;
+  if (brands.length === 0) return null;
 
   // Changing a filter always returns to page 1; keeping the old page number is how a listing shows "no results"
   // for a filter that clearly has some.
@@ -78,20 +67,6 @@ export function Filters({
             <X className="size-3" strokeWidth={1.5} aria-hidden />
           </Link>
         </div>
-      )}
-
-      {subcategories.length > 0 && (
-        <Group title="Danh mục con">
-          {subcategories.map(({ child, count }) => (
-            <Option
-              key={child.slug}
-              href={routes.category(child.slug)}
-              label={child.name}
-              count={count}
-              active={activeCategory === child.slug}
-            />
-          ))}
-        </Group>
       )}
 
       {brands.length > 0 && (
@@ -139,7 +114,7 @@ function Option({
   label: string;
   count?: number;
   active?: boolean;
-  /** Render a checkbox look: brand filters toggle, sub-categories navigate. */
+  /** Render a checkbox look for filters that toggle. */
   check?: boolean;
 }) {
   return (

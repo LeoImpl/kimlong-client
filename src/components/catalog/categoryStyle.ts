@@ -1,4 +1,4 @@
-import { Cpu, Factory, Wind, type LucideIcon } from "lucide-react";
+import { Cpu, Droplet, Factory, Funnel, Wind, type LucideIcon } from "lucide-react";
 
 export interface CategoryStyle {
   icon: LucideIcon;
@@ -34,6 +34,18 @@ const styles: Record<string, CategoryStyle> = {
     chip: "hover:border-amber-300 hover:bg-amber-50 hover:text-amber-800",
   },
 };
+
+/** Icons for individual product types, so oil, air and separator filters also differ by shape, not only by name. */
+const typeIcons: Record<string, LucideIcon> = {
+  "loc-dau": Droplet,
+  "loc-gio": Wind,
+  "loc-tach-dau": Funnel,
+};
+
+/** The icon for a type inside a family, falling back to the family's own. */
+export function typeIcon(slug: string, family: CategoryStyle): LucideIcon {
+  return typeIcons[slug] ?? family.icon;
+}
 
 export function categoryStyle(slug: string): CategoryStyle {
   return styles[slug] ?? styles["phu-tung-may-nen-khi"];

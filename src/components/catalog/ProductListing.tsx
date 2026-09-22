@@ -51,40 +51,18 @@ export function ProductListing({
     );
   }
 
-  const href = (changes: Record<string, string | undefined>) => {
-    const search = new URLSearchParams();
-    for (const [key, value] of Object.entries({ ...params, ...changes })) {
-      if (value) search.set(key, value);
-    }
-    const query = search.toString();
-    return query ? `${basePath}?${query}` : basePath;
-  };
   const view = listingView(params.view);
+  const href = listingHref(basePath, params);
 
   return (
-    // `min-w-0`: as a grid item this would otherwise grow to the table's width and scroll the whole page.
     <div className="min-w-0 space-y-4">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted">
-          <strong className="font-mono font-semibold text-ink">{result.totalItems}</strong> sản phẩm
-          {result.totalPages > 1 && (
-            <span className="ml-2 font-mono text-xs">
-              · trang {result.page + 1}/{result.totalPages}
-            </span>
-          )}
-        </p>
-        <nav
-          aria-label="Kiểu hiển thị"
-          className="flex rounded-md border border-line/80 bg-page p-0.5 shadow-card"
-        >
-          <ViewLink href={href({ view: undefined })} active={view === "grid"} label="Dạng lưới">
-            <LayoutGrid className="size-4" strokeWidth={1.5} aria-hidden />
-          </ViewLink>
-          <ViewLink href={href({ view: "bang" })} active={view === "table"} label="Dạng bảng">
-            <Rows3 className="size-4" strokeWidth={1.5} aria-hidden />
-          </ViewLink>
-        </nav>
-      </div>
+      <ListingToolbar
+        total={result.totalItems}
+        page={result.page}
+        totalPages={result.totalPages}
+        basePath={basePath}
+        params={params}
+      />
 
       {view === "table" ? (
         <ProductTable products={result.items} />
@@ -99,6 +77,58 @@ export function ProductListing({
           buildHref={(page) => href({ page: page > 0 ? String(page) : undefined })}
         />
       </div>
+    </div>
+  );
+}
+
+function listingHref(basePath: string, params: Record<string, string | undefined>) {
+  return (changes: Record<string, string | undefined>) => {
+    const search = new URLSearchParams();
+    for (const [key, value] of Object.entries({ ...params, ...changes })) {
+      if (value) search.set(key, value);
+    }
+    const query = search.toString();
+    return query ? `${basePath}?${query}` : basePath;
+  };
+}
+
+/** Result count and the grid/table switch. */
+function ListingToolbar({
+  total,
+  page = 0,
+  totalPages = 1,
+  basePath,
+  params,
+}: {
+  total: number;
+  page?: number;
+  totalPages?: number;
+  basePath: string;
+  params: Record<string, string | undefined>;
+}) {
+  const view = listingView(params.view);
+  const href = listingHref(basePath, { ...params, page: undefined });
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <p className="text-sm text-muted">
+        <strong className="font-mono font-semibold text-ink">{total}</strong> sản phẩm
+        {totalPages > 1 && (
+          <span className="ml-2 font-mono text-xs">
+            · trang {page + 1}/{totalPages}
+          </span>
+        )}
+      </p>
+      <nav
+        aria-label="Kiểu hiển thị"
+        className="flex rounded-md border border-line/80 bg-page p-0.5 shadow-card"
+      >
+        <ViewLink href={href({ view: undefined })} active={view === "grid"} label="Dạng lưới">
+          <LayoutGrid className="size-4" strokeWidth={1.5} aria-hidden />
+        </ViewLink>
+        <ViewLink href={href({ view: "bang" })} active={view === "table"} label="Dạng bảng">
+          <Rows3 className="size-4" strokeWidth={1.5} aria-hidden />
+        </ViewLink>
+      </nav>
     </div>
   );
 }

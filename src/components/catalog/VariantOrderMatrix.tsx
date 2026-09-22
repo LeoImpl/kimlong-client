@@ -136,8 +136,9 @@ export function VariantOrderMatrix({
                 <tr
                   key={variant.partNumber}
                   className={cn(
-                    "transition-colors hover:bg-slate-50/80",
-                    quantity > 0 && "bg-brand-50/60 hover:bg-brand-50",
+                    "transition-colors duration-300 hover:bg-slate-50/80",
+                    quantity > 0 &&
+                      "bg-brand-50/70 shadow-[inset_3px_0_0_var(--color-brand-600)] hover:bg-brand-50",
                   )}
                 >
                   <td className="border-b border-line/80 px-4 py-2">
@@ -206,7 +207,7 @@ export function VariantOrderMatrix({
           {added !== null ? (
             <Link
               href={routes.quote}
-              className="inline-flex items-center gap-1.5 font-semibold text-success hover:underline"
+              className="inline-flex animate-pop items-center gap-1.5 font-semibold text-success hover:underline"
             >
               <Check className="size-4" strokeWidth={2} aria-hidden />
               Đã thêm {added} mã · Xem yêu cầu ({lines.length})

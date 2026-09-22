@@ -20,6 +20,10 @@
   --color-brand-800: #3730a3;
   --color-brand-900: #312e81;
 
+  /* Second accent: cyan, for highlights on dark surfaces and gradients with the indigo. */
+  --color-cyan-accent: #06b6d4;
+  --color-cyan-soft: #ecfeff;
+
   /* Primary actions: deep navy. */
   --color-navy: #0f172a;
   --color-navy-hover: #1e293b;
@@ -45,6 +49,76 @@
   /* One elevation. Cards sit on the canvas with a hairline and a breath of shadow, never a floating drop. */
   --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05);
   --shadow-pop: 0 8px 24px -6px rgb(15 23 42 / 0.12), 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  --shadow-glow: 0 12px 32px -8px rgb(67 56 202 / 0.35);
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.5s ease-out both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-bump: bump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-ping-slow: ping-slow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes bump {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.35);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes ping-slow {
+    75%,
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
 }
 
 /* `inline` so the utility keeps the reference: next/font sets these variables on <html>, see app/layout.tsx. */
@@ -81,4 +155,129 @@ body {
   .font-mono {
     font-variant-numeric: tabular-nums;
   }
+}
+
+/**
+ * Visual layer. Everything here is decoration on top of a page that already works without it: patterns are
+ * background images, motion is CSS only, and all of it switches off for visitors who ask for reduced motion.
+ */
+@layer utilities {
+  /* Blueprint grid — the engineering-drawing texture behind hero and banner sections. */
+  .bg-blueprint {
+    background-image:
+      linear-gradient(to right, rgb(148 163 184 / 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(148 163 184 / 0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .bg-blueprint-fade {
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 40%, transparent 100%);
+  }
+  .bg-dots {
+    background-image: radial-gradient(rgb(100 116 139 / 0.18) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+
+  .text-gradient {
+    background: linear-gradient(100deg, #a5b4fc 0%, #67e8f9 55%, #e0e7ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-ink {
+    background: linear-gradient(
+      100deg,
+      var(--color-brand-900) 0%,
+      var(--color-brand-600) 60%,
+      #0891b2 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* A light sweep across a call to action on hover. */
+  .shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .shine::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      110deg,
+      transparent 30%,
+      rgb(255 255 255 / 0.22) 50%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+  }
+  .shine:hover::after {
+    transform: translateX(120%);
+  }
+
+  /* Hover lift for cards: a clear "this is clickable" without moving the layout around it. */
+  .lift {
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-pop);
+  }
+
+  /* Children fade up one after another; `--i` is set per child, capped so long lists do not drag. */
+  .stagger > * {
+    animation: var(--animate-fade-up);
+    animation-delay: calc(min(var(--i, 0), 8) * 60ms);
+  }
+}
+
+/* Reveal on scroll where the browser supports scroll-driven animation; elsewhere the content is simply there. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
+/* Skeletons shimmer instead of pulsing. */
+.animate-pulse.bg-line {
+  animation: none;
+  background: linear-gradient(90deg, var(--color-line) 0%, #f1f5f9 50%, var(--color-line) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    animation: none !important;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
 }

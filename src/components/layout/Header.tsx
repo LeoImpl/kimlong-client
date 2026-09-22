@@ -25,7 +25,7 @@ import { routes } from "@/lib/routes";
 export function Header() {
   return (
     <header>
-      <div className="hidden bg-navy md:block">
+      <div className="hidden bg-linear-to-r from-navy via-brand-900 to-navy md:block">
         <Container className="flex h-9 items-center justify-between text-xs text-slate-300">
           <p className="flex items-center gap-2">
             <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden />
@@ -37,7 +37,11 @@ export function Header() {
         </Container>
       </div>
 
-      <div className="sticky top-0 z-40 border-b border-line/80 bg-page/95 backdrop-blur">
+      <div className="sticky top-0 z-40 border-b border-line/80 bg-page/90 backdrop-blur-md">
+        <span
+          className="absolute inset-x-0 bottom-[-1px] h-px bg-linear-to-r from-transparent via-brand-500/60 to-transparent"
+          aria-hidden
+        />
         <Container className="flex h-16 items-center gap-3 lg:gap-6">
           <Logo />
           <div className="hidden flex-1 md:flex">

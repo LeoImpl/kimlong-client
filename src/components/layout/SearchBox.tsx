@@ -99,8 +99,8 @@ export function SearchBox({
       <button
         type="submit"
         className={cn(
-          "absolute top-1/2 right-1 -translate-y-1/2 rounded bg-navy px-4 text-sm font-semibold text-white",
-          "transition-colors hover:bg-navy-hover",
+          "absolute top-1/2 right-1 -translate-y-1/2 rounded bg-linear-to-r from-navy to-brand-900 px-4 text-sm font-semibold text-white",
+          "transition-all hover:from-brand-900 hover:to-brand-700",
           size === "lg" ? "h-10" : "h-8",
         )}
       >

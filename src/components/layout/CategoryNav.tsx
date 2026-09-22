@@ -23,7 +23,7 @@ export async function CategoryNav() {
           <li key={root.slug} className="group relative">
             <Link
               href={routes.category(root.slug)}
-              className="flex h-11 items-center gap-1 border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-900 hover:text-ink"
+              className="flex h-11 items-center gap-1 border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-600 hover:text-ink"
             >
               {root.name}
               {root.children.length > 0 && <Chevron />}
@@ -34,7 +34,7 @@ export async function CategoryNav() {
         <li>
           <Link
             href={routes.brands}
-            className="flex h-11 items-center border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-900 hover:text-ink"
+            className="flex h-11 items-center border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-600 hover:text-ink"
           >
             Thương hiệu
           </Link>
@@ -42,7 +42,7 @@ export async function CategoryNav() {
         <li>
           <Link
             href={routes.about}
-            className="flex h-11 items-center border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-900 hover:text-ink"
+            className="flex h-11 items-center border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-600 hover:text-ink"
           >
             Giới thiệu
           </Link>
@@ -50,7 +50,7 @@ export async function CategoryNav() {
         <li>
           <Link
             href={routes.contact}
-            className="flex h-11 items-center border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-900 hover:text-ink"
+            className="flex h-11 items-center border-b-2 border-transparent px-3 text-[13px] font-semibold text-body transition-colors hover:border-brand-600 hover:text-ink"
           >
             Liên hệ
           </Link>
@@ -62,7 +62,7 @@ export async function CategoryNav() {
 
 function Submenu({ items }: { items: CategoryNode[] }) {
   return (
-    <ul className="invisible absolute top-full left-0 z-20 min-w-60 rounded-lg border border-line/80 bg-page py-1.5 opacity-0 shadow-pop transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+    <ul className="invisible absolute top-full left-0 z-20 min-w-60 rounded-lg border border-line/80 bg-page py-1.5 opacity-0 shadow-pop transition-[opacity,transform] duration-200 translate-y-1 group-hover:translate-y-0 group-focus-within:translate-y-0 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
       {items.map((child) => (
         <li key={child.slug}>
           <Link

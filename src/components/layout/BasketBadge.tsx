@@ -20,7 +20,11 @@ export function BasketBadge() {
       <ClipboardList className="size-4" strokeWidth={1.5} aria-hidden />
       <span className="hidden sm:inline">Yêu cầu báo giá</span>
       {lines.length > 0 && (
-        <span className="inline-flex h-5 min-w-5 items-center justify-center rounded bg-brand-900 px-1 font-mono text-[11px] font-semibold text-white">
+        // Keyed by the count, so the badge re-mounts and bumps each time a line is added.
+        <span
+          key={lines.length}
+          className="inline-flex h-5 min-w-5 animate-bump items-center justify-center rounded bg-linear-to-br from-brand-700 to-cyan-600 px-1 font-mono text-[11px] font-semibold text-white"
+        >
           {lines.length}
         </span>
       )}

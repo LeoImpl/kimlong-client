@@ -55,7 +55,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Tới nội dung chính
         </a>
         <Header />
-        <main id="main">{children}</main>
+        <main id="main" className="relative isolate">
+          {/* A tinted blueprint band behind the top of every page; the home hero paints over it. */}
+          <div
+            className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80 overflow-hidden"
+            aria-hidden
+          >
+            <div className="absolute -top-32 left-[10%] size-96 rounded-full bg-brand-200/50 blur-3xl" />
+            <div className="absolute -top-24 right-[5%] size-80 rounded-full bg-cyan-200/40 blur-3xl" />
+            <div className="bg-blueprint bg-blueprint-fade absolute inset-0" />
+          </div>
+          {children}
+        </main>
         <Footer />
         {/* Reserves the height of the sticky mobile bar so it never covers the end of the page. */}
         <div className="h-14 md:hidden" aria-hidden />

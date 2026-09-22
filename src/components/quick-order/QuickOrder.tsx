@@ -394,7 +394,7 @@ export function QuickOrder() {
           </p>
 
           {notice && (
-            <Alert tone={notice.tone} className="mt-4">
+            <Alert tone={notice.tone} className="mt-4 animate-pop">
               {notice.text}
               {notice.tone === "success" && (
                 <Link
@@ -430,7 +430,7 @@ function RowStatus({
   const match = lookup.get(key);
   if (match) {
     return (
-      <span className="flex min-w-0 items-center gap-2">
+      <span className="flex min-w-0 animate-fade-in items-center gap-2">
         <CheckCircle2 className="size-4 shrink-0 text-success" strokeWidth={1.5} aria-hidden />
         <Link
           href={routes.product(match.productSlug)}
@@ -447,7 +447,7 @@ function RowStatus({
   }
   if (match === null) {
     return (
-      <span className="flex items-center gap-2 text-warning">
+      <span className="flex animate-fade-in items-center gap-2 text-warning">
         <CircleDashed className="size-4 shrink-0" strokeWidth={1.5} aria-hidden />
         Chưa có trên web · sales kiểm tra
       </span>

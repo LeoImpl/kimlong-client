@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
+import { ArrowRight, FileUp } from "lucide-react";
 import { connection } from "next/server";
 import { ProductGrid } from "@/components/catalog/ProductCard";
 import { SearchBox } from "@/components/layout/SearchBox";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container, SectionHeading } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
-import { getCategories, listProducts } from "@/lib/api/catalog";
+import { flattenCategories, getBrands, getCategories, listProducts } from "@/lib/api/catalog";
 import { getCompany, getPartners } from "@/lib/api/company";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
 import { routes } from "@/lib/routes";
@@ -41,22 +42,66 @@ export default function Home() {
         <StructuredData />
       </Suspense>
 
-      <section className="border-b border-line bg-linear-to-b from-surface to-page">
-        <Container className="py-12 lg:py-20">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-balance text-ink sm:text-4xl lg:text-5xl">
+      <section className="border-b border-line/80 bg-page">
+        <Container className="grid gap-10 py-10 lg:grid-cols-12 lg:py-14">
+          <div className="lg:col-span-7">
+            <p className="font-mono text-xs font-medium tracking-wider text-brand-700 uppercase">
+              Nhà cung cấp B2B · Phụ tùng công nghiệp
+            </p>
+            <h1 className="mt-3 text-3xl font-bold tracking-tight text-balance text-ink sm:text-4xl">
               Phụ tùng máy nén khí &amp; thiết bị tự động hóa chính hãng
             </h1>
-            <p className="mt-4 text-lg text-balance text-body">
-              Tra cứu theo mã sản phẩm hoặc tên thiết bị. Báo giá nhanh, giao hàng toàn quốc.
+            <p className="mt-4 max-w-xl text-base text-balance text-body sm:text-lg">
+              Tra cứu theo mã sản phẩm, part number hoặc hãng. Báo giá sỉ theo số lượng, giao hàng
+              toàn quốc.
             </p>
-            <div className="mt-8">
+            <div className="mt-7 max-w-xl">
               <SearchBox size="lg" />
             </div>
-            <p className="mt-3 text-sm text-muted">
-              Ví dụ: <SearchExample q="1613900100" />, <SearchExample q="DSBC-32-50" />,{" "}
+            <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-muted">
+              Thử:
+              <SearchExample q="1613900100" />
+              <SearchExample q="DSBC-32-50" />
               <SearchExample q="lọc dầu Atlas Copco" />
             </p>
+            <Suspense fallback={<StatsSkeleton />}>
+              <CatalogueStats />
+            </Suspense>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="rounded-lg border border-line/80 bg-canvas p-6 shadow-card">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center rounded-md bg-navy text-white">
+                  <FileUp className="size-5" strokeWidth={1.5} aria-hidden />
+                </span>
+                <div>
+                  <h2 className="text-base font-semibold text-ink">Có sẵn danh sách mã?</h2>
+                  <p className="text-sm text-muted">Đặt nhiều mã trong một lần gửi.</p>
+                </div>
+              </div>
+              <ol className="mt-5 space-y-3">
+                {[
+                  ["Dán từ Excel hoặc tải lên CSV", "Mã sản phẩm và số lượng, mỗi dòng một mã."],
+                  ["Đối chiếu danh mục tức thì", "Mã có trên web được nhận diện ngay."],
+                  ["Nhận báo giá qua email", "Cả những mã chưa có trên web."],
+                ].map(([title, detail], index) => (
+                  <li key={title} className="flex gap-3">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-line-strong bg-page font-mono text-xs font-semibold text-ink">
+                      {index + 1}
+                    </span>
+                    <span>
+                      <span className="block text-sm font-semibold text-ink">{title}</span>
+                      <span className="block text-sm text-muted">{detail}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+              <ButtonLink href={routes.quickOrder} size="lg" className="mt-6 w-full">
+                Đặt hàng nhanh
+                <ArrowRight className="size-4" strokeWidth={1.5} aria-hidden />
+              </ButtonLink>
+            </div>
           </div>
         </Container>
       </section>
@@ -67,7 +112,7 @@ export default function Home() {
         </Suspense>
       </Container>
 
-      <section className="border-y border-line bg-surface">
+      <section className="border-y border-line/80 bg-page">
         <Container className="py-12 lg:py-16">
           <Suspense fallback={<ProductsSkeleton />}>
             <FeaturedProducts />
@@ -81,20 +126,29 @@ export default function Home() {
         </Suspense>
       </Container>
 
-      <section className="border-t border-line bg-brand-700">
-        <Container className="flex flex-col items-center gap-4 py-12 text-center">
-          <h2 className="text-2xl font-bold text-white">Cần báo giá cho nhiều mã cùng lúc?</h2>
-          <p className="max-w-xl text-brand-100">
-            Gửi danh sách mã sản phẩm và số lượng, chúng tôi báo giá trong giờ làm việc.
-          </p>
-          <div className="mt-2 flex flex-wrap justify-center gap-3">
-            <ButtonLink href={routes.quote} variant="secondary" size="lg">
-              Yêu cầu báo giá
+      <section className="bg-navy">
+        <Container className="flex flex-col items-start justify-between gap-6 py-10 lg:flex-row lg:items-center">
+          <div>
+            <h2 className="text-xl font-bold text-white sm:text-2xl">
+              Cần báo giá cho nhiều mã cùng lúc?
+            </h2>
+            <p className="mt-2 max-w-xl text-slate-300">
+              Gửi danh sách mã sản phẩm và số lượng, chúng tôi báo giá trong giờ làm việc.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <ButtonLink
+              href={routes.quickOrder}
+              size="lg"
+              className="bg-white text-ink hover:bg-slate-100 active:bg-slate-200"
+            >
+              <FileUp className="size-4" strokeWidth={1.5} aria-hidden />
+              Gửi danh sách mã
             </ButtonLink>
             <ButtonLink
               href={routes.contact}
               size="lg"
-              className="bg-brand-900 hover:bg-brand-900/80"
+              className="border border-slate-600 bg-transparent shadow-none hover:bg-navy-hover"
             >
               Liên hệ tư vấn
             </ButtonLink>
@@ -103,6 +157,36 @@ export default function Home() {
       </section>
     </>
   );
+}
+
+/** Real counts from the API — a buyer judging a supplier trusts a number more than an adjective. */
+async function CatalogueStats() {
+  await connection();
+  const [products, categories, brands] = await Promise.all([
+    listProducts({ size: 1 }),
+    getCategories(),
+    getBrands(),
+  ]);
+  const stats = [
+    { value: products.totalItems, label: "sản phẩm" },
+    { value: flattenCategories(categories).length, label: "danh mục" },
+    { value: brands.length, label: "thương hiệu" },
+  ];
+
+  return (
+    <dl className="mt-8 flex max-w-xl divide-x divide-line/80 rounded-lg border border-line/80 bg-canvas">
+      {stats.map((stat) => (
+        <div key={stat.label} className="flex-1 px-4 py-3">
+          <dt className="text-xs text-muted">{stat.label}</dt>
+          <dd className="font-mono text-xl font-semibold text-ink">{stat.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+function StatsSkeleton() {
+  return <Skeleton className="mt-8 h-16 max-w-xl" />;
 }
 
 /**
@@ -140,7 +224,10 @@ async function StructuredData() {
 
 function SearchExample({ q }: { q: string }) {
   return (
-    <Link href={routes.search(q)} className="text-brand-700 hover:underline">
+    <Link
+      href={routes.search(q)}
+      className="rounded-md border border-line/80 bg-canvas px-2 py-0.5 font-mono text-xs text-body transition-colors hover:border-brand-300 hover:text-brand-800"
+    >
       {q}
     </Link>
   );
@@ -167,7 +254,7 @@ async function Categories() {
       />
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((root) => (
-          <li key={root.slug} className="rounded-lg border border-line bg-page p-5">
+          <li key={root.slug} className="rounded-lg border border-line/80 bg-page p-5 shadow-card">
             <h3 className="text-base font-semibold text-ink">
               <Link href={routes.category(root.slug)} className="hover:text-brand-700">
                 {root.name}
@@ -178,7 +265,7 @@ async function Categories() {
                 <li key={child.slug}>
                   <Link
                     href={routes.category(child.slug)}
-                    className="inline-flex rounded-full border border-line px-3 py-1 text-sm text-body hover:border-brand-300 hover:text-brand-700"
+                    className="inline-flex rounded-md border border-line/80 bg-canvas px-2.5 py-1 text-sm text-body transition-colors hover:border-brand-300 hover:text-brand-800"
                   >
                     {child.name}
                   </Link>
@@ -232,7 +319,7 @@ async function Partners() {
         {partners.map((partner) => (
           <li
             key={partner.slug}
-            className="flex h-24 items-center justify-center rounded-lg border border-line bg-page p-4"
+            className="flex h-24 items-center justify-center rounded-lg border border-line/80 bg-page p-4 shadow-card grayscale transition hover:grayscale-0"
           >
             {partner.logoUrl ? (
               <span className="relative h-full w-full">

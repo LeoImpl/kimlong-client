@@ -7,7 +7,11 @@
  */
 
 export interface BasketLine {
-  productSlug: string;
+  /**
+   * Null for a part number the catalogue does not list (typed or uploaded on the quick order page). Such a line
+   * still goes to sales: the API resolves part numbers itself, and an unlisted part is often one we can source.
+   */
+  productSlug: string | null;
   productName: string;
   /** A product may be added as a whole family (null) or as one specific part number. */
   partNumber: string | null;
@@ -26,7 +30,7 @@ export const STORAGE_KEY = "kimlong.quote-basket.v1";
 
 /** A line is identified by product and part number, so the same product can be asked for in two sizes. */
 export function lineId(line: Pick<BasketLine, "productSlug" | "partNumber">): string {
-  return `${line.productSlug}::${line.partNumber ?? ""}`;
+  return `${line.productSlug ?? ""}::${line.partNumber ?? ""}`;
 }
 
 export function addLine(lines: BasketLine[], line: BasketLine): BasketLine[] {
@@ -88,11 +92,14 @@ export function parseBasket(raw: string | null): BasketLine[] {
 function isBasketLine(value: unknown): value is BasketLine {
   if (typeof value !== "object" || value === null) return false;
   const line = value as Record<string, unknown>;
+  const slug = line.productSlug;
+  const partNumber = line.partNumber;
   return (
-    typeof line.productSlug === "string" &&
-    line.productSlug.length > 0 &&
+    (slug === null || (typeof slug === "string" && slug.length > 0)) &&
     typeof line.productName === "string" &&
-    (line.partNumber === null || typeof line.partNumber === "string") &&
+    (partNumber === null || typeof partNumber === "string") &&
+    // A line needs something sales can act on: a product, or at least a part number.
+    (slug !== null || (typeof partNumber === "string" && partNumber.length > 0)) &&
     typeof line.quantity === "number" &&
     typeof line.unit === "string" &&
     (line.imageUrl === null || typeof line.imageUrl === "string")

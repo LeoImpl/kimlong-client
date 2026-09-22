@@ -16,7 +16,7 @@ export async function submitQuoteRequest(request: SubmitQuoteRequest): Promise<S
 }
 
 export function quoteLine(line: {
-  productSlug: string;
+  productSlug: string | null;
   partNumber: string | null;
   quantity: number;
   unit: string;

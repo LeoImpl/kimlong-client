@@ -81,7 +81,7 @@ async function Reference({
   if (!reference) return null;
 
   return (
-    <div className="mt-6 rounded-lg border border-line bg-surface px-6 py-4">
+    <div className="mt-6 rounded-lg border border-line/80 bg-page shadow-card px-6 py-4">
       <p className="text-sm text-muted">Mã yêu cầu của bạn</p>
       <p className="mt-1 font-mono text-xl font-semibold tracking-tight text-ink select-all">
         {reference}

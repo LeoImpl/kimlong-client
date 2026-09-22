@@ -16,7 +16,7 @@ export function ProductGallery({ images, name }: { images: MediaFile[]; name: st
 
   return (
     <div className="space-y-3">
-      <div className="relative aspect-square overflow-hidden rounded-lg border border-line bg-page">
+      <div className="relative aspect-square overflow-hidden rounded-lg border border-line/80 bg-page shadow-card">
         <ProductImage
           src={current?.url ?? null}
           alt={name}
@@ -36,8 +36,10 @@ export function ProductGallery({ images, name }: { images: MediaFile[]; name: st
                 aria-label={`Ảnh ${index + 1} của ${name}`}
                 aria-current={index === active}
                 className={cn(
-                  "relative block aspect-square w-full overflow-hidden rounded border bg-page",
-                  index === active ? "border-brand-700" : "border-line hover:border-line-strong",
+                  "relative block aspect-square w-full overflow-hidden rounded-md border bg-page transition-colors",
+                  index === active
+                    ? "border-brand-900 ring-1 ring-brand-900"
+                    : "border-line hover:border-line-strong",
                 )}
               >
                 <ProductImage src={image.url} alt="" sizes="100px" className="p-1.5" />

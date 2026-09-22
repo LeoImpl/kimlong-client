@@ -53,7 +53,7 @@ async function ContactDetails() {
   );
 
   return (
-    <aside className="rounded-lg border border-line bg-surface p-5">
+    <aside className="rounded-lg border border-line/80 bg-page shadow-card p-5">
       <h2 className="text-base font-semibold text-ink">{company.legalName}</h2>
       {company.headquarters && <p className="mt-3 text-sm text-body">{company.headquarters}</p>}
 

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { FileUp, Package, Trash2 } from "lucide-react";
 import { flushSync } from "react-dom";
 import { ButtonLink, Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Feedback";
@@ -94,10 +95,20 @@ export function QuoteForm({ hotline }: { hotline: string | null }) {
       <Honeypot value={website} onChange={setWebsite} />
 
       <section aria-labelledby="lines-heading">
-        <h2 id="lines-heading" className="text-lg font-semibold text-ink">
-          Sản phẩm cần báo giá ({lines.length})
-        </h2>
-        <ul className="mt-4 divide-y divide-line border-y border-line">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h2 id="lines-heading" className="text-lg font-semibold text-ink">
+            Sản phẩm cần báo giá{" "}
+            <span className="font-mono text-base font-medium text-muted">({lines.length})</span>
+          </h2>
+          <Link
+            href={routes.quickOrder}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 hover:underline"
+          >
+            <FileUp className="size-4" strokeWidth={1.5} aria-hidden />
+            Thêm từ danh sách mã / CSV
+          </Link>
+        </div>
+        <ul className="mt-4 divide-y divide-line/80 overflow-hidden rounded-lg border border-line/80 bg-page shadow-card">
           {lines.map((line) => (
             <LineRow key={lineId(line)} line={line} disabled={sending} />
           ))}
@@ -122,7 +133,7 @@ export function QuoteForm({ hotline }: { hotline: string | null }) {
       </section>
 
       <section aria-labelledby="contact-heading" className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-lg border border-line bg-page p-5">
+        <div className="rounded-lg border border-line/80 bg-page p-5 shadow-card">
           <h2 id="contact-heading" className="text-lg font-semibold text-ink">
             Thông tin liên hệ
           </h2>
@@ -162,18 +173,24 @@ function LineRow({ line, disabled }: { line: BasketLine; disabled: boolean }) {
   const id = lineId(line);
 
   return (
-    <li className="flex gap-4 py-4">
-      <div className="relative size-16 shrink-0 overflow-hidden rounded border border-line bg-page">
-        {line.imageUrl && (
+    <li className="flex gap-4 px-4 py-4 transition-colors hover:bg-slate-50/80">
+      <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-md border border-line/80 bg-page">
+        {line.imageUrl ? (
           <Image src={line.imageUrl} alt="" fill sizes="64px" className="object-contain p-1" />
+        ) : (
+          <Package className="size-6 text-line-strong" strokeWidth={1.5} aria-hidden />
         )}
       </div>
 
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-ink">
-          <Link href={routes.product(line.productSlug)} className="hover:text-brand-700">
-            {line.productName}
-          </Link>
+          {line.productSlug ? (
+            <Link href={routes.product(line.productSlug)} className="hover:text-brand-700">
+              {line.productName}
+            </Link>
+          ) : (
+            line.productName
+          )}
         </p>
         {line.partNumber && (
           <div className="mt-1">
@@ -191,7 +208,7 @@ function LineRow({ line, disabled }: { line: BasketLine; disabled: boolean }) {
               value={line.quantity}
               disabled={disabled}
               onChange={(event) => basket.update(id, { quantity: Number(event.target.value) })}
-              className="h-9 w-20 rounded-md border border-line-strong bg-page px-2 text-sm text-ink"
+              className="h-9 w-20 rounded-md border border-line-strong bg-page px-2 text-right font-mono text-sm text-ink shadow-card focus:border-brand-700"
               aria-label={`Số lượng của ${line.productName}`}
             />
           </label>
@@ -214,8 +231,9 @@ function LineRow({ line, disabled }: { line: BasketLine; disabled: boolean }) {
             type="button"
             onClick={() => basket.remove(id)}
             disabled={disabled}
-            className="text-sm text-muted hover:text-danger"
+            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm text-muted transition-colors hover:bg-danger-soft hover:text-danger"
           >
+            <Trash2 className="size-4" strokeWidth={1.5} aria-hidden />
             Xóa
           </button>
         </div>

@@ -90,7 +90,7 @@ async function CategoryContent({ params, searchParams }: PageProps<"/danh-muc/[s
             <li key={child.slug}>
               <Link
                 href={routes.category(child.slug)}
-                className="inline-flex rounded-full border border-line bg-page px-3 py-1.5 text-sm text-body hover:border-brand-300 hover:text-brand-700"
+                className="inline-flex rounded-md border border-line/80 bg-page px-3 py-1.5 text-sm font-medium text-body shadow-card transition-colors hover:border-brand-300 hover:text-brand-800"
               >
                 {child.name}
               </Link>
@@ -117,24 +117,25 @@ async function Listing({
 }) {
   const resolved = await searchParams;
   const brand = single(resolved.brand);
+  const view = single(resolved.view);
   const page = Number(single(resolved.page) ?? 0) || 0;
 
   const result = await listProducts({ category: slug, brand, page, facets: true });
   const basePath = routes.category(slug);
 
   return (
-    <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]">
+    <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]">
       <Filters
         facets={result.facets}
         subcategories={subcategories}
         activeBrand={brand}
         basePath={basePath}
-        params={{ brand }}
+        params={{ brand, view }}
       />
       <ProductListing
         result={result}
         basePath={basePath}
-        params={{ brand }}
+        params={{ brand, view }}
         emptyTitle="Danh mục này chưa có sản phẩm nào trên website"
         emptyDescription="Kho còn nhiều mã chưa lên website — gọi hoặc gửi yêu cầu, chúng tôi kiểm tra và báo lại."
       />

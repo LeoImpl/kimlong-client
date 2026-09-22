@@ -82,6 +82,10 @@ export const basket = {
   add(line: BasketLine) {
     write(addLine(getSnapshot(), line));
   },
+  /** Several lines in one write, so other tabs and subscribers see one change rather than a burst. */
+  addAll(lines: BasketLine[]) {
+    write(lines.reduce(addLine, getSnapshot()));
+  },
   update(id: string, changes: Partial<BasketLine>) {
     write(updateLine(getSnapshot(), id, changes));
   },

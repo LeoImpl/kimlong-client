@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Zap } from "lucide-react";
 import { useState } from "react";
 import { flushSync } from "react-dom";
 import { Button } from "@/components/ui/Button";
@@ -76,7 +77,8 @@ export function QuickQuoteForm({
   if (!open) {
     return (
       <Button variant="secondary" size="lg" onClick={() => setOpen(true)}>
-        Báo giá nhanh mã này
+        <Zap className="size-4" strokeWidth={1.5} aria-hidden />
+        Báo giá nhanh
       </Button>
     );
   }
@@ -85,7 +87,7 @@ export function QuickQuoteForm({
     <form
       onSubmit={onSubmit}
       noValidate
-      className="relative rounded-lg border border-line bg-page p-5"
+      className="relative rounded-lg border border-line/80 bg-page p-5 shadow-card"
     >
       <Honeypot value={website} onChange={setWebsite} />
 

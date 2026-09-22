@@ -60,14 +60,15 @@ async function Results({ searchParams }: { searchParams: PageProps<"/san-pham">[
   const resolved = await searchParams;
   const q = single(resolved.q);
   const brand = single(resolved.brand);
+  const view = single(resolved.view);
   const page = Number(single(resolved.page) ?? 0) || 0;
 
   const criteria = { q, brand, page, facets: true };
   const result = q ? await searchProducts(criteria) : await listProducts(criteria);
-  const params = { q, brand };
+  const params = { q, brand, view };
 
   return (
-    <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]">
+    <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]">
       <Filters
         facets={result.facets}
         activeBrand={brand}
@@ -99,7 +100,7 @@ function single(value: string | string[] | undefined): string | undefined {
 
 function ListingSkeleton() {
   return (
-    <div className="mt-8 grid gap-8 lg:grid-cols-[220px_1fr]" aria-hidden>
+    <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]" aria-hidden>
       <div className="hidden space-y-3 lg:block">
         <Skeleton className="h-4 w-24" />
         <Skeleton className="h-32 w-full" />

@@ -38,7 +38,10 @@ async function CategoryTree() {
   return (
     <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {categories.map((root) => (
-        <section key={root.slug} className="rounded-lg border border-line bg-page p-5">
+        <section
+          key={root.slug}
+          className="rounded-lg border border-line/80 bg-page shadow-card p-5"
+        >
           <h2 className="text-base font-semibold text-ink">
             <Link href={routes.category(root.slug)} className="hover:text-brand-700">
               {root.name}

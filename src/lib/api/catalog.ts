@@ -1,6 +1,13 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { apiFetch, apiFetchOrNull } from "./client";
-import type { Brand, CategoryNode, ProductDetail, ProductPage, ProductSlug } from "./types";
+import type {
+  Brand,
+  CategoryNode,
+  PartNumberMatch,
+  ProductDetail,
+  ProductPage,
+  ProductSlug,
+} from "./types";
 
 /**
  * Catalogue reads.
@@ -95,6 +102,19 @@ export async function getProductSlugs(): Promise<ProductSlug[]> {
   cacheLife("hours");
   cacheTag(TAGS.slugs);
   return apiFetch<ProductSlug[]>("/api/public/v1/catalog/products/slugs");
+}
+
+/** The API's limit per lookup; the quick order page caps its rows at the same number. */
+export const MAX_PART_NUMBER_LOOKUP = 100;
+
+/**
+ * Resolves a buyer's list of part numbers in one request (quick order). Uncached for the same reason as search:
+ * the input is whatever was pasted. Unknown part numbers are simply absent from the result.
+ */
+export async function lookupPartNumbers(partNumbers: string[]): Promise<PartNumberMatch[]> {
+  if (partNumbers.length === 0) return [];
+  const search = new URLSearchParams(partNumbers.map((value) => ["pn", value]));
+  return apiFetch<PartNumberMatch[]>(`/api/public/v1/catalog/part-numbers?${search}`);
 }
 
 /** Flattens the category tree, for navigation and for generating routes. */

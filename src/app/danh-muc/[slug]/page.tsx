@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Filters } from "@/components/catalog/Filters";
+import { CategoryTabs } from "@/components/catalog/CategoryTabs";
+import { CategoryTypePicker } from "@/components/catalog/CategoryTypePicker";
 import { ProductListing } from "@/components/catalog/ProductListing";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Container } from "@/components/ui/Container";
@@ -84,62 +85,61 @@ async function CategoryContent({ params, searchParams }: PageProps<"/danh-muc/[s
       </h1>
       {category.description && <p className="mt-2 max-w-3xl text-body">{category.description}</p>}
 
-      {category.children.length > 0 && (
-        <ul className="mt-6 flex flex-wrap gap-2">
-          {category.children.map((child) => (
-            <li key={child.slug}>
-              <Link
-                href={routes.category(child.slug)}
-                className="inline-flex rounded-md border border-line/80 bg-page px-3 py-1.5 text-sm font-medium text-body shadow-card transition-colors hover:border-brand-300 hover:text-brand-800"
-              >
-                {child.name}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-
       <Suspense fallback={<ListingSkeleton />}>
-        <Listing slug={slug} searchParams={searchParams} subcategories={category.children} />
+        <Listing category={category} parent={path.at(-2)} searchParams={searchParams} />
       </Suspense>
     </Container>
   );
 }
 
 async function Listing({
-  slug,
+  category,
+  parent,
   searchParams,
-  subcategories,
 }: {
-  slug: string;
+  category: CategoryNode;
+  /** The category directly above this one, whose types become the tabs; none for a top-level category. */
+  parent?: CategoryNode;
   searchParams: PageProps<"/danh-muc/[slug]">["searchParams"];
-  subcategories: CategoryNode[];
 }) {
   const resolved = await searchParams;
   const brand = single(resolved.brand);
   const view = single(resolved.view);
   const page = Number(single(resolved.page) ?? 0) || 0;
 
-  const result = await listProducts({ category: slug, brand, page, facets: true });
-  const basePath = routes.category(slug);
+  // A family with types (e.g. compressor parts: oil, air and separator filters) lists nothing itself — the
+  // buyer picks a type, and each type page lists only that type.
+  if (category.children.length > 0) {
+    return <CategoryTypePicker family={category} brand={brand} />;
+  }
+
+  const result = await listProducts({ category: category.slug, brand, page, facets: true });
+  const basePath = routes.category(category.slug);
+  const params = { brand, view };
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]">
-      <Filters
-        facets={result.facets}
-        subcategories={subcategories}
-        activeBrand={brand}
-        basePath={basePath}
-        params={{ brand, view }}
-      />
-      <ProductListing
-        result={result}
-        basePath={basePath}
-        params={{ brand, view }}
-        emptyTitle="Danh mục này chưa có sản phẩm nào trên website"
-        emptyDescription="Kho còn nhiều mã chưa lên website — gọi hoặc gửi yêu cầu, chúng tôi kiểm tra và báo lại."
-      />
-    </div>
+    <>
+      {parent && (
+        <Suspense fallback={<TabsSkeleton />}>
+          <CategoryTabs root={parent} active={category.slug} brand={brand} />
+        </Suspense>
+      )}
+
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]">
+        <Filters facets={result.facets} activeBrand={brand} basePath={basePath} params={params} />
+        <ProductListing
+          result={result}
+          basePath={basePath}
+          params={params}
+          emptyTitle={
+            brand
+              ? `Chưa có ${category.name.toLowerCase()} của hãng này trên website`
+              : "Danh mục này chưa có sản phẩm nào trên website"
+          }
+          emptyDescription="Kho còn nhiều mã chưa lên website — gọi hoặc gửi yêu cầu, chúng tôi kiểm tra và báo lại."
+        />
+      </div>
+    </>
   );
 }
 
@@ -155,6 +155,16 @@ function PageSkeleton() {
       <Skeleton className="mt-4 h-9 w-72" />
       <ListingSkeleton />
     </Container>
+  );
+}
+
+function TabsSkeleton() {
+  return (
+    <div className="mt-6 flex gap-2" aria-hidden>
+      {["w-24", "w-28", "w-28", "w-32"].map((width) => (
+        <Skeleton key={width} className={`h-10 ${width}`} />
+      ))}
+    </div>
   );
 }
 

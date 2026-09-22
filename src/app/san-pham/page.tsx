@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { Filters } from "@/components/catalog/Filters";
 import { ProductListing } from "@/components/catalog/ProductListing";
 import { SearchBox } from "@/components/layout/SearchBox";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
-import { listProducts, searchProducts } from "@/lib/api/catalog";
+import { getBrands, getCategories, listProducts, searchProducts } from "@/lib/api/catalog";
+import { resolveSearchIntent } from "@/lib/search-intent";
 import { routes } from "@/lib/routes";
 
 /**
@@ -62,6 +64,17 @@ async function Results({ searchParams }: { searchParams: PageProps<"/san-pham">[
   const brand = single(resolved.brand);
   const view = single(resolved.view);
   const page = Number(single(resolved.page) ?? 0) || 0;
+
+  // A query that is just a product type ("lọc dầu", "lọc gió Kobelco") goes to that category: word search would
+  // mix in neighbouring types, e.g. every "lọc tách dầu" for "lọc dầu".
+  if (q && !brand && page === 0) {
+    const [categories, brands] = await Promise.all([getCategories(), getBrands()]);
+    const intent = resolveSearchIntent(q, categories, brands);
+    if (intent) {
+      const target = routes.category(intent.category);
+      redirect(intent.brand ? `${target}?brand=${encodeURIComponent(intent.brand)}` : target);
+    }
+  }
 
   const criteria = { q, brand, page, facets: true };
   const result = q ? await searchProducts(criteria) : await listProducts(criteria);

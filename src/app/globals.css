@@ -317,6 +317,27 @@ body {
   }
 }
 
+/**
+ * The brand strip (BrandMarquee): the track holds the list twice and moves left by half its width — one copy —
+ * then starts again, which the eye cannot tell from a continuous loop. The edges fade so logos slide in and out
+ * rather than being cut. It stops under the pointer and while a logo has keyboard focus.
+ */
+.marquee {
+  mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee-track {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 /* Sections rise as they scroll into view where the browser can do it without JavaScript; elsewhere they are
    simply there. */
 @supports (animation-timeline: view()) {
@@ -365,6 +386,22 @@ body {
     animation: none !important;
   }
   .resolve-pending {
+    display: none;
+  }
+  /* A still, wrapping row of logos instead of a moving strip; the duplicate list is dropped. */
+  .marquee {
+    mask-image: none;
+  }
+  .marquee-track {
+    width: auto;
+    animation: none !important;
+  }
+  .marquee-track > ul {
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-shrink: 1;
+  }
+  .marquee-track > ul[aria-hidden] {
     display: none;
   }
   .hover-lift:hover {

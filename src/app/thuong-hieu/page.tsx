@@ -49,7 +49,13 @@ async function BrandGrid() {
           >
             <div className="relative flex h-12 w-full items-center justify-center">
               {brand.logoUrl ? (
-                <Image src={brand.logoUrl} alt="" fill sizes="200px" className="object-contain" />
+                <Image
+                  src={brand.logoUrl}
+                  alt=""
+                  fill
+                  sizes="200px"
+                  className="object-contain p-2"
+                />
               ) : (
                 <span className="text-lg font-semibold text-line-strong" aria-hidden>
                   {brand.name.slice(0, 2).toUpperCase()}

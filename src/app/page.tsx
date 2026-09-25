@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import {
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { connection } from "next/server";
 import { ProductGrid } from "@/components/catalog/ProductCard";
+import { BrandMarquee } from "@/components/catalog/BrandMarquee";
 import { categoryIcon } from "@/components/catalog/categoryStyle";
 import { CountUp } from "@/components/motion/CountUp";
 import { SearchBox } from "@/components/layout/SearchBox";
@@ -451,7 +451,7 @@ async function FeaturedProducts() {
   );
 }
 
-/** The makers we supply, as a still grid: a buyer scans it for their brand, which a moving marquee prevents. */
+/** The makers we distribute, as a moving strip of their logos (stored in the media module, served from S3). */
 async function Partners() {
   await connection();
   const partners = await getPartners();
@@ -464,30 +464,7 @@ async function Partners() {
         description="Hàng chính hãng, có chứng từ đầy đủ."
         className="mb-6"
       />
-      <ul className="plate-cells reveal rounded-lg [--cell:10rem]">
-        {partners.map((partner) => (
-          <li
-            key={partner.slug}
-            className="group flex h-24 items-center justify-center p-5 transition-colors hover:bg-action-50"
-          >
-            {partner.logoUrl ? (
-              <span className="relative h-full w-full">
-                <Image
-                  src={partner.logoUrl}
-                  alt={partner.name}
-                  fill
-                  sizes="200px"
-                  className="object-contain grayscale transition duration-300 group-hover:grayscale-0"
-                />
-              </span>
-            ) : (
-              <span className="font-display text-xl font-semibold text-body transition-colors group-hover:text-action-700">
-                {partner.name}
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
+      <BrandMarquee brands={partners} />
     </>
   );
 }

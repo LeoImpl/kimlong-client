@@ -14,8 +14,8 @@ import { routes } from "@/lib/routes";
  */
 export function Footer() {
   return (
-    <footer className="mt-16 border-t border-line/80 bg-page">
-      <Container className="py-10">
+    <footer className="mt-20 bg-navy text-white/70">
+      <Container className="py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <Suspense fallback={<ColumnSkeleton />}>
             <CompanyColumn />
@@ -24,30 +24,30 @@ export function Footer() {
             <CategoryColumn />
           </Suspense>
           <div>
-            <h2 className="text-sm font-semibold text-ink">Thông tin</h2>
-            <ul className="mt-3 space-y-2 text-sm text-body">
+            <h2 className="text-lg text-white">Thông tin</h2>
+            <ul className="mt-3 space-y-2 text-[15px] text-white/70">
               <li>
-                <Link href={routes.about} className="hover:text-brand-700">
+                <Link href={routes.about} className="hover:text-white">
                   Giới thiệu
                 </Link>
               </li>
               <li>
-                <Link href={routes.products} className="hover:text-brand-700">
+                <Link href={routes.products} className="hover:text-white">
                   Tất cả sản phẩm
                 </Link>
               </li>
               <li>
-                <Link href={routes.brands} className="hover:text-brand-700">
+                <Link href={routes.brands} className="hover:text-white">
                   Thương hiệu
                 </Link>
               </li>
               <li>
-                <Link href={routes.quote} className="hover:text-brand-700">
+                <Link href={routes.quote} className="hover:text-white">
                   Yêu cầu báo giá
                 </Link>
               </li>
               <li>
-                <Link href={routes.contact} className="hover:text-brand-700">
+                <Link href={routes.contact} className="hover:text-white">
                   Liên hệ
                 </Link>
               </li>
@@ -58,9 +58,9 @@ export function Footer() {
           </Suspense>
         </div>
       </Container>
-      <div className="border-t border-line/80 bg-canvas">
+      <div className="border-t border-white/10">
         <Container className="py-4">
-          <Suspense fallback={<Skeleton className="h-3 w-72" />}>
+          <Suspense fallback={<Skeleton className="h-3 w-72 bg-white/10" />}>
             <Copyright />
           </Suspense>
         </Container>
@@ -74,11 +74,13 @@ async function CompanyColumn() {
   const company = await getCompany();
   return (
     <div>
-      <h2 className="text-sm font-semibold text-ink">{company.legalName}</h2>
-      {company.tagline && <p className="mt-3 text-sm text-body">{company.tagline}</p>}
-      {company.headquarters && <p className="mt-3 text-sm text-body">{company.headquarters}</p>}
+      <h2 className="text-lg leading-snug text-white">{company.legalName}</h2>
+      {company.tagline && <p className="mt-3 text-[15px] text-white/70">{company.tagline}</p>}
+      {company.headquarters && (
+        <p className="mt-3 text-[15px] text-white/70">{company.headquarters}</p>
+      )}
       {company.foundedYear && (
-        <p className="mt-2 text-sm text-muted">Thành lập năm {company.foundedYear}</p>
+        <p className="mt-2 text-sm text-white/50">Thành lập năm {company.foundedYear}</p>
       )}
     </div>
   );
@@ -89,11 +91,11 @@ async function CategoryColumn() {
   const categories = await getCategories();
   return (
     <div>
-      <h2 className="text-sm font-semibold text-ink">Danh mục</h2>
-      <ul className="mt-3 space-y-2 text-sm text-body">
+      <h2 className="text-lg text-white">Danh mục</h2>
+      <ul className="mt-3 space-y-2 text-[15px] text-white/70">
         {categories.map((category) => (
           <li key={category.slug}>
-            <Link href={routes.category(category.slug)} className="hover:text-brand-700">
+            <Link href={routes.category(category.slug)} className="hover:text-white">
               {category.name}
             </Link>
           </li>
@@ -113,18 +115,21 @@ async function ContactColumn() {
   );
   return (
     <div>
-      <h2 className="text-sm font-semibold text-ink">Liên hệ</h2>
-      <ul className="mt-3 space-y-2 text-sm text-body">
+      <h2 className="text-lg text-white">Liên hệ</h2>
+      <ul className="mt-3 space-y-2 text-[15px] text-white/70">
         {hotlines.map((hotline) => (
           <li key={hotline.phone}>
-            <a href={telHref(hotline.phone)} className="font-medium text-brand-700 hover:underline">
+            <a
+              href={telHref(hotline.phone)}
+              className="font-mono text-base font-medium text-brand-300 hover:underline"
+            >
               {formatPhone(hotline.phone)}
             </a>
-            {hotline.label && <span className="ml-1 text-muted">· {hotline.label}</span>}
+            {hotline.label && <span className="block text-white/50">{hotline.label}</span>}
           </li>
         ))}
         <li>
-          <a href={`mailto:${company.email}`} className="hover:text-brand-700">
+          <a href={`mailto:${company.email}`} className="hover:text-white">
             {company.email}
           </a>
         </li>
@@ -134,7 +139,7 @@ async function ContactColumn() {
               href={zaloHref(hotlines[0].phone)}
               target="_blank"
               rel="noopener"
-              className="hover:text-brand-700"
+              className="hover:text-white"
             >
               Chat Zalo
             </a>
@@ -149,7 +154,7 @@ async function Copyright() {
   await connection();
   const company = await getCompany();
   return (
-    <p className="text-xs text-muted">
+    <p className="text-[13px] text-white/50">
       © {new Date().getFullYear()} {company.legalName}. Mọi thông tin sản phẩm chỉ mang tính tham
       khảo, vui lòng liên hệ để được báo giá chính xác.
     </p>
@@ -159,10 +164,10 @@ async function Copyright() {
 function ColumnSkeleton() {
   return (
     <div className="space-y-2" aria-hidden>
-      <Skeleton className="h-3 w-24" />
-      <Skeleton className="h-3 w-40" />
-      <Skeleton className="h-3 w-32" />
-      <Skeleton className="h-3 w-36" />
+      <Skeleton className="h-3 w-24 bg-white/10" />
+      <Skeleton className="h-3 w-40 bg-white/10" />
+      <Skeleton className="h-3 w-32 bg-white/10" />
+      <Skeleton className="h-3 w-36 bg-white/10" />
     </div>
   );
 }

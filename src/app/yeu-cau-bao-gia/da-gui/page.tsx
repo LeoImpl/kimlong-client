@@ -39,9 +39,7 @@ export default function QuoteSentPage({ searchParams }: PageProps<"/yeu-cau-bao-
           </svg>
         </span>
 
-        <h1 className="mt-5 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-          Đã gửi yêu cầu
-        </h1>
+        <h1 className="mt-5 text-[2rem] leading-tight sm:text-[2.5rem]">Đã gửi yêu cầu</h1>
         <p className="mt-3 text-body">
           Cảm ơn bạn. Chúng tôi đã nhận được yêu cầu và sẽ phản hồi qua email trong giờ làm việc.
         </p>
@@ -81,11 +79,9 @@ async function Reference({
   if (!reference) return null;
 
   return (
-    <div className="mt-6 rounded-lg border border-line/80 bg-page shadow-card px-6 py-4">
+    <div className="mt-6 rounded-lg border border-line bg-page px-6 py-4">
       <p className="text-sm text-muted">Mã yêu cầu của bạn</p>
-      <p className="mt-1 font-mono text-xl font-semibold tracking-tight text-ink select-all">
-        {reference}
-      </p>
+      <p className="mt-1 font-mono text-xl font-semibold text-ink select-all">{reference}</p>
       <p className="mt-2 text-xs text-muted">
         Vui lòng giữ lại mã này để tiện tra cứu khi liên hệ.
       </p>
@@ -101,7 +97,7 @@ async function Hotline() {
   return (
     <p className="mt-8 text-sm text-body">
       Cần gấp?{" "}
-      <a href={telHref(hotline.phone)} className="font-semibold text-brand-700 hover:underline">
+      <a href={telHref(hotline.phone)} className="font-semibold text-action-600 hover:underline">
         Gọi {formatPhone(hotline.phone)}
       </a>{" "}
       hoặc{" "}
@@ -109,7 +105,7 @@ async function Hotline() {
         href={zaloHref(hotline.phone)}
         target="_blank"
         rel="noopener"
-        className="font-semibold text-brand-700 hover:underline"
+        className="font-semibold text-action-600 hover:underline"
       >
         chat Zalo
       </a>
@@ -121,7 +117,7 @@ async function Hotline() {
 function Step({ number, children }: { number: number; children: React.ReactNode }) {
   return (
     <li className="flex gap-3">
-      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-brand-50 text-xs font-semibold text-brand-800">
+      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-action-50 text-xs font-semibold text-action-700">
         {number}
       </span>
       {children}

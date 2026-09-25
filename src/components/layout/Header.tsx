@@ -25,23 +25,18 @@ import { routes } from "@/lib/routes";
 export function Header() {
   return (
     <header>
-      <div className="hidden bg-linear-to-r from-navy via-brand-900 to-navy md:block">
-        <Container className="flex h-9 items-center justify-between text-xs text-slate-300">
-          <p className="flex items-center gap-2">
-            <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden />
-            Phụ tùng máy nén khí &amp; thiết bị tự động hóa — giao hàng toàn quốc
+      <div className="hidden bg-navy md:block">
+        <Container className="flex h-9 items-center justify-end text-[13px] lg:justify-between text-white/70">
+          <p className="hidden lg:block">
+            Phụ tùng máy nén khí và thiết bị tự động hóa, giao hàng toàn quốc
           </p>
-          <Suspense fallback={<Skeleton className="h-3 w-56 bg-slate-700" />}>
+          <Suspense fallback={<Skeleton className="h-3 w-56 bg-white/10" />}>
             <ContactStrip />
           </Suspense>
         </Container>
       </div>
 
-      <div className="sticky top-0 z-40 border-b border-line/80 bg-page/90 backdrop-blur-md">
-        <span
-          className="absolute inset-x-0 bottom-[-1px] h-px bg-linear-to-r from-transparent via-brand-500/60 to-transparent"
-          aria-hidden
-        />
+      <div className="sticky top-0 z-40 border-b border-line bg-page">
         <Container className="flex h-16 items-center gap-3 lg:gap-6">
           <Logo />
           <div className="hidden flex-1 md:flex">
@@ -51,7 +46,7 @@ export function Header() {
             <ButtonLink
               href={routes.quickOrder}
               size="sm"
-              className="h-9"
+              className="h-10"
               aria-label="Đặt hàng nhanh theo mã hoặc tải file CSV"
             >
               <FileUp className="size-4" strokeWidth={1.5} aria-hidden />
@@ -62,7 +57,7 @@ export function Header() {
         </Container>
       </div>
 
-      <div className="border-b border-line/80 bg-page">
+      <div className="border-b border-line bg-page">
         <Container className="py-2 md:py-0">
           <div className="mb-2 md:hidden">
             <SearchBox />
@@ -92,7 +87,7 @@ async function ContactStrip() {
     <p className="flex items-center gap-5">
       <a
         href={telHref(hotline.phone)}
-        className="flex items-center gap-1.5 font-medium text-white hover:text-brand-200"
+        className="flex items-center gap-1.5 font-medium text-white hover:text-brand-300"
       >
         <Phone className="size-3.5" strokeWidth={1.5} aria-hidden />
         <span className="font-mono">{formatPhone(hotline.phone)}</span>

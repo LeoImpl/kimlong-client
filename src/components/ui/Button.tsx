@@ -1,23 +1,24 @@
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "accent" | "secondary" | "ghost" | "danger";
+type Variant = "primary" | "dark" | "accent" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-all duration-200 " +
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-[color,background-color,border-color,transform] duration-150 " +
+  "active:scale-[0.98] " +
   "disabled:pointer-events-none disabled:opacity-50 whitespace-nowrap [&_svg]:shrink-0";
 
 const variants: Record<Variant, string> = {
-  // Navy into indigo, lighter on hover, with the `shine` sweep: the one element on a page meant to be pressed.
-  primary:
-    "shine bg-linear-to-r from-navy to-brand-900 text-white shadow-card hover:from-brand-900 " +
-    "hover:to-brand-700 hover:shadow-glow active:scale-[0.98]",
-  accent:
-    "shine bg-linear-to-r from-brand-700 to-cyan-600 text-white shadow-card hover:shadow-glow active:scale-[0.98]",
+  // Industrial blue: the one element on a page meant to be pressed.
+  primary: "bg-action-600 text-white hover:bg-action-700 active:bg-action-800",
+  // Graphite, for a second strong action next to a blue one, or on a light band where blue would compete.
+  dark: "bg-navy text-white hover:bg-navy-hover",
+  // Brass, for the single most important action where graphite would disappear (on a dark ground).
+  accent: "bg-brand-300 text-ink hover:bg-brand-200 active:bg-brand-400",
   secondary:
-    "border border-line-strong bg-page text-ink shadow-card hover:bg-surface active:bg-line",
-  ghost: "text-brand-700 hover:bg-brand-50 active:bg-brand-100",
+    "border border-line-strong bg-page text-ink hover:border-muted hover:bg-surface active:bg-line",
+  ghost: "text-action-600 hover:bg-action-50 active:bg-action-100",
   danger: "bg-danger text-white hover:brightness-110",
 };
 

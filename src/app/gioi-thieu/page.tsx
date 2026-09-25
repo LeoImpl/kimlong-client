@@ -37,10 +37,8 @@ export default function AboutPage() {
         <Partners />
       </Suspense>
 
-      <section className="mt-16 rounded-lg border border-line/80 bg-page shadow-card p-6 text-center sm:p-10">
-        <h2 className="text-xl font-semibold text-ink sm:text-2xl">
-          Cần tìm đúng mã phụ tùng cho máy của bạn?
-        </h2>
+      <section className="mt-16 rounded-lg border border-line bg-page p-6 text-center sm:p-10">
+        <h2 className="text-2xl sm:text-[1.75rem]">Cần tìm đúng mã phụ tùng cho máy của bạn?</h2>
         <p className="mx-auto mt-2 max-w-xl text-body">
           Gửi model máy hoặc mã sản phẩm, đội ngũ kỹ thuật sẽ xác nhận đúng chủng loại trước khi báo
           giá.
@@ -66,14 +64,12 @@ async function Profile() {
   return (
     <>
       <header className="mt-4 max-w-3xl">
-        <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-          {company.legalName}
-        </h1>
+        <h1 className="text-[2rem] leading-tight sm:text-[2.5rem]">{company.legalName}</h1>
         {company.tagline && <p className="mt-3 text-lg text-body">{company.tagline}</p>}
       </header>
 
       {/* The facts a buyer checks: who we are legally, where, since when, and a number that is answered. */}
-      <dl className="mt-8 grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+      <dl className="plate-cells mt-8 [--cell:12rem]">
         <Fact label="Trụ sở" value={company.headquarters} />
         <Fact label="Thành lập" value={company.foundedYear ? String(company.foundedYear) : null} />
         <Fact label="Mã số thuế" value={company.taxCode} mono />
@@ -88,7 +84,7 @@ async function Profile() {
         <div className="mt-12 max-w-3xl space-y-10">
           {company.aboutSections.map((section) => (
             <section key={section.title}>
-              <h2 className="text-xl font-semibold text-ink">{section.title}</h2>
+              <h2 className="text-2xl">{section.title}</h2>
               <div className="mt-3 space-y-3 text-body">
                 {section.body.split(/\n{2,}/).map((paragraph, index) => (
                   <p key={index}>{paragraph}</p>
@@ -104,11 +100,8 @@ async function Profile() {
           <SectionHeading title="Vì sao khách hàng chọn Kim Long" className="mb-6" />
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {company.highlights.map((highlight) => (
-              <li
-                key={highlight.title}
-                className="rounded-lg border border-line/80 bg-page shadow-card p-5"
-              >
-                <h3 className="text-base font-semibold text-ink">{highlight.title}</h3>
+              <li key={highlight.title} className="rounded-lg border border-line bg-page p-5">
+                <h3 className="text-xl">{highlight.title}</h3>
                 <p className="mt-2 text-sm text-body">{highlight.body}</p>
               </li>
             ))}
@@ -125,11 +118,11 @@ async function Profile() {
               .map((milestone) => (
                 <li key={`${milestone.year}-${milestone.title}`} className="relative">
                   <span
-                    className="absolute top-1.5 -left-[31px] size-2.5 rounded-full border-2 border-page bg-brand-900"
+                    className="absolute top-1.5 -left-[31px] size-2.5 rounded-full border-2 border-page bg-brand-500"
                     aria-hidden
                   />
                   <p className="font-mono text-sm text-brand-700">{milestone.year}</p>
-                  <h3 className="mt-1 text-base font-medium text-ink">{milestone.title}</h3>
+                  <h3 className="mt-1 text-xl">{milestone.title}</h3>
                   {milestone.description && (
                     <p className="mt-1 text-sm text-body">{milestone.description}</p>
                   )}
@@ -153,7 +146,7 @@ async function Profile() {
                   href={document.url}
                   target="_blank"
                   rel="noopener"
-                  className="text-sm text-brand-700 hover:underline"
+                  className="text-sm text-action-600 hover:underline"
                 >
                   {document.title}
                 </a>
@@ -180,11 +173,11 @@ function Fact({
   // A fact we do not have is left out rather than shown as "—": a blank where a tax code should be reads badly.
   if (!value) return null;
   return (
-    <div className="bg-page p-4">
-      <dt className="text-xs text-muted uppercase">{label}</dt>
-      <dd className={`mt-1 text-sm font-medium text-ink ${mono ? "font-mono" : ""}`}>
+    <div className="p-4">
+      <dt className="text-[13px] text-muted">{label}</dt>
+      <dd className={`mt-1 font-medium text-ink ${mono ? "font-mono" : ""}`}>
         {href ? (
-          <a href={href} className="text-brand-700 hover:underline">
+          <a href={href} className="text-action-600 hover:underline">
             {value}
           </a>
         ) : (
@@ -206,7 +199,10 @@ async function Partners() {
         title="Hãng chúng tôi phân phối"
         description="Hàng chính hãng, chứng từ đầy đủ."
         action={
-          <Link href={routes.brands} className="text-sm font-medium text-brand-700 hover:underline">
+          <Link
+            href={routes.brands}
+            className="text-sm font-medium text-action-600 hover:underline"
+          >
             Xem sản phẩm theo hãng
           </Link>
         }
@@ -214,10 +210,7 @@ async function Partners() {
       />
       <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {partners.map((partner) => (
-          <li
-            key={partner.slug}
-            className="rounded-lg border border-line/80 bg-page shadow-card p-4"
-          >
+          <li key={partner.slug} className="rounded-lg border border-line bg-page p-4">
             <div className="relative flex h-14 items-center justify-center">
               {partner.logoUrl ? (
                 <Image

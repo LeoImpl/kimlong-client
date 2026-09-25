@@ -23,9 +23,7 @@ export default function Error({
 
   return (
     <Container className="py-16 text-center lg:py-24">
-      <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-        Trang tạm thời không tải được
-      </h1>
+      <h1 className="text-[2rem] leading-tight sm:text-[2.5rem]">Trang tạm thời không tải được</h1>
       <p className="mx-auto mt-3 max-w-lg text-body">
         Vui lòng thử lại sau ít phút. Nếu cần gấp, hãy gọi hotline — chúng tôi vẫn nhận yêu cầu qua
         điện thoại và Zalo bình thường.

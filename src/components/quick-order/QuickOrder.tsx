@@ -210,11 +210,11 @@ export function QuickOrder() {
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       <section
         aria-labelledby="grid-heading"
-        className="overflow-hidden rounded-lg border border-line/80 bg-page shadow-card"
+        className="overflow-hidden rounded-lg border border-line bg-page"
       >
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line/80 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3">
           <div>
-            <h2 id="grid-heading" className="text-sm font-semibold text-ink">
+            <h2 id="grid-heading" className="text-lg">
               Danh sách mã
             </h2>
             <p className="mt-0.5 text-xs text-muted">
@@ -243,7 +243,7 @@ export function QuickOrder() {
             <a
               href={templateHref}
               download="kimlong-dat-hang-mau.csv"
-              className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-brand-700 hover:bg-brand-50"
+              className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-medium text-action-600 hover:bg-action-50"
             >
               <Download className="size-4" strokeWidth={1.5} aria-hidden />
               File mẫu
@@ -255,7 +255,7 @@ export function QuickOrder() {
           <table className="w-full border-collapse text-sm">
             <caption className="sr-only">Nhập mã sản phẩm và số lượng</caption>
             <thead>
-              <tr className="bg-surface text-left text-xs font-semibold tracking-wide text-muted uppercase">
+              <tr className="bg-surface text-left text-[13px] font-medium text-muted">
                 <th scope="col" className="w-10 border-b border-line px-3 py-2 text-right">
                   #
                 </th>
@@ -275,11 +275,11 @@ export function QuickOrder() {
             </thead>
             <tbody ref={grid}>
               {rows.map((row, index) => (
-                <tr key={row.key} className="group transition-colors hover:bg-slate-50/80">
-                  <td className="border-b border-line/80 px-3 py-1.5 text-right font-mono text-xs text-muted">
+                <tr key={row.key} className="group transition-colors hover:bg-surface">
+                  <td className="border-b border-line px-3 py-1.5 text-right font-mono text-xs text-muted">
                     {index + 1}
                   </td>
-                  <td className="border-b border-line/80 px-2 py-1.5">
+                  <td className="border-b border-line px-2 py-1.5">
                     <input
                       data-row={index}
                       data-col="pn"
@@ -292,10 +292,10 @@ export function QuickOrder() {
                       autoComplete="off"
                       spellCheck={false}
                       maxLength={64}
-                      className="h-9 w-full min-w-44 rounded border border-transparent bg-transparent px-2 font-mono text-[13px] text-ink uppercase placeholder:text-muted placeholder:normal-case hover:border-line focus:border-brand-700 focus:bg-page"
+                      className="h-9 w-full min-w-44 rounded border border-transparent bg-transparent px-2 font-mono text-[13px] text-ink uppercase placeholder:text-muted placeholder:normal-case hover:border-line focus:border-action-600 focus:bg-page"
                     />
                   </td>
-                  <td className="border-b border-line/80 px-2 py-1.5">
+                  <td className="border-b border-line px-2 py-1.5">
                     <input
                       data-row={index}
                       data-col="qty"
@@ -309,10 +309,10 @@ export function QuickOrder() {
                       }
                       onKeyDown={(event) => onCellKeyDown(event, index)}
                       aria-label={`Số lượng dòng ${index + 1}`}
-                      className="h-9 w-full rounded border border-transparent bg-transparent px-2 text-right font-mono text-[13px] text-ink hover:border-line focus:border-brand-700 focus:bg-page"
+                      className="h-9 w-full rounded border border-transparent bg-transparent px-2 text-right font-mono text-[13px] text-ink hover:border-line focus:border-action-600 focus:bg-page"
                     />
                   </td>
-                  <td className="border-b border-line/80 px-3 py-1.5">
+                  <td className="border-b border-line px-3 py-1.5">
                     <RowStatus
                       partNumber={row.partNumber}
                       lookup={lookup}
@@ -320,7 +320,7 @@ export function QuickOrder() {
                       failed={lookupFailed}
                     />
                   </td>
-                  <td className="border-b border-line/80 px-2 py-1.5">
+                  <td className="border-b border-line px-2 py-1.5">
                     <button
                       type="button"
                       tabIndex={-1}
@@ -359,8 +359,8 @@ export function QuickOrder() {
       </section>
 
       <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-lg border border-line/80 bg-page p-5 shadow-card">
-          <h2 className="text-sm font-semibold text-ink">Tóm tắt</h2>
+        <div className="rounded-lg border border-line bg-page p-5">
+          <h2 className="text-lg">Tóm tắt</h2>
           <dl className="mt-4 space-y-2.5 text-sm">
             <Stat label="Số mã" value={entries.length} />
             <Stat
@@ -437,7 +437,7 @@ function RowStatus({
           target="_blank"
           rel="noopener"
           tabIndex={-1}
-          className="truncate text-body hover:text-brand-700"
+          className="truncate text-body hover:text-action-600"
           title={match.productName}
         >
           {match.productName}

@@ -19,9 +19,7 @@ export default function QuotePage() {
   return (
     <Container className="py-6 lg:py-10">
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Yêu cầu báo giá" }]} />
-      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-        Yêu cầu báo giá
-      </h1>
+      <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">Yêu cầu báo giá</h1>
       <p className="mt-2 max-w-2xl text-body">
         Kiểm tra lại danh sách, điền thông tin liên hệ và gửi. Chúng tôi phản hồi trong giờ làm
         việc.

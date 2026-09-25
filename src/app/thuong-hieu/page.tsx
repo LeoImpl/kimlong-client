@@ -22,7 +22,7 @@ export default function BrandsPage() {
   return (
     <Container className="py-6 lg:py-10">
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Thương hiệu" }]} />
-      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">Thương hiệu</h1>
+      <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">Thương hiệu</h1>
       <p className="mt-2 max-w-3xl text-body">
         Chúng tôi cung cấp phụ tùng và thiết bị chính hãng của các hãng dưới đây. Chọn một hãng để
         xem sản phẩm.
@@ -45,7 +45,7 @@ async function BrandGrid() {
         <li key={brand.slug}>
           <Link
             href={routes.brand(brand.slug)}
-            className="flex h-full flex-col items-center gap-3 rounded-lg border border-line/80 bg-page shadow-card p-5 text-center hover:border-brand-300 transition-colors"
+            className="flex h-full flex-col items-center gap-3 rounded-lg border border-line bg-page p-5 text-center transition-colors hover:border-ink"
           >
             <div className="relative flex h-12 w-full items-center justify-center">
               {brand.logoUrl ? (

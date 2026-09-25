@@ -1,68 +1,99 @@
 @import "tailwindcss";
 
 /**
- * Design tokens — "data-dense minimalist". A cool off-white canvas, white cards with hairline borders, one navy
- * for actions and one industrial indigo for accents; everything else is slate. An industrial supplier's catalogue
- * has to read like a datasheet: legible, calm and trustworthy, never like a B2C sale page. Colour carries meaning
- * only (in stock, pending, error). Dark mode is deliberately not supported in v1 (the audience browses in daylight
- * on factory desktops), so `color-scheme: light` stops browsers in dark mode from recolouring form controls.
+ * Design tokens — "nameplate". The site borrows its look from the rating plates and part tags on the equipment it
+ * sells: a buyer arrives holding a part, reads the number off its plate and wants to find that number here. So the
+ * page is zinc-grey steel, content sits on white plates with hairline borders, text is graphite, and the one warm
+ * colour is brass — the metal of valve tags and nameplates, and the "kim" (metal, gold) in Kim Long.
+ *
+ * Three colours with three jobs: industrial blue is what you press (buttons, links, the selected state), brass is
+ * who we are (logo, rivets, brand labels), and green/amber/red are status. Surfaces stay flat with small radii;
+ * the only depth is a soft lift when a card is hovered. Dark mode is not supported in v1 (the audience browses in
+ * daylight on factory desktops), so `color-scheme: light` stops browsers recolouring form controls.
+ *
+ * Motion is quick (150–300 ms) and always answers something: a page arriving, a pointer over a card, a line
+ * added to the basket. Everything switches off under `prefers-reduced-motion`.
  */
 @theme {
-  /* Accent: Tailwind's indigo scale; the "industrial indigo" #312E81 is 900, links and focus use 700. */
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-200: #c7d2fe;
-  --color-brand-300: #a5b4fc;
-  --color-brand-400: #818cf8;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-800: #3730a3;
-  --color-brand-900: #312e81;
+  /* Brass. 500 is the mark (logo, rivets, rules); 700 is the text shade (links, focus), AA on white and steel. */
+  --color-brand-50: #faf5ea;
+  --color-brand-100: #f2e7cc;
+  --color-brand-200: #e4cf9c;
+  --color-brand-300: #d2b26a;
+  --color-brand-400: #bf9748;
+  --color-brand-500: #a87b2a;
+  --color-brand-600: #8f6620;
+  --color-brand-700: #7a5716;
+  --color-brand-800: #5f4312;
+  --color-brand-900: #45300d;
 
-  /* Second accent: cyan, for highlights on dark surfaces and gradients with the indigo. */
-  --color-cyan-accent: #06b6d4;
-  --color-cyan-soft: #ecfeff;
+  /* Actions: industrial blue. 600 carries white text at 6.8:1 and is the link colour on white and steel. */
+  --color-action-50: #eef4fb;
+  --color-action-100: #d9e6f6;
+  --color-action-200: #b3ccec;
+  --color-action-500: #2a6bc2;
+  --color-action-600: #1f5aab;
+  --color-action-700: #1a4b8e;
+  --color-action-800: #163d73;
 
-  /* Primary actions: deep navy. */
-  --color-navy: #0f172a;
-  --color-navy-hover: #1e293b;
+  /* Dark surfaces (utility strip, footer, the closing band): graphite. `navy` is the historical token name. */
+  --color-navy: #1c2227;
+  --color-navy-hover: #323b42;
 
-  /* Neutrals, named by role so a component never has to pick a slate number. */
-  --color-canvas: #f8fafc;
+  /* Neutrals, named by role so a component never has to pick a grey. Cool zinc, never warm. */
+  --color-canvas: #ebeded;
   --color-page: #ffffff;
-  --color-surface: #f8fafc;
-  --color-ink: #0f172a;
-  --color-body: #475569;
-  --color-muted: #64748b;
-  --color-line: #e2e8f0;
-  --color-line-strong: #cbd5e1;
+  --color-surface: #f4f5f5;
+  --color-ink: #1c2227;
+  --color-body: #3f4a52;
+  --color-muted: #5e6a73;
+  --color-line: #d5dadc;
+  --color-line-strong: #b4bcc0;
 
-  /* State. Never used for decoration: emerald = available, amber = pending, red = failed. */
-  --color-success: #047857;
-  --color-success-soft: #ecfdf5;
-  --color-warning: #b45309;
-  --color-warning-soft: #fffbeb;
-  --color-danger: #b91c1c;
-  --color-danger-soft: #fef2f2;
+  /* State. Never used for decoration: green = available, amber = pending, red = failed. */
+  --color-success: #2f6b3a;
+  --color-success-soft: #edf5ee;
+  --color-warning: #9a5b0b;
+  --color-warning-soft: #fdf4e6;
+  --color-danger: #a8261c;
+  --color-danger-soft: #fbeeec;
 
-  /* One elevation. Cards sit on the canvas with a hairline and a breath of shadow, never a floating drop. */
-  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.05);
-  --shadow-pop: 0 8px 24px -6px rgb(15 23 42 / 0.12), 0 1px 3px 0 rgb(0 0 0 / 0.05);
-  --shadow-glow: 0 12px 32px -8px rgb(67 56 202 / 0.35);
+  /* Small radii with a hierarchy: controls 3px, panels 4px, plates 6px. Nothing is a pill except counters. */
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
 
-  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-fade-in: fade-in 0.5s ease-out both;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-marquee: marquee 40s linear infinite;
   --animate-bump: bump 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --animate-pop: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  --animate-ping-slow: ping-slow 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-pop: pop 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 0.2s ease-out both;
+  --animate-rise: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 
-  @keyframes fade-up {
+  @keyframes bump {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes pop {
     from {
       opacity: 0;
-      transform: translateY(16px);
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
     }
     to {
       opacity: 1;
@@ -77,54 +108,13 @@
       opacity: 1;
     }
   }
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-  @keyframes marquee {
-    to {
-      transform: translateX(-50%);
-    }
-  }
-  @keyframes bump {
-    0% {
-      transform: scale(1);
-    }
-    40% {
-      transform: scale(1.35);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  @keyframes pop {
-    from {
-      opacity: 0;
-      transform: scale(0.92);
-    }
-    to {
-      opacity: 1;
-      transform: none;
-    }
-  }
-  @keyframes ping-slow {
-    75%,
-    100% {
-      transform: scale(2.2);
-      opacity: 0;
-    }
-  }
 }
 
 /* `inline` so the utility keeps the reference: next/font sets these variables on <html>, see app/layout.tsx. */
 @theme inline {
-  --font-sans: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SFMono-Regular", monospace;
+  --font-sans: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-barlow-condensed), var(--font-barlow), ui-sans-serif, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", monospace;
 }
 
 :root {
@@ -142,115 +132,210 @@ body {
  */
 @layer base {
   :focus-visible {
-    outline: 2px solid var(--color-brand-700);
+    outline: 2px solid var(--color-action-600);
     outline-offset: 2px;
   }
 
   ::selection {
-    background-color: var(--color-brand-100);
-    color: var(--color-brand-900);
+    background-color: var(--color-action-100);
+    color: var(--color-ink);
+  }
+
+  /* Headings use the condensed cut: long Vietnamese product names fit, and it reads like stamped plate lettering. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--color-ink);
+    letter-spacing: 0;
+  }
+
+  /* Everything clickable says so, including the summary of a filter group. */
+  a,
+  button:not(:disabled),
+  summary,
+  label[for],
+  [role="button"] {
+    cursor: pointer;
   }
 
   /* Part numbers are compared digit by digit; tabular figures keep them aligned in tables. */
   .font-mono {
-    font-variant-numeric: tabular-nums;
+    font-variant-numeric: tabular-nums slashed-zero;
+  }
+}
+
+@layer components {
+  /**
+   * The nameplate: a white plate with a firm border and a brass rivet in each corner. It is the site's one bold
+   * device, so it is reserved for the three places a part number is the subject — the search, the product's title
+   * block and the lookup panel. Anywhere else it would stop meaning anything.
+   */
+  .plate {
+    --rivet-inset: 11px;
+    position: relative;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-xl);
+    background-color: var(--color-page);
+    background-image:
+      radial-gradient(
+        circle at var(--rivet-inset) var(--rivet-inset),
+        var(--color-brand-300) 0 2px,
+        var(--color-brand-600) 3px,
+        transparent 3.5px
+      ),
+      radial-gradient(
+        circle at calc(100% - var(--rivet-inset)) var(--rivet-inset),
+        var(--color-brand-300) 0 2px,
+        var(--color-brand-600) 3px,
+        transparent 3.5px
+      ),
+      radial-gradient(
+        circle at var(--rivet-inset) calc(100% - var(--rivet-inset)),
+        var(--color-brand-300) 0 2px,
+        var(--color-brand-600) 3px,
+        transparent 3.5px
+      ),
+      radial-gradient(
+        circle at calc(100% - var(--rivet-inset)) calc(100% - var(--rivet-inset)),
+        var(--color-brand-300) 0 2px,
+        var(--color-brand-600) 3px,
+        transparent 3.5px
+      );
+    background-repeat: no-repeat;
+  }
+
+  /* A plate on a dark ground (the footer): the same rivets on graphite. */
+  .plate-dark {
+    border-color: rgb(255 255 255 / 0.18);
+    background-color: var(--color-navy);
+  }
+
+  /**
+   * Boxed fields, as on a rating plate: a small label over a value, cells separated by hairlines. The rules are the
+   * gap showing a line-coloured background; cells wrap and the last row stretches, so a row is never left with an
+   * empty grey hole whatever the number of facts. `--cell` is a cell's minimum width; `.col-span-full` takes a row.
+   */
+  .plate-cells {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background-color: var(--color-line);
+  }
+  .plate-cells > * {
+    flex: 1 1 var(--cell, 9rem);
+    background-color: var(--color-page);
+    padding: 0.5rem 0.75rem;
+  }
+  .plate-cells > .col-span-full {
+    flex-basis: 100%;
+  }
+}
+
+@layer utilities {
+  /**
+   * Children rise one after another when the block arrives. `--i` is set per child and capped, so a long grid
+   * never keeps the visitor waiting for its last card.
+   */
+  .stagger > * {
+    animation: var(--animate-rise);
+    animation-delay: calc(min(var(--i, 0), 10) * 45ms);
+  }
+
+  /* A card that answers the pointer: a small lift and a blue edge. Transform only, so nothing around it moves. */
+  .hover-lift {
+    transition:
+      transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-action-500);
+    box-shadow: 0 10px 24px -12px rgb(28 34 39 / 0.28);
   }
 }
 
 /**
- * Visual layer. Everything here is decoration on top of a page that already works without it: patterns are
- * background images, motion is CSS only, and all of it switches off for visitors who ask for reduced motion.
+ * The quick-order demo on the home page, played once: a part number types itself into the first column, then its
+ * lookup resolves from "đang tra cứu" to the result. `--chars` is the code's length and `--at` when the row
+ * starts. The finished state is what is in the HTML, so screen readers, crawlers and reduced motion get it
+ * directly; the animation only hides it for the first seconds.
  */
-@layer utilities {
-  /* Blueprint grid — the engineering-drawing texture behind hero and banner sections. */
-  .bg-blueprint {
-    background-image:
-      linear-gradient(to right, rgb(148 163 184 / 0.12) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(148 163 184 / 0.12) 1px, transparent 1px);
-    background-size: 32px 32px;
+.type-in {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: bottom;
+  border-right: 2px solid transparent;
+  animation:
+    type-in calc(var(--chars) * 70ms) steps(var(--chars)) var(--at) both,
+    caret 0.5s step-end calc(var(--at) - 0.5s) 3;
+}
+@keyframes type-in {
+  from {
+    width: 0;
   }
-  .bg-blueprint-fade {
-    mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 40%, transparent 100%);
+  to {
+    /* + the caret's 2px border, which border-box sizing would otherwise take from the last character. */
+    width: calc(var(--chars) * 1ch + 2px);
   }
-  .bg-dots {
-    background-image: radial-gradient(rgb(100 116 139 / 0.18) 1px, transparent 1px);
-    background-size: 18px 18px;
+}
+@keyframes caret {
+  50% {
+    border-color: var(--color-action-600);
   }
-
-  .text-gradient {
-    background: linear-gradient(100deg, #a5b4fc 0%, #67e8f9 55%, #e0e7ff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+}
+.resolve-pending {
+  animation: resolve-out 0.2s ease-out calc(var(--at) + var(--chars) * 70ms + 0.7s) both;
+}
+.resolve-done {
+  animation: resolve-in 0.3s cubic-bezier(0.22, 1, 0.36, 1)
+    calc(var(--at) + var(--chars) * 70ms + 0.7s) both;
+}
+@keyframes resolve-out {
+  from {
+    opacity: 1;
   }
-  .text-gradient-ink {
-    background: linear-gradient(
-      100deg,
-      var(--color-brand-900) 0%,
-      var(--color-brand-600) 60%,
-      #0891b2 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  to {
+    opacity: 0;
+    visibility: hidden;
   }
-
-  /* A light sweep across a call to action on hover. */
-  .shine {
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
+}
+@keyframes resolve-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
   }
-  .shine::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      110deg,
-      transparent 30%,
-      rgb(255 255 255 / 0.22) 50%,
-      transparent 70%
-    );
-    transform: translateX(-120%);
-    transition: transform 0.7s ease;
-  }
-  .shine:hover::after {
-    transform: translateX(120%);
-  }
-
-  /* Hover lift for cards: a clear "this is clickable" without moving the layout around it. */
-  .lift {
-    transition:
-      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.25s ease,
-      border-color 0.25s ease;
-  }
-  .lift:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-pop);
-  }
-
-  /* Children fade up one after another; `--i` is set per child, capped so long lists do not drag. */
-  .stagger > * {
-    animation: var(--animate-fade-up);
-    animation-delay: calc(min(var(--i, 0), 8) * 60ms);
+  to {
+    opacity: 1;
+    transform: none;
   }
 }
 
-/* Reveal on scroll where the browser supports scroll-driven animation; elsewhere the content is simply there. */
+/* Sections rise as they scroll into view where the browser can do it without JavaScript; elsewhere they are
+   simply there. */
 @supports (animation-timeline: view()) {
   .reveal {
-    animation: fade-up linear both;
+    animation: rise linear both;
     animation-timeline: view();
-    animation-range: entry 0% entry 35%;
+    animation-range: entry 0% entry 30%;
   }
 }
 
 /* Skeletons shimmer instead of pulsing. */
 .animate-pulse.bg-line {
   animation: none;
-  background: linear-gradient(90deg, var(--color-line) 0%, #f1f5f9 50%, var(--color-line) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-line) 0%,
+    var(--color-surface) 50%,
+    var(--color-line) 100%
+  );
   background-size: 200% 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
@@ -273,8 +358,17 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal {
+  .reveal,
+  .stagger > *,
+  .type-in,
+  .resolve-done {
     animation: none !important;
+  }
+  .resolve-pending {
+    display: none;
+  }
+  .hover-lift:hover {
+    transform: none;
   }
 }
 

@@ -1,8 +1,8 @@
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-md border bg-page px-3 text-sm text-ink shadow-card placeholder:text-muted " +
-  "transition-colors focus:border-brand-700 disabled:bg-surface disabled:text-muted";
+  "w-full rounded-md border bg-page px-3 text-[15px] text-ink placeholder:text-muted " +
+  "transition-colors focus:border-action-600 disabled:bg-surface disabled:text-muted";
 
 /** Invalid fields are marked with a colour *and* a message, never colour alone. */
 function border(invalid?: boolean) {

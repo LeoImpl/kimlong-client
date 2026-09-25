@@ -118,10 +118,7 @@ function ListingToolbar({
           </span>
         )}
       </p>
-      <nav
-        aria-label="Kiểu hiển thị"
-        className="flex rounded-md border border-line/80 bg-page p-0.5 shadow-card"
-      >
+      <nav aria-label="Kiểu hiển thị" className="flex rounded-md border border-line bg-page p-0.5">
         <ViewLink href={href({ view: undefined })} active={view === "grid"} label="Dạng lưới">
           <LayoutGrid className="size-4" strokeWidth={1.5} aria-hidden />
         </ViewLink>
@@ -153,7 +150,7 @@ function ViewLink({
       scroll={false}
       className={cn(
         "flex h-7 w-8 items-center justify-center rounded transition-colors",
-        active ? "bg-navy text-white" : "text-muted hover:bg-surface hover:text-ink",
+        active ? "bg-action-600 text-white" : "text-muted hover:bg-surface hover:text-ink",
       )}
     >
       {children}

@@ -80,9 +80,7 @@ async function CategoryContent({ params, searchParams }: PageProps<"/danh-muc/[s
         ]}
       />
 
-      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-        {category.name}
-      </h1>
+      <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">{category.name}</h1>
       {category.description && <p className="mt-2 max-w-3xl text-body">{category.description}</p>}
 
       <Suspense fallback={<ListingSkeleton />}>

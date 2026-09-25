@@ -38,13 +38,13 @@ export function PartNumber({
 
   return (
     <span className={cn("group/pn inline-flex items-center gap-1 text-[13px]", className)}>
-      <span className="font-mono font-medium tracking-tight text-ink select-all">{value}</span>
+      <span className="font-mono font-medium text-ink select-all">{value}</span>
       {copyable && (
         <button
           type="button"
           onClick={copy}
           tabIndex={copyTabbable ? undefined : -1}
-          className="rounded p-1 text-muted opacity-60 transition hover:bg-surface hover:text-brand-700 hover:opacity-100 focus-visible:opacity-100 group-hover/pn:opacity-100"
+          className="rounded p-1 text-muted opacity-60 transition hover:bg-surface hover:text-action-600 hover:opacity-100 focus-visible:opacity-100 group-hover/pn:opacity-100"
           aria-label={copied ? `Đã sao chép ${value}` : `Sao chép mã ${value}`}
           title={copied ? "Đã sao chép" : "Sao chép"}
         >

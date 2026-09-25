@@ -37,8 +37,8 @@ export function Pagination({
             className={cn(
               "inline-flex h-9 min-w-9 items-center justify-center rounded-md px-2 font-mono text-sm",
               entry === page
-                ? "bg-navy font-medium text-white"
-                : "border border-line bg-page text-body shadow-card hover:bg-surface",
+                ? "bg-action-600 font-medium text-white"
+                : "border border-line bg-page text-body hover:border-line-strong hover:bg-surface",
             )}
           >
             {entry + 1}
@@ -64,7 +64,7 @@ function Step({
   children: React.ReactNode;
 }) {
   const className =
-    "inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-line bg-page shadow-card";
+    "inline-flex h-9 min-w-9 items-center justify-center rounded-md border border-line bg-page";
   if (disabled) {
     return (
       <span className={cn(className, "text-line-strong")} aria-disabled>

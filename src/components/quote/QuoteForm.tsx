@@ -96,19 +96,19 @@ export function QuoteForm({ hotline }: { hotline: string | null }) {
 
       <section aria-labelledby="lines-heading">
         <div className="flex flex-wrap items-end justify-between gap-3">
-          <h2 id="lines-heading" className="text-lg font-semibold text-ink">
+          <h2 id="lines-heading" className="text-xl">
             Sản phẩm cần báo giá{" "}
             <span className="font-mono text-base font-medium text-muted">({lines.length})</span>
           </h2>
           <Link
             href={routes.quickOrder}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-brand-700 hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-action-600 hover:underline"
           >
             <FileUp className="size-4" strokeWidth={1.5} aria-hidden />
             Thêm từ danh sách mã / CSV
           </Link>
         </div>
-        <ul className="mt-4 divide-y divide-line/80 overflow-hidden rounded-lg border border-line/80 bg-page shadow-card">
+        <ul className="mt-4 divide-y divide-line overflow-hidden rounded-lg border border-line bg-page">
           {lines.map((line) => (
             <LineRow key={lineId(line)} line={line} disabled={sending} />
           ))}
@@ -133,8 +133,8 @@ export function QuoteForm({ hotline }: { hotline: string | null }) {
       </section>
 
       <section aria-labelledby="contact-heading" className="lg:sticky lg:top-24 lg:self-start">
-        <div className="rounded-lg border border-line/80 bg-page p-5 shadow-card">
-          <h2 id="contact-heading" className="text-lg font-semibold text-ink">
+        <div className="rounded-lg border border-line bg-page p-5">
+          <h2 id="contact-heading" className="text-xl">
             Thông tin liên hệ
           </h2>
           <p className="mt-1 text-sm text-muted">
@@ -173,8 +173,8 @@ function LineRow({ line, disabled }: { line: BasketLine; disabled: boolean }) {
   const id = lineId(line);
 
   return (
-    <li className="flex gap-4 px-4 py-4 transition-colors hover:bg-slate-50/80">
-      <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-md border border-line/80 bg-page">
+    <li className="flex gap-4 px-4 py-4 transition-colors hover:bg-surface">
+      <div className="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-md border border-line bg-page">
         {line.imageUrl ? (
           <Image src={line.imageUrl} alt="" fill sizes="64px" className="object-contain p-1" />
         ) : (
@@ -185,7 +185,7 @@ function LineRow({ line, disabled }: { line: BasketLine; disabled: boolean }) {
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-ink">
           {line.productSlug ? (
-            <Link href={routes.product(line.productSlug)} className="hover:text-brand-700">
+            <Link href={routes.product(line.productSlug)} className="hover:text-action-600">
               {line.productName}
             </Link>
           ) : (
@@ -208,7 +208,7 @@ function LineRow({ line, disabled }: { line: BasketLine; disabled: boolean }) {
               value={line.quantity}
               disabled={disabled}
               onChange={(event) => basket.update(id, { quantity: Number(event.target.value) })}
-              className="h-9 w-20 rounded-md border border-line-strong bg-page px-2 text-right font-mono text-sm text-ink shadow-card focus:border-brand-700"
+              className="h-9 w-20 rounded-md border border-line-strong bg-page px-2 text-right font-mono text-sm text-ink focus:border-action-600"
               aria-label={`Số lượng của ${line.productName}`}
             />
           </label>

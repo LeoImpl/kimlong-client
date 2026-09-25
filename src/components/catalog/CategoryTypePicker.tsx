@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { listProducts } from "@/lib/api/catalog";
 import type { CategoryNode } from "@/lib/api/types";
 import { routes } from "@/lib/routes";
-import { categoryStyle, typeIcon } from "./categoryStyle";
+import { categoryIcon } from "./categoryStyle";
 import { ProductImage } from "./ProductImage";
 
 /**
@@ -26,61 +26,48 @@ export async function CategoryTypePicker({
     })),
   );
   const available = types.filter((entry) => entry.result.totalItems > 0);
-  const style = categoryStyle(family.slug);
   const query = brand ? `?brand=${encodeURIComponent(brand)}` : "";
 
   if (available.length === 0) return null;
 
   return (
     <section aria-labelledby="type-picker-heading" className="mt-8">
-      <h2
-        id="type-picker-heading"
-        className="text-sm font-semibold tracking-wide text-muted uppercase"
-      >
+      <h2 id="type-picker-heading" className="text-2xl">
         Chọn loại sản phẩm
       </h2>
-      <ul className="stagger mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="stagger mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {available.map(({ type, result }, index) => {
-          const Icon = typeIcon(type.slug, style);
+          const Icon = categoryIcon(type.slug, family.slug);
           return (
             <li key={type.slug} style={{ "--i": index } as React.CSSProperties}>
               <Link
                 href={`${routes.category(type.slug)}${query}`}
-                className="lift group relative flex h-full flex-col overflow-hidden rounded-xl border border-line/80 bg-page shadow-card hover:border-brand-200"
+                className="group hover-lift flex h-full flex-col rounded-lg border border-line bg-page"
               >
-                <span
-                  className={`absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-linear-to-r transition-transform duration-500 group-hover:scale-x-100 ${style.bar}`}
-                  aria-hidden
-                />
-                <div className="flex items-center gap-4 p-5">
-                  <span
-                    className={`flex size-12 shrink-0 items-center justify-center rounded-lg ring-1 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${style.tile}`}
-                  >
+                <div className="flex items-center gap-3 p-5">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-md bg-action-50 text-action-600 transition-colors group-hover:bg-action-600 group-hover:text-white">
                     <Icon className="size-6" strokeWidth={1.5} aria-hidden />
                   </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-lg font-semibold text-ink">{type.name}</p>
-                    <p className="font-mono text-xs text-muted">{result.totalItems} sản phẩm</p>
-                  </div>
-                  <ArrowRight
-                    className="size-5 text-muted transition-transform group-hover:translate-x-1 group-hover:text-brand-700"
-                    strokeWidth={1.5}
-                    aria-hidden
-                  />
+                  <p className="min-w-0 flex-1 font-display text-2xl font-semibold text-ink">
+                    {type.name}
+                  </p>
+                  <span className="font-mono text-sm text-muted">{result.totalItems}</span>
                 </div>
                 {/* A glimpse of what is inside, so the three types are told apart by their parts too. */}
-                <div className="mt-auto grid grid-cols-4 gap-2 border-t border-line/80 bg-canvas p-3">
+                <div className="mt-auto grid grid-cols-4 gap-px border-y border-line bg-line">
                   {result.items.map((product) => (
-                    <div
-                      key={product.slug}
-                      className="relative aspect-square overflow-hidden rounded-md border border-line/80 bg-page"
-                    >
-                      <ProductImage src={product.imageUrl} alt="" sizes="80px" className="p-1" />
+                    <div key={product.slug} className="relative aspect-square bg-surface">
+                      <ProductImage src={product.imageUrl} alt="" sizes="96px" className="p-1.5" />
                     </div>
                   ))}
                 </div>
-                <p className="border-t border-line/80 px-5 py-3 text-sm font-semibold text-brand-700">
+                <p className="flex items-center justify-between px-5 py-3 text-[15px] font-medium text-action-600">
                   Xem {result.totalItems} sản phẩm {type.name.toLowerCase()}
+                  <ArrowRight
+                    className="size-4 transition-transform group-hover:translate-x-1"
+                    strokeWidth={1.5}
+                    aria-hidden
+                  />
                 </p>
               </Link>
             </li>

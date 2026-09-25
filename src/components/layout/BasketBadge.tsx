@@ -15,7 +15,7 @@ export function BasketBadge() {
   return (
     <Link
       href={routes.quote}
-      className="relative inline-flex h-9 items-center gap-2 rounded-md border border-line-strong bg-page px-3 text-sm font-semibold text-ink shadow-card transition-colors hover:bg-surface"
+      className="relative inline-flex h-10 items-center gap-2 rounded-md border border-line-strong bg-page px-3 text-sm font-semibold text-ink transition-colors hover:border-muted hover:bg-surface"
     >
       <ClipboardList className="size-4" strokeWidth={1.5} aria-hidden />
       <span className="hidden sm:inline">Yêu cầu báo giá</span>
@@ -23,7 +23,7 @@ export function BasketBadge() {
         // Keyed by the count, so the badge re-mounts and bumps each time a line is added.
         <span
           key={lines.length}
-          className="inline-flex h-5 min-w-5 animate-bump items-center justify-center rounded bg-linear-to-br from-brand-700 to-cyan-600 px-1 font-mono text-[11px] font-semibold text-white"
+          className="inline-flex h-5 min-w-5 animate-bump items-center justify-center rounded-full bg-action-600 px-1.5 font-mono text-xs font-semibold text-white"
         >
           {lines.length}
         </span>

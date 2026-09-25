@@ -12,12 +12,12 @@ import { ProductImage } from "./ProductImage";
  */
 export function ProductTable({ products }: { products: ProductSummary[] }) {
   return (
-    <div className="overflow-hidden rounded-lg border border-line/80 bg-page shadow-card">
+    <div className="overflow-hidden rounded-lg border border-line bg-page">
       <div className="relative overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <caption className="sr-only">Danh sách sản phẩm</caption>
           <thead>
-            <tr className="bg-surface text-left text-xs font-semibold tracking-wide whitespace-nowrap text-muted uppercase">
+            <tr className="bg-surface text-left text-[13px] font-medium whitespace-nowrap text-muted">
               <th scope="col" className="border-b border-line px-4 py-2.5">
                 Sản phẩm
               </th>
@@ -42,24 +42,24 @@ export function ProductTable({ products }: { products: ProductSummary[] }) {
             {products.map((product) => {
               const extra = product.variantCount - product.partNumbers.length;
               return (
-                <tr key={product.slug} className="group transition-colors hover:bg-slate-50/80">
-                  <td className="border-b border-line/80 px-4 py-2.5">
+                <tr key={product.slug} className="group transition-colors hover:bg-surface">
+                  <td className="border-b border-line px-4 py-2.5">
                     <div className="flex min-w-60 items-center gap-3">
-                      <div className="relative size-11 shrink-0 overflow-hidden rounded-md border border-line/80 bg-page">
+                      <div className="relative size-11 shrink-0 overflow-hidden rounded-md border border-line bg-page">
                         <ProductImage src={product.imageUrl} alt="" sizes="44px" className="p-1" />
                       </div>
                       <Link
                         href={routes.product(product.slug)}
-                        className="font-semibold text-ink hover:text-brand-700"
+                        className="font-semibold text-ink hover:text-action-600"
                       >
                         {product.name}
                       </Link>
                     </div>
                   </td>
-                  <td className="border-b border-line/80 px-3 py-2.5 text-xs font-medium whitespace-nowrap text-muted uppercase">
+                  <td className="border-b border-line px-3 py-2.5 text-[13px] font-medium whitespace-nowrap text-brand-700">
                     {product.brand?.name ?? "—"}
                   </td>
-                  <td className="border-b border-line/80 px-3 py-2.5">
+                  <td className="border-b border-line px-3 py-2.5">
                     <div className="flex max-w-80 flex-wrap gap-x-3 gap-y-0.5">
                       {product.partNumbers.slice(0, 3).map((partNumber) => (
                         <PartNumber
@@ -72,18 +72,18 @@ export function ProductTable({ products }: { products: ProductSummary[] }) {
                       {extra > 0 && <span className="font-mono text-xs text-muted">+{extra}</span>}
                     </div>
                   </td>
-                  <td className="border-b border-line/80 px-3 py-2.5 text-right font-mono text-xs text-body">
+                  <td className="border-b border-line px-3 py-2.5 text-right font-mono text-xs text-body">
                     {product.variantCount}
                   </td>
-                  <td className="border-b border-line/80 px-3 py-2.5 text-right whitespace-nowrap">
+                  <td className="border-b border-line px-3 py-2.5 text-right whitespace-nowrap">
                     <Price price={product.price} className="text-sm" />
                   </td>
-                  <td className="border-b border-line/80 px-3 py-2.5">
+                  <td className="border-b border-line px-3 py-2.5">
                     <Link
                       href={routes.product(product.slug)}
                       tabIndex={-1}
                       aria-hidden
-                      className="flex size-7 items-center justify-center rounded-md text-muted transition-colors group-hover:bg-page group-hover:text-brand-700"
+                      className="flex size-7 items-center justify-center rounded-md text-muted transition-colors group-hover:bg-page group-hover:text-action-600"
                     >
                       <ArrowUpRight className="size-4" strokeWidth={1.5} />
                     </Link>

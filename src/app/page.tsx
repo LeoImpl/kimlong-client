@@ -2,10 +2,20 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
-import { ArrowRight, CheckCircle2, CircleDashed, FileUp } from "lucide-react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  CheckCircle2,
+  ChevronRight,
+  Clock3,
+  FileUp,
+  Loader2,
+  Truck,
+  Wrench,
+} from "lucide-react";
 import { connection } from "next/server";
 import { ProductGrid } from "@/components/catalog/ProductCard";
-import { categoryStyle } from "@/components/catalog/categoryStyle";
+import { categoryIcon } from "@/components/catalog/categoryStyle";
 import { CountUp } from "@/components/motion/CountUp";
 import { SearchBox } from "@/components/layout/SearchBox";
 import { ButtonLink } from "@/components/ui/Button";
@@ -44,146 +54,132 @@ export default function Home() {
         <StructuredData />
       </Suspense>
 
-      <section className="relative isolate overflow-hidden bg-navy">
-        {/* Glow and blueprint grid: pure decoration, behind the content and hidden from assistive tech. */}
-        <div className="absolute inset-0 -z-10" aria-hidden>
-          <div className="absolute -top-40 -left-32 size-[520px] rounded-full bg-brand-600/40 blur-3xl" />
-          <div className="absolute top-10 right-[-120px] size-[460px] rounded-full bg-cyan-500/25 blur-3xl" />
-          <div className="absolute bottom-[-220px] left-1/3 size-[420px] rounded-full bg-brand-400/20 blur-3xl" />
-          <div className="bg-blueprint bg-blueprint-fade absolute inset-0" />
-        </div>
-
-        <Container className="grid gap-12 py-14 lg:grid-cols-12 lg:py-20">
+      {/* The page's one orchestrated moment: headline, plate and quick-order panel arrive in sequence. */}
+      <section className="bg-linear-to-b from-action-50 to-canvas">
+        <Container className="grid gap-10 py-10 sm:py-14 lg:grid-cols-12 lg:gap-12 lg:py-16">
           <div className="lg:col-span-7">
-            <p className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] font-medium tracking-wider text-cyan-200 uppercase backdrop-blur">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping-slow rounded-full bg-emerald-400" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
-              </span>
-              Nhà cung cấp B2B · Phụ tùng công nghiệp
-            </p>
-            <h1 className="mt-5 animate-fade-up text-4xl font-bold tracking-tight text-balance text-white [animation-delay:80ms] sm:text-5xl">
-              Phụ tùng máy nén khí &amp; <span className="text-gradient">thiết bị tự động hóa</span>{" "}
-              chính hãng
+            <h1 className="max-w-3xl animate-rise text-[2.5rem] leading-[1.02] text-balance sm:text-[3.75rem]">
+              Phụ tùng máy nén khí và thiết bị tự động hóa chính hãng
             </h1>
-            <p className="mt-5 max-w-xl animate-fade-up text-base text-balance text-slate-300 [animation-delay:160ms] sm:text-lg">
-              Tra cứu theo mã sản phẩm, part number hoặc hãng. Báo giá sỉ theo số lượng, giao hàng
-              toàn quốc.
+            <p className="mt-4 max-w-xl animate-rise text-lg text-body [animation-delay:80ms]">
+              Nhập mã in trên nhãn thiết bị để tìm đúng sản phẩm và nhận báo giá sỉ. Giao hàng toàn
+              quốc.
             </p>
-            <div className="mt-8 max-w-xl animate-fade-up rounded-lg bg-white/10 p-1.5 ring-1 ring-white/15 backdrop-blur [animation-delay:240ms]">
-              <SearchBox size="lg" />
+
+            {/* The nameplate: the site's one bold device, holding the one thing it is for. */}
+            <div className="plate mt-8 animate-rise px-5 pt-6 pb-5 [animation-delay:160ms] sm:px-8 sm:pt-7 sm:pb-7">
+              <p className="text-[15px] font-medium text-ink" aria-hidden>
+                Mã sản phẩm, part number hoặc hãng
+              </p>
+              <SearchBox size="lg" placeholder="Ví dụ 1613900100" className="mt-2" />
+              <p className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-muted">
+                Thử:
+                <SearchExample q="1613900100" />
+                <SearchExample q="DSBC-32-50" />
+                <SearchExample q="lọc dầu Atlas Copco" />
+              </p>
+              <Suspense fallback={<StatsSkeleton />}>
+                <CatalogueStats />
+              </Suspense>
             </div>
-            <p className="mt-4 flex animate-fade-up flex-wrap items-center gap-2 text-sm text-slate-400 [animation-delay:320ms]">
-              Thử:
-              <SearchExample q="1613900100" />
-              <SearchExample q="DSBC-32-50" />
-              <SearchExample q="lọc dầu Atlas Copco" />
-            </p>
-            <Suspense fallback={<StatsSkeleton />}>
-              <CatalogueStats />
-            </Suspense>
           </div>
 
-          <div className="relative lg:col-span-5">
-            <div className="animate-fade-up rounded-xl border border-white/15 bg-white/[0.07] p-6 shadow-2xl ring-1 ring-white/5 backdrop-blur-md [animation-delay:200ms]">
-              <div className="flex items-center gap-3">
-                <span className="flex size-11 items-center justify-center rounded-lg bg-linear-to-br from-brand-500 to-cyan-500 text-white shadow-glow">
+          <aside
+            className="animate-rise self-end [animation-delay:260ms] lg:col-span-5"
+            aria-labelledby="quick-order-heading"
+          >
+            <div className="rounded-lg border border-line bg-page p-5 shadow-[0_12px_32px_-16px_rgb(31_90_171/0.35)] sm:p-6">
+              <div className="flex items-start gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-action-50 text-action-600">
                   <FileUp className="size-5" strokeWidth={1.5} aria-hidden />
                 </span>
                 <div>
-                  <h2 className="text-base font-semibold text-white">Có sẵn danh sách mã?</h2>
-                  <p className="text-sm text-slate-400">Đặt nhiều mã trong một lần gửi.</p>
+                  <h2 id="quick-order-heading" className="text-2xl">
+                    Có sẵn danh sách mã?
+                  </h2>
+                  <p className="mt-1 text-body">
+                    Dán từ Excel hoặc tải lên CSV. Mã có trên web được nhận diện ngay, mã chưa có
+                    thì bộ phận kinh doanh kiểm tra và báo giá qua email.
+                  </p>
                 </div>
               </div>
-              <ol className="mt-6 space-y-4">
-                {[
-                  ["Dán từ Excel hoặc tải lên CSV", "Mã sản phẩm và số lượng, mỗi dòng một mã."],
-                  ["Đối chiếu danh mục tức thì", "Mã có trên web được nhận diện ngay."],
-                  ["Nhận báo giá qua email", "Cả những mã chưa có trên web."],
-                ].map(([title, detail], index) => (
-                  <li key={title} className="flex gap-3">
-                    <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-cyan-300/30 bg-cyan-400/10 font-mono text-xs font-semibold text-cyan-200">
-                      {index + 1}
-                    </span>
-                    <span>
-                      <span className="block text-sm font-semibold text-white">{title}</span>
-                      <span className="block text-sm text-slate-400">{detail}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
 
-              {/* A sample of what the lookup shows, so the promise is concrete before the click. */}
-              <div className="mt-6 space-y-2 rounded-lg border border-white/10 bg-navy/60 p-3 font-mono text-xs">
-                <p className="flex items-center justify-between gap-3">
-                  <span className="text-slate-200">1613900100 × 2</span>
-                  <span className="flex items-center gap-1.5 text-emerald-300">
-                    <CheckCircle2 className="size-3.5" strokeWidth={1.5} aria-hidden />
+              {/* A sample of what the lookup shows, played once as the page arrives, so the promise is concrete
+                  before the click. */}
+              <table className="mt-5 w-full text-sm" aria-label="Ví dụ kết quả đối chiếu mã">
+                <thead>
+                  <tr className="border-b border-line text-left text-[13px] text-muted">
+                    <th scope="col" className="py-1.5 font-medium">
+                      Mã
+                    </th>
+                    <th scope="col" className="py-1.5 text-right font-medium">
+                      SL
+                    </th>
+                    <th scope="col" className="py-1.5 pl-4 font-medium">
+                      Kết quả
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <DemoRow code="1613900100" quantity={2} at="0.9s" found>
                     Lọc gió Atlas Copco
-                  </span>
-                </p>
-                <p className="flex items-center justify-between gap-3">
-                  <span className="text-slate-200">XYZ-4410 × 5</span>
-                  <span className="flex items-center gap-1.5 text-amber-300">
-                    <CircleDashed className="size-3.5" strokeWidth={1.5} aria-hidden />
-                    Sales kiểm tra
-                  </span>
-                </p>
-              </div>
+                  </DemoRow>
+                  <DemoRow code="XYZ-4410" quantity={5} at="2.2s">
+                    Kinh doanh kiểm tra
+                  </DemoRow>
+                </tbody>
+              </table>
 
-              <ButtonLink
-                href={routes.quickOrder}
-                size="lg"
-                className="mt-6 w-full bg-white bg-none text-ink shadow-glow hover:bg-slate-100"
-              >
-                Đặt hàng nhanh
-                <ArrowRight className="size-4" strokeWidth={1.5} aria-hidden />
+              <ButtonLink href={routes.quickOrder} size="lg" className="group mt-5 w-full">
+                Đặt hàng nhanh theo mã
+                <ArrowRight
+                  className="size-4 transition-transform group-hover:translate-x-1"
+                  strokeWidth={1.5}
+                  aria-hidden
+                />
               </ButtonLink>
             </div>
-          </div>
+          </aside>
         </Container>
       </section>
 
-      <Container className="py-14 lg:py-20">
-        <Suspense fallback={<CategoriesSkeleton />}>
-          <Categories />
-        </Suspense>
-      </Container>
+      <TrustBar />
 
-      <section className="relative border-y border-line/80 bg-page">
-        <div className="bg-dots absolute inset-0 opacity-60" aria-hidden />
-        <Container className="relative py-14 lg:py-20">
-          <Suspense fallback={<ProductsSkeleton />}>
-            <FeaturedProducts />
+      <section className="border-b border-line bg-page">
+        <Container className="py-12 lg:py-16">
+          <Suspense fallback={<CategoriesSkeleton />}>
+            <Categories />
           </Suspense>
         </Container>
       </section>
 
-      <div className="py-14 lg:py-20">
+      <Container className="py-12 lg:py-16">
+        <Suspense fallback={<ProductsSkeleton />}>
+          <FeaturedProducts />
+        </Suspense>
+      </Container>
+
+      <Container className="pb-16">
         <Suspense fallback={<PartnersSkeleton />}>
           <Partners />
         </Suspense>
-      </div>
+      </Container>
 
-      <section className="relative isolate overflow-hidden bg-linear-to-r from-navy via-brand-900 to-navy">
-        <div className="absolute inset-0 -z-10" aria-hidden>
-          <div className="bg-blueprint absolute inset-0 opacity-60" />
-          <div className="absolute top-1/2 right-10 size-72 -translate-y-1/2 rounded-full bg-cyan-500/25 blur-3xl" />
-        </div>
-        <Container className="reveal flex flex-col items-start justify-between gap-6 py-14 lg:flex-row lg:items-center">
+      <section className="bg-action-700">
+        <Container className="reveal flex flex-col items-start justify-between gap-6 py-12 lg:flex-row lg:items-center">
           <div>
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">
-              Cần báo giá cho <span className="text-gradient">nhiều mã</span> cùng lúc?
+            <h2 className="text-[2rem] leading-tight text-white">
+              Cần báo giá cho nhiều mã cùng lúc?
             </h2>
-            <p className="mt-2 max-w-xl text-slate-300">
-              Gửi danh sách mã sản phẩm và số lượng, chúng tôi báo giá trong giờ làm việc.
+            <p className="mt-2 max-w-xl text-lg text-action-100">
+              Gửi danh sách mã và số lượng, bộ phận kinh doanh báo giá trong giờ làm việc.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <ButtonLink
               href={routes.quickOrder}
               size="lg"
-              className="bg-white bg-none text-ink shadow-glow hover:bg-slate-100"
+              className="bg-page text-action-700 hover:bg-action-50"
             >
               <FileUp className="size-4" strokeWidth={1.5} aria-hidden />
               Gửi danh sách mã
@@ -191,7 +187,7 @@ export default function Home() {
             <ButtonLink
               href={routes.contact}
               size="lg"
-              className="border border-white/25 bg-white/5 bg-none shadow-none backdrop-blur hover:bg-white/10"
+              className="border border-white/40 bg-transparent text-white hover:bg-white/10"
             >
               Liên hệ tư vấn
             </ButtonLink>
@@ -202,7 +198,10 @@ export default function Home() {
   );
 }
 
-/** Real counts from the API — a buyer judging a supplier trusts a number more than an adjective. */
+/**
+ * Real counts from the API, as the bottom row of the plate — a buyer judging a supplier trusts a number more
+ * than an adjective, and on a rating plate the figures sit in exactly this kind of boxed row.
+ */
 async function CatalogueStats() {
   await connection();
   const [products, categories, brands] = await Promise.all([
@@ -211,20 +210,17 @@ async function CatalogueStats() {
     getBrands(),
   ]);
   const stats = [
-    { value: products.totalItems, label: "sản phẩm" },
-    { value: flattenCategories(categories).length, label: "danh mục" },
-    { value: brands.length, label: "thương hiệu" },
+    { value: products.totalItems, label: "Sản phẩm" },
+    { value: flattenCategories(categories).length, label: "Danh mục" },
+    { value: brands.length, label: "Thương hiệu" },
   ];
 
   return (
-    <dl className="mt-10 grid max-w-xl animate-fade-up grid-cols-3 gap-3 [animation-delay:400ms]">
+    <dl className="plate-cells mt-6 [--cell:6rem]">
       {stats.map((stat) => (
-        <div
-          key={stat.label}
-          className="rounded-lg border border-white/10 bg-white/5 px-4 py-3 backdrop-blur"
-        >
-          <dt className="text-xs text-slate-400">{stat.label}</dt>
-          <dd className="font-mono text-2xl font-semibold text-white">
+        <div key={stat.label}>
+          <dt className="text-[13px] text-muted">{stat.label}</dt>
+          <dd className="font-display text-2xl font-semibold text-action-700">
             <CountUp value={stat.value} />
           </dd>
         </div>
@@ -234,7 +230,80 @@ async function CatalogueStats() {
 }
 
 function StatsSkeleton() {
-  return <div className="mt-10 h-[74px] max-w-xl rounded-lg bg-white/5" aria-hidden />;
+  return <Skeleton className="mt-6 h-[66px] w-full" />;
+}
+
+/** One row of the lookup demo; see `.type-in` in globals.css for the timing. */
+function DemoRow({
+  code,
+  quantity,
+  at,
+  found,
+  children,
+}: {
+  code: string;
+  quantity: number;
+  at: string;
+  found?: boolean;
+  children: string;
+}) {
+  const timing = { "--chars": code.length, "--at": at } as React.CSSProperties;
+  const Icon = found ? CheckCircle2 : Clock3;
+  return (
+    <tr className="border-b border-line" style={timing}>
+      <td className="py-2 font-mono text-ink">
+        <span className="type-in">{code}</span>
+      </td>
+      <td className="py-2 text-right font-mono">{quantity}</td>
+      <td className="relative py-2 pl-4">
+        <span
+          className="resolve-pending absolute inset-y-0 left-4 flex items-center gap-1.5 text-muted"
+          aria-hidden
+        >
+          <Loader2 className="size-4 animate-spin" strokeWidth={1.5} />
+          Đang tra cứu…
+        </span>
+        <span
+          className={`resolve-done inline-flex items-center gap-1.5 ${found ? "text-success" : "text-warning"}`}
+        >
+          <Icon className="size-4" strokeWidth={1.5} aria-hidden />
+          {children}
+        </span>
+      </td>
+    </tr>
+  );
+}
+
+/**
+ * What a buyer checks before trusting a new supplier, in one line under the hero. Only claims the business
+ * already makes elsewhere on the site — no invented stock levels, delivery times or discounts.
+ */
+function TrustBar() {
+  const items = [
+    { icon: BadgeCheck, title: "Hàng chính hãng", detail: "Có chứng từ nguồn gốc" },
+    { icon: Truck, title: "Giao hàng toàn quốc", detail: "Từ TP. Hồ Chí Minh" },
+    { icon: Clock3, title: "Báo giá nhanh", detail: "Trong giờ làm việc" },
+    { icon: Wrench, title: "Tư vấn kỹ thuật", detail: "Chọn đúng mã, đúng thông số" },
+  ];
+  return (
+    <section aria-label="Cam kết" className="border-y border-line bg-page">
+      <Container>
+        <ul className="grid grid-cols-2 gap-px bg-line lg:grid-cols-4">
+          {items.map(({ icon: Icon, title, detail }) => (
+            <li key={title} className="group flex items-center gap-3 bg-page px-2 py-4 sm:px-4">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-action-50 text-action-600 transition-colors group-hover:bg-action-600 group-hover:text-white">
+                <Icon className="size-5" strokeWidth={1.5} aria-hidden />
+              </span>
+              <span className="leading-tight">
+                <span className="block font-semibold text-ink">{title}</span>
+                <span className="block text-[13px] text-muted">{detail}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Container>
+    </section>
+  );
 }
 
 /**
@@ -274,13 +343,17 @@ function SearchExample({ q }: { q: string }) {
   return (
     <Link
       href={routes.search(q)}
-      className="rounded-md border border-white/15 bg-white/5 px-2 py-0.5 font-mono text-xs text-slate-200 transition-colors hover:border-cyan-300/50 hover:bg-cyan-400/10 hover:text-white"
+      className="font-mono text-[13px] text-action-600 underline decoration-action-200 underline-offset-4 transition-colors hover:decoration-action-600"
     >
       {q}
     </Link>
   );
 }
 
+/**
+ * The three families side by side, divided by rules rather than boxed as cards: they are one list read across,
+ * and every type inside is a direct link — two clicks from the home page to a filtered listing.
+ */
 async function Categories() {
   await connection();
   const categories = await getCategories();
@@ -289,13 +362,12 @@ async function Categories() {
     <>
       <SectionHeading
         title="Danh mục sản phẩm"
-        description="Chọn nhóm thiết bị bạn đang cần."
         action={
           <Link
             href={routes.categories}
-            className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-700"
+            className="group inline-flex items-center gap-1 text-[15px] font-medium text-action-600 hover:underline"
           >
-            Xem tất cả
+            Xem tất cả danh mục
             <ArrowRight
               className="size-4 transition-transform group-hover:translate-x-0.5"
               strokeWidth={1.5}
@@ -303,48 +375,45 @@ async function Categories() {
             />
           </Link>
         }
-        className="reveal mb-8"
+        className="mb-6"
       />
-      <ul className="stagger grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {categories.map((root, index) => {
-          const style = categoryStyle(root.slug);
-          const Icon = style.icon;
+      <ul className="reveal grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
+        {categories.map((root) => {
+          const Icon = categoryIcon(root.slug);
           return (
-            <li
-              key={root.slug}
-              style={{ "--i": index } as React.CSSProperties}
-              className="lift group relative overflow-hidden rounded-xl border border-line/80 bg-page p-6 shadow-card"
-            >
-              <span
-                className={`absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-linear-to-r transition-transform duration-500 group-hover:scale-x-100 ${style.bar}`}
-                aria-hidden
-              />
-              <div className="flex items-start justify-between gap-4">
-                <span
-                  className={`flex size-12 items-center justify-center rounded-lg ring-1 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${style.tile}`}
-                >
-                  <Icon className="size-6" strokeWidth={1.5} aria-hidden />
-                </span>
-                <span className="font-mono text-xs text-muted">
-                  {String(root.children.length).padStart(2, "0")} nhóm
-                </span>
-              </div>
-              <h3 className="mt-4 text-lg font-semibold text-ink">
-                <Link href={routes.category(root.slug)} className="after:absolute after:inset-0">
+            <li key={root.slug} className="bg-page p-5 sm:p-6">
+              <span className="flex size-11 items-center justify-center rounded-md bg-action-50 text-action-600">
+                <Icon className="size-6" strokeWidth={1.5} aria-hidden />
+              </span>
+              <h3 className="mt-3 text-2xl leading-tight">
+                <Link href={routes.category(root.slug)} className="hover:underline">
                   {root.name}
                 </Link>
               </h3>
-              <ul className="relative z-10 mt-4 flex flex-wrap gap-2">
-                {root.children.map((child) => (
-                  <li key={child.slug}>
-                    <Link
-                      href={routes.category(child.slug)}
-                      className={`inline-flex rounded-md border border-line/80 bg-canvas px-2.5 py-1 text-sm text-body transition-colors ${style.chip}`}
-                    >
-                      {child.name}
-                    </Link>
-                  </li>
-                ))}
+              <ul className="mt-3 -mx-2">
+                {root.children.map((child) => {
+                  const ChildIcon = categoryIcon(child.slug, root.slug);
+                  return (
+                    <li key={child.slug}>
+                      <Link
+                        href={routes.category(child.slug)}
+                        className="group flex items-center gap-2.5 rounded-md px-2 py-1.5 text-body transition-colors hover:bg-action-50 hover:text-action-700"
+                      >
+                        <ChildIcon
+                          className="size-4 text-muted group-hover:text-action-600"
+                          strokeWidth={1.5}
+                          aria-hidden
+                        />
+                        <span className="flex-1">{child.name}</span>
+                        <ChevronRight
+                          className="size-4 text-line-strong transition-transform group-hover:translate-x-0.5 group-hover:text-action-600"
+                          strokeWidth={1.5}
+                          aria-hidden
+                        />
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </li>
           );
@@ -362,99 +431,81 @@ async function FeaturedProducts() {
     <>
       <SectionHeading
         title="Sản phẩm tiêu biểu"
-        description="Những mã được hỏi nhiều nhất."
         action={
           <Link
             href={routes.products}
-            className="text-sm font-medium text-brand-700 hover:underline"
+            className="group inline-flex items-center gap-1 text-[15px] font-medium text-action-600 hover:underline"
           >
-            Tất cả sản phẩm
+            Tất cả {result.totalItems} sản phẩm
+            <ArrowRight
+              className="size-4 transition-transform group-hover:translate-x-0.5"
+              strokeWidth={1.5}
+              aria-hidden
+            />
           </Link>
         }
-        className="reveal mb-8"
+        className="mb-6"
       />
       <ProductGrid products={result.items} />
     </>
   );
 }
 
+/** The makers we supply, as a still grid: a buyer scans it for their brand, which a moving marquee prevents. */
 async function Partners() {
   await connection();
   const partners = await getPartners();
   if (partners.length === 0) return null;
 
-  // Rendered twice for a seamless loop; the copy is hidden from assistive tech and crawlers see one list.
-  const row = (hidden: boolean) =>
-    partners.map((partner) => (
-      <li
-        key={`${partner.slug}-${hidden}`}
-        aria-hidden={hidden || undefined}
-        className="flex h-20 w-44 shrink-0 items-center justify-center rounded-lg border border-line/80 bg-page p-4 shadow-card grayscale transition duration-300 hover:scale-105 hover:grayscale-0"
-      >
-        {partner.logoUrl ? (
-          <span className="relative h-full w-full">
-            <Image
-              src={partner.logoUrl}
-              alt={hidden ? "" : partner.name}
-              fill
-              sizes="176px"
-              className="object-contain"
-            />
-          </span>
-        ) : (
-          <span className="text-sm font-semibold text-body">{partner.name}</span>
-        )}
-      </li>
-    ));
-
   return (
     <>
-      <Container>
-        <SectionHeading
-          title="Hãng chúng tôi phân phối"
-          description="Hàng chính hãng, có chứng từ đầy đủ."
-          className="reveal mb-8"
-        />
-      </Container>
-      <div className="group relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]">
-        <ul className="flex w-max animate-marquee gap-4 py-2 group-hover:[animation-play-state:paused]">
-          {row(false)}
-          {row(true)}
-        </ul>
-      </div>
+      <SectionHeading
+        title="Hãng chúng tôi phân phối"
+        description="Hàng chính hãng, có chứng từ đầy đủ."
+        className="mb-6"
+      />
+      <ul className="plate-cells reveal rounded-lg [--cell:10rem]">
+        {partners.map((partner) => (
+          <li
+            key={partner.slug}
+            className="group flex h-24 items-center justify-center p-5 transition-colors hover:bg-action-50"
+          >
+            {partner.logoUrl ? (
+              <span className="relative h-full w-full">
+                <Image
+                  src={partner.logoUrl}
+                  alt={partner.name}
+                  fill
+                  sizes="200px"
+                  className="object-contain grayscale transition duration-300 group-hover:grayscale-0"
+                />
+              </span>
+            ) : (
+              <span className="font-display text-xl font-semibold text-body transition-colors group-hover:text-action-700">
+                {partner.name}
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
 
 function CategoriesSkeleton() {
-  return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-hidden>
-      {[0, 1, 2].map((index) => (
-        <Skeleton key={index} className="h-40" />
-      ))}
-    </div>
-  );
+  return <Skeleton className="h-72 w-full" />;
 }
 
 function ProductsSkeleton() {
   return (
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4" aria-hidden>
       {Array.from({ length: 8 }, (_, index) => (
-        <Skeleton key={index} className="h-64" />
+        <Skeleton key={index} className="h-72" />
       ))}
     </div>
   );
 }
 
 function PartnersSkeleton() {
-  return (
-    <div
-      className="mx-auto grid max-w-7xl px-4 sm:px-6 lg:px-8 grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5"
-      aria-hidden
-    >
-      {Array.from({ length: 5 }, (_, index) => (
-        <Skeleton key={index} className="h-24" />
-      ))}
-    </div>
-  );
+  return <Skeleton className="h-48 w-full" />;
 }

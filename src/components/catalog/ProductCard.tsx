@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { PartNumber } from "@/components/ui/PartNumber";
 import { Price } from "@/components/ui/Price";
 import type { ProductSummary } from "@/lib/api/types";
 import { routes } from "@/lib/routes";
+import { CardQuoteAction } from "./CardQuoteAction";
 import { ProductImage } from "./ProductImage";
 
 /**
@@ -20,58 +20,48 @@ export function ProductCard({
   const extra = product.variantCount - product.partNumbers.length;
 
   return (
-    <article className="lift group relative flex w-full flex-col overflow-hidden rounded-xl border border-line/80 bg-page shadow-card hover:border-brand-200">
-      <span
-        className="absolute inset-x-0 top-0 z-10 h-0.5 origin-left scale-x-0 bg-linear-to-r from-brand-600 to-cyan-accent transition-transform duration-500 group-hover:scale-x-100"
-        aria-hidden
-      />
-      <Link
-        href={routes.product(product.slug)}
-        className="relative block aspect-4/3 overflow-hidden bg-linear-to-b from-page to-canvas"
-      >
+    <article className="group hover-lift relative flex w-full flex-col overflow-hidden rounded-lg border border-line bg-page">
+      {/* The whole card is the name's link (its ::after covers the card); the photo needs no link of its own. */}
+      <div className="relative aspect-4/3 overflow-hidden border-b border-line bg-surface">
         <ProductImage
           src={product.imageUrl}
-          alt={product.name}
+          alt=""
           eager={priority}
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-          className="p-4 transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+          className="p-3 mix-blend-multiply transition-transform duration-300 ease-out group-hover:scale-105"
         />
-      </Link>
+      </div>
 
-      <div className="flex flex-1 flex-col gap-2 border-t border-line/80 p-4">
+      <div className="flex flex-1 flex-col p-3 sm:p-4">
         {product.brand && (
-          <p className="text-[11px] font-semibold tracking-wider text-brand-700 uppercase">
-            {product.brand.name}
-          </p>
+          <p className="text-[13px] font-medium text-brand-700">{product.brand.name}</p>
         )}
-        <h3 className="text-sm leading-snug font-semibold text-ink">
-          <Link href={routes.product(product.slug)} className="hover:text-brand-700">
+        <h3 className="mt-0.5 font-sans text-[15px] leading-snug font-medium">
+          <Link
+            href={routes.product(product.slug)}
+            className="transition-colors after:absolute after:inset-0 group-hover:text-action-700"
+          >
             {product.name}
           </Link>
         </h3>
 
+        {/* The label strip: what the visitor compares against the tag on the part in their hand. */}
         {product.partNumbers.length > 0 && (
-          <ul className="flex flex-wrap items-center gap-1">
+          <ul className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-dashed border-line pt-2.5">
             {product.partNumbers.slice(0, 3).map((partNumber) => (
-              <li key={partNumber} className="rounded bg-surface px-1.5 py-0.5">
-                <PartNumber value={partNumber} copyable={false} className="text-[11px]" />
+              <li key={partNumber} className="min-w-0 break-all">
+                <PartNumber value={partNumber} copyable={false} className="text-[13px]" />
               </li>
             ))}
-            {extra > 0 && <li className="px-1 font-mono text-[11px] text-muted">+{extra}</li>}
+            {extra > 0 && <li className="font-mono text-xs text-muted">+{extra}</li>}
           </ul>
         )}
 
-        <div className="mt-auto flex items-center justify-between border-t border-dashed border-line pt-3">
-          <Price price={product.price} className="text-sm" />
-          <span className="flex items-center gap-1 font-mono text-[11px] text-muted transition-colors group-hover:text-brand-700">
-            {product.variantCount} mã
-            <ArrowRight
-              className="size-3 -translate-x-1 opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100"
-              strokeWidth={1.5}
-              aria-hidden
-            />
-          </span>
+        <div className="mt-auto flex items-center justify-between pt-3 pb-3 text-[13px]">
+          <Price price={product.price} />
+          <span className="text-muted">{product.variantCount} mã</span>
         </div>
+        <CardQuoteAction product={product} />
       </div>
     </article>
   );
@@ -79,7 +69,7 @@ export function ProductCard({
 
 export function ProductGrid({ products }: { products: ProductSummary[] }) {
   return (
-    <ul className="stagger grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+    <ul className="stagger grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
       {products.map((product, index) => (
         <li key={product.slug} className="flex" style={{ "--i": index } as React.CSSProperties}>
           <ProductCard product={product} priority={index < 4} />

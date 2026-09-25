@@ -21,12 +21,14 @@ export function SearchBox({
   shortcut,
   className,
   size = "md",
+  placeholder = "Mã sản phẩm, part number, hãng sản xuất…",
 }: {
   defaultValue?: string;
   autoFocus?: boolean;
   shortcut?: boolean;
   className?: string;
   size?: "md" | "lg";
+  placeholder?: string;
 }) {
   const router = useRouter();
   const [value, setValue] = useState(defaultValue);
@@ -73,18 +75,21 @@ export function SearchBox({
         value={value}
         autoFocus={autoFocus}
         onChange={(event) => setValue(event.target.value)}
-        placeholder="Mã sản phẩm, part number, hãng sản xuất…"
+        placeholder={placeholder}
         autoComplete="off"
         spellCheck={false}
         className={cn(
-          "peer w-full rounded-md border border-line-strong bg-surface pl-10 text-sm text-ink shadow-card",
-          "transition-colors placeholder:text-muted hover:border-muted focus:border-brand-700 focus:bg-page",
+          "peer w-full rounded-md border border-line-strong bg-page pl-10 text-ink",
+          "transition-colors placeholder:text-muted hover:border-muted focus:border-action-600",
           shortcut ? "pr-28" : "pr-20",
-          size === "lg" ? "h-12 text-base" : "h-10",
+          size === "lg" ? "h-14 pl-11 text-lg" : "h-10 text-[15px]",
         )}
       />
       <Search
-        className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted"
+        className={cn(
+          "pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-muted",
+          size === "lg" ? "size-5" : "size-4",
+        )}
         strokeWidth={1.5}
         aria-hidden
       />
@@ -99,9 +104,9 @@ export function SearchBox({
       <button
         type="submit"
         className={cn(
-          "absolute top-1/2 right-1 -translate-y-1/2 rounded bg-linear-to-r from-navy to-brand-900 px-4 text-sm font-semibold text-white",
-          "transition-all hover:from-brand-900 hover:to-brand-700",
-          size === "lg" ? "h-10" : "h-8",
+          "absolute top-1/2 right-1 -translate-y-1/2 rounded-sm bg-action-600 font-semibold text-white",
+          "transition-colors hover:bg-action-700",
+          size === "lg" ? "h-12 px-6 text-base" : "h-8 px-4 text-sm",
         )}
       >
         Tìm

@@ -3,7 +3,7 @@ import { cn } from "@/lib/cn";
 type Tone = "neutral" | "brand" | "success" | "warning" | "danger";
 
 /**
- * A short fact next to a product: "Chính hãng", "12 mã", "Giao toàn quốc". Tones carry meaning — emerald is
+ * A short fact next to a product: "Chính hãng", "12 mã", "Giao toàn quốc". Tones carry meaning — green is
  * available/genuine, amber is pending — so a badge is never coloured for decoration.
  */
 

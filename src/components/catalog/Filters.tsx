@@ -42,14 +42,14 @@ export function Filters({
   return (
     <aside
       aria-label="Bộ lọc"
-      className="self-start overflow-hidden rounded-lg border border-line/80 bg-page shadow-card lg:sticky lg:top-24"
+      className="self-start overflow-hidden rounded-lg border border-line bg-page lg:sticky lg:top-24"
     >
-      <div className="flex items-center justify-between border-b border-line/80 px-4 py-3">
-        <h2 className="text-xs font-semibold tracking-wide text-ink uppercase">Bộ lọc kỹ thuật</h2>
+      <div className="flex items-center justify-between border-b border-line px-4 py-3">
+        <h2 className="text-lg">Bộ lọc</h2>
         {activeBrand && (
           <Link
             href={href({ brand: undefined })}
-            className="text-xs font-medium text-brand-700 hover:underline"
+            className="text-xs font-medium text-action-600 hover:underline"
           >
             Xóa lọc
           </Link>
@@ -57,10 +57,10 @@ export function Filters({
       </div>
 
       {activeBrandName && (
-        <div className="flex flex-wrap gap-1.5 border-b border-line/80 px-4 py-3">
+        <div className="flex flex-wrap gap-1.5 border-b border-line px-4 py-3">
           <Link
             href={href({ brand: undefined })}
-            className="inline-flex items-center gap-1 rounded-md border border-brand-200 bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-800 hover:bg-brand-100"
+            className="inline-flex items-center gap-1 rounded-md border border-line-strong bg-surface px-2 py-0.5 text-[13px] font-medium text-ink hover:border-muted"
             aria-label={`Bỏ lọc thương hiệu ${activeBrandName}`}
           >
             {activeBrandName}
@@ -89,8 +89,8 @@ export function Filters({
 
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <details open className="group border-b border-line/80 last:border-b-0">
-      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-sm font-semibold text-ink transition-colors select-none hover:bg-slate-50/80 [&::-webkit-details-marker]:hidden">
+    <details open className="group border-b border-line last:border-b-0">
+      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-[15px] font-semibold text-ink transition-colors select-none hover:bg-surface [&::-webkit-details-marker]:hidden">
         {title}
         <ChevronDown
           className="size-4 text-muted transition-transform group-open:rotate-180"
@@ -123,17 +123,17 @@ function Option({
         href={href}
         aria-current={active ? "true" : undefined}
         className={cn(
-          "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors",
+          "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[15px] transition-colors",
           active
-            ? "bg-brand-50 font-medium text-brand-900"
-            : "text-body hover:bg-slate-50/80 hover:text-ink",
+            ? "bg-action-50 font-medium text-action-800"
+            : "text-body hover:bg-surface hover:text-ink",
         )}
       >
         {check && (
           <span
             className={cn(
               "flex size-4 shrink-0 items-center justify-center rounded border",
-              active ? "border-brand-900 bg-brand-900" : "border-line-strong bg-page",
+              active ? "border-action-600 bg-action-600" : "border-line-strong bg-page",
             )}
             aria-hidden
           >

@@ -20,9 +20,7 @@ export default function CategoriesPage() {
   return (
     <Container className="py-6 lg:py-10">
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Danh mục" }]} />
-      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-        Danh mục sản phẩm
-      </h1>
+      <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">Danh mục sản phẩm</h1>
 
       <Suspense fallback={<TreeSkeleton />}>
         <CategoryTree />
@@ -38,12 +36,9 @@ async function CategoryTree() {
   return (
     <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {categories.map((root) => (
-        <section
-          key={root.slug}
-          className="rounded-lg border border-line/80 bg-page shadow-card p-5"
-        >
-          <h2 className="text-base font-semibold text-ink">
-            <Link href={routes.category(root.slug)} className="hover:text-brand-700">
+        <section key={root.slug} className="rounded-lg border border-line bg-page p-5">
+          <h2 className="text-xl">
+            <Link href={routes.category(root.slug)} className="hover:text-action-600">
               {root.name}
             </Link>
           </h2>
@@ -54,7 +49,7 @@ async function CategoryTree() {
                 <li key={child.slug}>
                   <Link
                     href={routes.category(child.slug)}
-                    className="text-sm text-body hover:text-brand-700"
+                    className="text-sm text-body hover:text-action-600"
                   >
                     {child.name}
                   </Link>

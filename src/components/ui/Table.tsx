@@ -21,7 +21,7 @@ export function Th({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   return (
     <th
       className={cn(
-        "border-b border-line bg-surface px-3 py-2.5 text-left text-xs font-semibold tracking-wide whitespace-nowrap text-muted uppercase",
+        "border-b border-line bg-surface px-3 py-2 text-left text-[13px] font-medium whitespace-nowrap text-muted",
         className,
       )}
       {...props}
@@ -32,7 +32,7 @@ export function Th({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
 export function Td({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={cn("border-b border-line/80 px-3 py-2.5 align-top text-body", className)}
+      className={cn("border-b border-line px-3 py-2.5 align-top text-body", className)}
       {...props}
     />
   );
@@ -43,7 +43,7 @@ export function Td({ className, ...props }: React.TdHTMLAttributes<HTMLTableCell
  */
 /** A body row with the one hover the whole site uses for data rows. */
 export function Tr({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
-  return <tr className={cn("transition-colors hover:bg-slate-50/80", className)} {...props} />;
+  return <tr className={cn("transition-colors hover:bg-surface", className)} {...props} />;
 }
 
 export function SpecList({
@@ -55,13 +55,13 @@ export function SpecList({
 }) {
   if (items.length === 0) return null;
   return (
-    <dl className={cn("divide-y divide-line/80 border-y border-line/80", className)}>
+    <dl className={cn("divide-y divide-line border-y border-line", className)}>
       {items.map((item) => (
         <div
           key={item.name}
-          className="grid grid-cols-1 gap-1 px-1 py-2.5 transition-colors hover:bg-slate-50/80 sm:grid-cols-3 sm:gap-4"
+          className="grid grid-cols-1 gap-1 px-1 py-2.5 transition-colors hover:bg-surface sm:grid-cols-3 sm:gap-4"
         >
-          <dt className="text-sm text-muted">{item.name}</dt>
+          <dt className="text-[15px] text-muted">{item.name}</dt>
           <dd className="font-mono text-[13px] text-ink sm:col-span-2">{item.value}</dd>
         </div>
       ))}

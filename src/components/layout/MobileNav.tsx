@@ -80,14 +80,14 @@ export function MobileNav({ categories }: { categories: CategoryNode[] }) {
             <Link
               href={routes.brands}
               onClick={() => setOpen(false)}
-              className="block px-2 py-1.5 text-sm font-medium text-brand-700"
+              className="block px-2 py-1.5 text-sm font-medium text-action-600"
             >
               Tất cả thương hiệu
             </Link>
             <Link
               href={routes.about}
               onClick={() => setOpen(false)}
-              className="block px-2 py-1.5 text-sm font-medium text-brand-700"
+              className="block px-2 py-1.5 text-sm font-medium text-action-600"
             >
               Giới thiệu
             </Link>

@@ -3,23 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { connection } from "next/server";
-import {
-  ArrowDown,
-  BadgeCheck,
-  Check,
-  FileCheck2,
-  FileDown,
-  Globe2,
-  Layers,
-  ShieldCheck,
-  Truck,
-} from "lucide-react";
+import { ArrowDown, Check, FileDown } from "lucide-react";
 import { AddToQuote } from "@/components/quote/AddToQuote";
 import { QuickQuoteForm } from "@/components/quote/QuickQuoteForm";
 import { ProductGallery } from "@/components/catalog/ProductGallery";
 import { ProductGrid } from "@/components/catalog/ProductCard";
 import { VariantOrderMatrix } from "@/components/catalog/VariantOrderMatrix";
-import { Badge } from "@/components/ui/Badge";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -120,84 +109,52 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
       />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-12 lg:gap-10">
-        <div className="animate-fade-up lg:col-span-5">
+        <div className="lg:col-span-5">
           <ProductGallery images={product.images} name={product.name} />
         </div>
 
-        <div className="animate-fade-up [animation-delay:100ms] lg:col-span-7">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-semibold tracking-wide uppercase">
-            {product.brand && (
-              <Link
-                href={routes.brand(product.brand.slug)}
-                className="text-brand-700 hover:underline"
-              >
-                {product.brand.name}
-              </Link>
-            )}
-            {product.brand && category && <span className="text-line-strong">/</span>}
-            {category && (
-              <Link href={routes.category(category.slug)} className="text-muted hover:text-ink">
-                {category.name}
-              </Link>
-            )}
-          </div>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-balance text-ink sm:text-3xl">
-            {product.name}
-          </h1>
-          {product.summary && <p className="mt-3 max-w-2xl text-body">{product.summary}</p>}
+        <div className="lg:col-span-7">
+          {/* The nameplate: the facts a buyer checks against the part in their hand, boxed like its rating plate. */}
+          <div className="plate px-5 pt-6 pb-5 sm:px-8 sm:pt-8 sm:pb-7">
+            <p className="flex flex-wrap items-center gap-x-2 text-[15px]">
+              {product.brand && (
+                <Link
+                  href={routes.brand(product.brand.slug)}
+                  className="font-medium text-action-600 hover:underline"
+                >
+                  {product.brand.name}
+                </Link>
+              )}
+              {product.brand && category && (
+                <span className="text-line-strong" aria-hidden>
+                  /
+                </span>
+              )}
+              {category && (
+                <Link href={routes.category(category.slug)} className="text-muted hover:text-ink">
+                  {category.name}
+                </Link>
+              )}
+            </p>
+            <h1 className="mt-1 text-[2rem] leading-[1.1] text-balance sm:text-[2.75rem]">
+              {product.name}
+            </h1>
+            {product.summary && <p className="mt-3 max-w-2xl text-body">{product.summary}</p>}
 
-          <TrustBadges product={product} />
-
-          <Card className="relative mt-6 overflow-hidden p-5">
-            <span
-              className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-brand-700 via-brand-500 to-cyan-accent"
-              aria-hidden
-            />
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold tracking-wide text-muted uppercase">Đơn giá</p>
-                <Price
-                  price={product.price}
-                  className="text-gradient-ink mt-1 block text-3xl font-bold"
-                />
-              </div>
-              <p className="max-w-64 text-xs leading-relaxed text-muted">
-                Giá sỉ theo số lượng và thời điểm đặt hàng. Gửi yêu cầu để nhận báo giá chính xác
-                qua email.
-              </p>
-            </div>
-
-            {product.variants.length > 0 && (
-              <div className="mt-5 border-t border-line/80 pt-4">
-                <p className="text-xs font-semibold tracking-wide text-muted uppercase">
-                  {product.variants.length > 1
-                    ? `${product.variants.length} mã sản phẩm`
-                    : "Mã sản phẩm"}
-                </p>
-                <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1.5">
-                  {product.variants.slice(0, 6).map((variant) => (
-                    <li key={variant.partNumber}>
-                      <PartNumber value={variant.partNumber} />
-                    </li>
-                  ))}
-                  {product.variants.length > 6 && (
-                    <li className="self-center text-sm text-muted">
-                      <a href="#dat-hang" className="hover:text-brand-700 hover:underline">
-                        +{product.variants.length - 6} mã khác
-                      </a>
-                    </li>
-                  )}
-                </ul>
-              </div>
-            )}
+            <PlateFields product={product} />
 
             {/* Two ways in, on purpose: the matrix for a buyer collecting a service kit, the quick form for the
                 visitor after one part who would otherwise just close the tab. */}
-            <div className="mt-5 flex flex-wrap items-start gap-3">
-              {product.variants.length > 0 ? (
+            <div className="mt-6 flex flex-wrap items-start gap-3">
+              {product.variants.length > 1 ? (
                 <ButtonLink href="#dat-hang" size="lg">
                   <ArrowDown className="size-4" strokeWidth={1.5} aria-hidden />
-                  Chọn mã &amp; số lượng
+                  Chọn mã và số lượng
+                </ButtonLink>
+              ) : product.variants.length === 1 ? (
+                <ButtonLink href="#dat-hang" size="lg">
+                  <ArrowDown className="size-4" strokeWidth={1.5} aria-hidden />
+                  Nhập số lượng
                 </ButtonLink>
               ) : (
                 <AddToQuote product={basketProduct} />
@@ -206,7 +163,7 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
                 <QuickQuote product={product} partNumbers={partNumbers} />
               </Suspense>
             </div>
-          </Card>
+          </div>
 
           {product.documents.length > 0 && (
             <ul className="mt-4 flex flex-wrap gap-2">
@@ -216,10 +173,10 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
                     href={document.url}
                     target="_blank"
                     rel="noopener"
-                    className="inline-flex h-9 items-center gap-2 rounded-md border border-line/80 bg-page px-3 text-sm font-medium text-ink shadow-card transition-colors hover:bg-surface"
+                    className="inline-flex h-10 items-center gap-2 rounded-md border border-line-strong bg-page px-3 text-sm font-medium text-ink transition-colors hover:border-muted"
                   >
                     <FileDown className="size-4 text-brand-700" strokeWidth={1.5} aria-hidden />
-                    Spec sheet
+                    Tài liệu kỹ thuật
                     <span className="max-w-48 truncate font-mono text-xs text-muted">
                       {document.filename}
                     </span>
@@ -232,9 +189,9 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
           {product.highlights.length > 0 && (
             <ul className="mt-6 space-y-2">
               {product.highlights.map((highlight) => (
-                <li key={highlight} className="flex gap-2.5 text-sm text-body">
+                <li key={highlight} className="flex gap-2.5 text-body">
                   <Check
-                    className="mt-0.5 size-4 shrink-0 text-success"
+                    className="mt-1 size-4 shrink-0 text-success"
                     strokeWidth={1.5}
                     aria-hidden
                   />
@@ -247,30 +204,27 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
       </div>
 
       {product.variants.length > 0 && (
-        <section id="dat-hang" className="reveal mt-12 scroll-mt-24">
+        <section id="dat-hang" className="mt-14 scroll-mt-24">
           <SectionHeading
             title="Đặt hàng theo mã"
-            description="Nhập số lượng cho từng mã — Tab hoặc Enter để sang mã kế tiếp. Mã được tra cứu không phân biệt hoa thường và dấu gạch."
+            description="Nhập số lượng cho từng mã, rồi nhấn Tab hoặc Enter để sang mã kế tiếp."
             className="mb-4"
           />
           <VariantOrderMatrix product={basketProduct} variants={product.variants} />
         </section>
       )}
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-12">
-        {product.specifications.length > 0 && (
-          <section className="reveal lg:col-span-7">
-            <SectionHeading title="Thông số kỹ thuật" className="mb-4" />
-            <Card className="px-4 py-1">
-              <SpecList items={product.specifications} className="border-y-0" />
-            </Card>
-          </section>
-        )}
-        <CommercialTerms product={product} />
-      </div>
+      {product.specifications.length > 0 && (
+        <section className="mt-14 max-w-3xl">
+          <SectionHeading title="Thông số kỹ thuật" className="mb-4" />
+          <Card className="px-4 py-1">
+            <SpecList items={product.specifications} className="border-y-0" />
+          </Card>
+        </section>
+      )}
 
       {product.description && (
-        <section className="mt-12 max-w-3xl">
+        <section className="mt-14 max-w-3xl">
           <SectionHeading title="Mô tả" className="mb-4" />
           <div className="space-y-3 leading-relaxed text-body">
             {product.description.split(/\n{2,}/).map((paragraph, index) => (
@@ -290,58 +244,63 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
 }
 
 /**
- * The facts a purchaser checks before asking for a price, as badges under the name. Only what the catalogue
- * actually records is shown — no invented stock levels or minimum order quantities.
+ * The plate's fields: the part numbers first (what the visitor searched for), then the facts a purchaser checks
+ * before asking for a price. Only what the catalogue records is shown — no invented stock levels or minimum
+ * order quantities — and a missing fact is left out rather than shown blank.
  */
-function TrustBadges({ product }: { product: ProductDetail }) {
+function PlateFields({ product }: { product: ProductDetail }) {
   const { commercial } = product;
-  const badges: { icon: React.ReactNode; text: string; tone: "neutral" | "success" | "brand" }[] =
-    [];
-  const icon = { strokeWidth: 1.5, "aria-hidden": true } as const;
+  const facts = [
+    { name: "Hãng", value: product.brand?.name },
+    { name: "Tình trạng", value: commercial.condition },
+    { name: "Bảo hành", value: commercial.warranty },
+    { name: "Xuất xứ", value: commercial.origin },
+    { name: "Chứng từ", value: commercial.documents },
+    { name: "Giao hàng", value: commercial.delivery },
+  ].filter((fact): fact is { name: string; value: string } => Boolean(fact.value));
+  const shown = product.variants.slice(0, 6);
+  const more = product.variants.length - shown.length;
 
-  if (product.variants.length > 1) {
-    badges.push({
-      icon: <Layers {...icon} />,
-      text: `${product.variants.length} mã`,
-      tone: "neutral",
-    });
-  }
-  if (commercial.condition) {
-    badges.push({ icon: <BadgeCheck {...icon} />, text: commercial.condition, tone: "success" });
-  }
-  if (commercial.warranty) {
-    badges.push({
-      icon: <ShieldCheck {...icon} />,
-      text: `Bảo hành: ${commercial.warranty}`,
-      tone: "neutral",
-    });
-  }
-  if (commercial.origin) {
-    badges.push({
-      icon: <Globe2 {...icon} />,
-      text: `Xuất xứ: ${commercial.origin}`,
-      tone: "neutral",
-    });
-  }
-  if (commercial.documents) {
-    badges.push({ icon: <FileCheck2 {...icon} />, text: commercial.documents, tone: "neutral" });
-  }
-  if (commercial.delivery) {
-    badges.push({ icon: <Truck {...icon} />, text: commercial.delivery, tone: "brand" });
-  }
-
-  if (badges.length === 0) return null;
   return (
-    <ul className="mt-4 flex flex-wrap gap-2">
-      {badges.map((badge) => (
-        <li key={badge.text}>
-          <Badge tone={badge.tone} className="py-1">
-            {badge.icon}
-            {badge.text}
-          </Badge>
-        </li>
+    <dl className="plate-cells mt-6">
+      {shown.length > 0 && (
+        <div className="col-span-full">
+          <dt className="text-[13px] text-muted">
+            {product.variants.length > 1 ? `${product.variants.length} mã sản phẩm` : "Mã sản phẩm"}
+          </dt>
+          <dd className="mt-0.5 flex flex-wrap items-center gap-x-5 gap-y-1">
+            {shown.map((variant) => (
+              <PartNumber
+                key={variant.partNumber}
+                value={variant.partNumber}
+                className="text-[17px]"
+              />
+            ))}
+            {more > 0 && (
+              <a href="#dat-hang" className="text-sm text-muted hover:text-ink hover:underline">
+                +{more} mã khác
+              </a>
+            )}
+          </dd>
+        </div>
+      )}
+      {facts.map((fact) => (
+        <div key={fact.name}>
+          <dt className="text-[13px] text-muted">{fact.name}</dt>
+          <dd className="mt-0.5 font-medium text-ink">{fact.value}</dd>
+        </div>
       ))}
-    </ul>
+      <div className="col-span-full bg-surface">
+        <dt className="text-[13px] text-muted">Đơn giá</dt>
+        <dd className="mt-0.5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+          <Price price={product.price} className="font-display text-2xl font-semibold" />
+          <span className="max-w-sm text-[13px] text-muted">
+            Giá sỉ theo số lượng và thời điểm đặt hàng. Gửi yêu cầu để nhận báo giá chính xác qua
+            email.
+          </span>
+        </dd>
+      </div>
+    </dl>
   );
 }
 
@@ -389,26 +348,6 @@ async function QuickQuote({
   );
 }
 
-function CommercialTerms({ product }: { product: ProductDetail }) {
-  const terms = [
-    { name: "Xuất xứ", value: product.commercial.origin },
-    { name: "Bảo hành", value: product.commercial.warranty },
-    { name: "Tình trạng", value: product.commercial.condition },
-    { name: "Chứng từ", value: product.commercial.documents },
-    { name: "Giao hàng", value: product.commercial.delivery },
-  ].filter((term): term is { name: string; value: string } => Boolean(term.value));
-
-  if (terms.length === 0) return null;
-  return (
-    <section className="reveal lg:col-span-5">
-      <SectionHeading title="Điều kiện thương mại" className="mb-4" />
-      <Card className="px-4 py-1">
-        <SpecList items={terms} className="border-y-0" />
-      </Card>
-    </section>
-  );
-}
-
 /**
  * "Khách cũng xem": other products in the same category. Done with the existing search endpoint rather than a
  * new one — with a catalogue this size, same-category is as good a signal as anything an endpoint could compute.
@@ -427,7 +366,7 @@ async function RelatedProducts({
 
   return (
     <section className="mt-16">
-      <SectionHeading title="Sản phẩm cùng danh mục" className="mb-4" />
+      <SectionHeading title="Sản phẩm cùng loại" className="mb-4" />
       <ProductGrid products={related} />
     </section>
   );

@@ -27,7 +27,7 @@ export function EmptyState({
         className,
       )}
     >
-      <p className="text-base font-medium text-ink">{title}</p>
+      <p className="font-display text-xl font-semibold text-ink">{title}</p>
       {description && <p className="mx-auto mt-1.5 max-w-md text-sm text-body">{description}</p>}
       {action && <div className="mt-5 flex justify-center gap-3">{action}</div>}
     </div>
@@ -37,7 +37,7 @@ export function EmptyState({
 type Tone = "info" | "success" | "warning" | "danger";
 
 const tones: Record<Tone, string> = {
-  info: "border-brand-200 bg-brand-50 text-brand-900",
+  info: "border-action-200 bg-action-50 text-action-800",
   success: "border-success/20 bg-success-soft text-success",
   warning: "border-warning/20 bg-warning-soft text-warning",
   danger: "border-danger/20 bg-danger-soft text-danger",

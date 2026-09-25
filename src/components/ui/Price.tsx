@@ -22,5 +22,5 @@ export function Price({ price, className }: { price: PriceValue | null; classNam
       </span>
     );
   }
-  return <span className={cn("font-medium text-brand-700", className)}>Liên hệ</span>;
+  return <span className={cn("font-medium text-ink", className)}>Liên hệ</span>;
 }

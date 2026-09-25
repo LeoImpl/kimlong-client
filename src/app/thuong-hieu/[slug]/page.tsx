@@ -75,14 +75,14 @@ async function BrandContent({ params, searchParams }: PageProps<"/thuong-hieu/[s
         ]}
       />
 
-      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">{brand.name}</h1>
+      <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">{brand.name}</h1>
       {brand.description && <p className="mt-2 max-w-3xl text-body">{brand.description}</p>}
       {brand.websiteUrl && (
         <a
           href={brand.websiteUrl}
           target="_blank"
           rel="noopener nofollow"
-          className="mt-2 inline-block text-sm text-brand-700 hover:underline"
+          className="mt-2 inline-block text-sm text-action-600 hover:underline"
         >
           Trang chủ hãng
         </a>
@@ -131,17 +131,15 @@ function CategoryFacets({ facets, brandSlug }: { facets: Facets | null; brandSlu
   return (
     <aside
       aria-label="Danh mục"
-      className="self-start overflow-hidden rounded-lg border border-line/80 bg-page shadow-card lg:sticky lg:top-24"
+      className="self-start overflow-hidden rounded-lg border border-line bg-page lg:sticky lg:top-24"
     >
-      <h2 className="border-b border-line/80 px-4 py-3 text-xs font-semibold tracking-wide text-ink uppercase">
-        Danh mục
-      </h2>
+      <h2 className="border-b border-line px-4 py-3 text-lg">Danh mục</h2>
       <ul className="space-y-0.5 p-2">
         {facets.categories.map((category) => (
           <li key={category.slug}>
             <Link
               href={`${routes.category(category.slug)}?brand=${encodeURIComponent(brandSlug)}`}
-              className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm text-body transition-colors hover:bg-slate-50/80 hover:text-ink"
+              className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm text-body transition-colors hover:bg-surface hover:text-ink"
             >
               <span>{category.name}</span>
               <span className="font-mono text-[11px] text-muted">{category.count}</span>

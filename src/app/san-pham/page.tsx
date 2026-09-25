@@ -32,7 +32,7 @@ export default function ProductsPage({ searchParams }: PageProps<"/san-pham">) {
   return (
     <Container className="py-6 lg:py-10">
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Sản phẩm" }]} />
-      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">Sản phẩm</h1>
+      <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">Sản phẩm</h1>
 
       <Suspense fallback={<Skeleton className="mt-6 h-12 max-w-2xl" />}>
         <QueryBox searchParams={searchParams} />

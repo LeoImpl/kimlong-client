@@ -89,10 +89,7 @@ export function VariantOrderMatrix({
 
   return (
     <div
-      className={cn(
-        "overflow-hidden rounded-lg border border-line/80 bg-page shadow-card",
-        narrow && "max-w-2xl",
-      )}
+      className={cn("overflow-hidden rounded-lg border border-line bg-page", narrow && "max-w-2xl")}
     >
       <div className="relative overflow-x-auto">
         <table className="w-full border-collapse text-sm">
@@ -100,7 +97,7 @@ export function VariantOrderMatrix({
             Danh sách mã sản phẩm — nhập số lượng để thêm vào yêu cầu báo giá
           </caption>
           <thead>
-            <tr className="bg-surface text-left text-xs font-semibold tracking-wide whitespace-nowrap text-muted uppercase">
+            <tr className="bg-surface text-left text-[13px] font-medium whitespace-nowrap text-muted">
               <th scope="col" className="border-b border-line px-4 py-2.5">
                 Mã sản phẩm
               </th>
@@ -136,12 +133,12 @@ export function VariantOrderMatrix({
                 <tr
                   key={variant.partNumber}
                   className={cn(
-                    "transition-colors duration-300 hover:bg-slate-50/80",
+                    "transition-colors duration-300 hover:bg-surface",
                     quantity > 0 &&
-                      "bg-brand-50/70 shadow-[inset_3px_0_0_var(--color-brand-600)] hover:bg-brand-50",
+                      "bg-action-50/70 shadow-[inset_3px_0_0_var(--color-action-600)] hover:bg-action-50",
                   )}
                 >
-                  <td className="border-b border-line/80 px-4 py-2">
+                  <td className="border-b border-line px-4 py-2">
                     <span className="flex items-center gap-2">
                       <PartNumber value={variant.partNumber} copyTabbable={false} />
                       {inBasket.has(variant.partNumber) && (
@@ -156,26 +153,26 @@ export function VariantOrderMatrix({
                     </span>
                   </td>
                   {showLabel && (
-                    <td className="border-b border-line/80 px-3 py-2 text-body">
+                    <td className="border-b border-line px-3 py-2 text-body">
                       {variant.label ?? "—"}
                     </td>
                   )}
                   {showOrderCode && (
-                    <td className="border-b border-line/80 px-3 py-2 font-mono text-xs text-body">
+                    <td className="border-b border-line px-3 py-2 font-mono text-xs text-body">
                       {variant.orderCode ?? "—"}
                     </td>
                   )}
                   {specNames.map((name) => (
-                    <td key={name} className="border-b border-line/80 px-3 py-2 text-body">
+                    <td key={name} className="border-b border-line px-3 py-2 text-body">
                       {variant.specifications.find((s) => s.name === name)?.value ?? "—"}
                     </td>
                   ))}
                   {showPrice && (
-                    <td className="border-b border-line/80 px-3 py-2 text-right">
+                    <td className="border-b border-line px-3 py-2 text-right">
                       <Price price={variant.price} className="font-mono text-[13px]" />
                     </td>
                   )}
-                  <td className="border-b border-line/80 px-4 py-1.5 text-right">
+                  <td className="border-b border-line px-4 py-1.5 text-right">
                     <input
                       data-row={index}
                       type="number"
@@ -189,9 +186,9 @@ export function VariantOrderMatrix({
                       onFocus={(event) => event.currentTarget.select()}
                       aria-label={`Số lượng mã ${variant.partNumber}`}
                       className={cn(
-                        "h-9 w-24 rounded-md border bg-page px-2 text-right font-mono text-[13px] text-ink shadow-card",
-                        "placeholder:text-line-strong focus:border-brand-700",
-                        quantity > 0 ? "border-brand-300" : "border-line-strong",
+                        "h-9 w-24 rounded-md border bg-page px-2 text-right font-mono text-[13px] text-ink",
+                        "placeholder:text-line-strong focus:border-action-600",
+                        quantity > 0 ? "border-action-500" : "border-line-strong",
                       )}
                     />
                   </td>

@@ -87,11 +87,11 @@ export function QuickQuoteForm({
     <form
       onSubmit={onSubmit}
       noValidate
-      className="relative rounded-lg border border-line/80 bg-page p-5 shadow-card"
+      className="relative rounded-lg border border-line bg-page p-5"
     >
       <Honeypot value={website} onChange={setWebsite} />
 
-      <h2 className="text-base font-semibold text-ink">Báo giá nhanh</h2>
+      <h2 className="text-xl">Báo giá nhanh</h2>
       <p className="mt-1 text-sm text-muted">{product.name}</p>
 
       <div className="mt-4 flex flex-wrap items-end gap-3">

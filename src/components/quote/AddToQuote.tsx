@@ -55,7 +55,7 @@ export function AddToQuote({
             setQuantity(Number(event.target.value));
             setAdded(false);
           }}
-          className="h-12 w-28 rounded-md border border-line-strong bg-page px-3 text-right font-mono text-sm text-ink shadow-card focus:border-brand-700"
+          className="h-12 w-28 rounded-md border border-line-strong bg-page px-3 text-right font-mono text-sm text-ink focus:border-action-600"
         />
       </label>
       <Button onClick={add} disabled={full} size="lg">

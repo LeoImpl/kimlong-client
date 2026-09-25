@@ -23,9 +23,7 @@ export default function QuickOrderPage() {
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Đặt hàng nhanh" }]} />
       <div className="mt-4 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Đặt hàng nhanh theo mã
-          </h1>
+          <h1 className="text-[2rem] leading-tight sm:text-[2.5rem]">Đặt hàng nhanh theo mã</h1>
           <p className="mt-2 max-w-2xl text-body">
             Nhập mã sản phẩm và số lượng, dán thẳng từ Excel hoặc tải lên file CSV. Mã được đối
             chiếu với danh mục ngay khi bạn nhập.

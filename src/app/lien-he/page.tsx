@@ -20,7 +20,7 @@ export default function ContactPage() {
   return (
     <Container className="py-6 lg:py-10">
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Liên hệ" }]} />
-      <h1 className="mt-4 text-2xl font-bold tracking-tight text-ink sm:text-3xl">Liên hệ</h1>
+      <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">Liên hệ</h1>
       <p className="mt-2 max-w-2xl text-body">
         Gọi trực tiếp nếu bạn cần gấp, hoặc gửi yêu cầu tư vấn để chúng tôi tìm đúng mã sản phẩm cho
         máy của bạn.
@@ -53,8 +53,8 @@ async function ContactDetails() {
   );
 
   return (
-    <aside className="rounded-lg border border-line/80 bg-page shadow-card p-5">
-      <h2 className="text-base font-semibold text-ink">{company.legalName}</h2>
+    <aside className="rounded-lg border border-line bg-page p-5">
+      <h2 className="text-xl">{company.legalName}</h2>
       {company.headquarters && <p className="mt-3 text-sm text-body">{company.headquarters}</p>}
 
       <dl className="mt-4 space-y-3 text-sm">
@@ -66,7 +66,7 @@ async function ContactDetails() {
             <dd>
               <a
                 href={telHref(hotline.phone)}
-                className="font-semibold text-brand-700 hover:underline"
+                className="font-semibold text-action-600 hover:underline"
               >
                 {formatPhone(hotline.phone)}
               </a>
@@ -76,7 +76,7 @@ async function ContactDetails() {
         <div>
           <dt className="text-muted">Email</dt>
           <dd>
-            <a href={`mailto:${company.email}`} className="text-brand-700 hover:underline">
+            <a href={`mailto:${company.email}`} className="text-action-600 hover:underline">
               {company.email}
             </a>
           </dd>
@@ -89,7 +89,7 @@ async function ContactDetails() {
                 href={zaloHref(hotlines[0].phone)}
                 target="_blank"
                 rel="noopener"
-                className="text-brand-700 hover:underline"
+                className="text-action-600 hover:underline"
               >
                 Chat với chúng tôi
               </a>

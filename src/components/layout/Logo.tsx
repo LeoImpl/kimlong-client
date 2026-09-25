@@ -1,13 +1,35 @@
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
 import { routes } from "@/lib/routes";
 
 /**
- * Wordmark rather than an image: there is no logo file yet, and a text mark stays sharp at every size, needs no
- * request, and can be swapped for the real artwork without touching the layout. The mark is a tiny nameplate —
- * graphite with a brass edge and rivets — the same device the site uses wherever a part number is the subject.
+ * The company logo. `src` is the logo from the company profile (an image in the media module, stored in S3); the
+ * header passes it once the profile has loaded. Without it — during the build, while the profile streams in, or if
+ * the API is down — a text wordmark stands in: a tiny graphite-and-brass nameplate with the name beside it.
+ *
+ * The artwork is a gold wordmark about 7:1, so it is sized by height and keeps its own width.
  */
-export function Logo({ className }: { className?: string }) {
+export function Logo({ src, className }: { src?: string | null; className?: string }) {
+  if (src) {
+    return (
+      <Link
+        href={routes.home}
+        className={cn("flex shrink-0 items-center", className)}
+        aria-label="Kim Long — trang chủ"
+      >
+        <Image
+          src={src}
+          alt="Kim Long"
+          width={800}
+          height={115}
+          sizes="(min-width: 640px) 223px, 167px"
+          loading="eager"
+          className="h-6 w-auto sm:h-8"
+        />
+      </Link>
+    );
+  }
   return (
     <Link
       href={routes.home}

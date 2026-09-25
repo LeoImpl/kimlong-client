@@ -38,7 +38,9 @@ export function Header() {
 
       <div className="sticky top-0 z-40 border-b border-line bg-page">
         <Container className="flex h-16 items-center gap-3 lg:gap-6">
-          <Logo />
+          <Suspense fallback={<Logo />}>
+            <CompanyLogo />
+          </Suspense>
           <div className="hidden flex-1 md:flex">
             <SearchBox className="max-w-2xl" shortcut />
           </div>
@@ -107,6 +109,13 @@ async function ContactStrip() {
       </a>
     </p>
   );
+}
+
+async function CompanyLogo() {
+  await connection();
+  // A profile that fails to load leaves the text wordmark, never an empty corner.
+  const company = await getCompany().catch(() => null);
+  return <Logo src={company?.logoUrl} />;
 }
 
 async function MobileCategories() {

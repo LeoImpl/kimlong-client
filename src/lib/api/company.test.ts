@@ -20,6 +20,7 @@ function company(hotlines: Hotline[]): CompanyProfile {
     highlights: [],
     milestones: [],
     technicalDocuments: [],
+    logoUrl: null,
   };
 }
 

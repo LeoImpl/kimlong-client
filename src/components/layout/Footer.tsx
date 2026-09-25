@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { connection } from "next/server";
+import Image from "next/image";
 import Link from "next/link";
 import { getCategories } from "@/lib/api/catalog";
 import { formatPhone, getCompany, telHref, zaloHref } from "@/lib/api/company";
@@ -74,6 +75,17 @@ async function CompanyColumn() {
   const company = await getCompany();
   return (
     <div>
+      {company.logoUrl && (
+        // Gold on graphite: the logo reads best on the dark footer.
+        <Image
+          src={company.logoUrl}
+          alt=""
+          width={800}
+          height={115}
+          sizes="195px"
+          className="mb-4 h-7 w-auto"
+        />
+      )}
       <h2 className="text-lg leading-snug text-white">{company.legalName}</h2>
       {company.tagline && <p className="mt-3 text-[15px] text-white/70">{company.tagline}</p>}
       {company.headquarters && (

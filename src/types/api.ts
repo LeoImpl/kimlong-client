@@ -224,6 +224,7 @@ export interface components {
             highlights?: components["schemas"]["PublicSection"][];
             milestones?: components["schemas"]["PublicMilestone"][];
             technicalDocuments?: components["schemas"]["PublicDocumentLink"][];
+            logoUrl?: string | null;
         };
         PublicDocumentLink: {
             title?: string;

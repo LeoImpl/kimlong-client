@@ -6,6 +6,8 @@ import { routes } from "@/lib/routes";
 import { categoryIcon } from "./categoryStyle";
 import { ProductImage } from "./ProductImage";
 
+const GLIMPSE_SIZE = 4;
+
 /**
  * A family page ("Phụ tùng máy nén khí") asks which type the buyer wants instead of listing every product: oil
  * filters, air filters and oil separators are different parts, and one list of all three is what buyers read as
@@ -22,7 +24,7 @@ export async function CategoryTypePicker({
   const types = await Promise.all(
     family.children.map(async (type) => ({
       type,
-      result: await listProducts({ category: type.slug, brand, size: 4 }),
+      result: await listProducts({ category: type.slug, brand, size: GLIMPSE_SIZE }),
     })),
   );
   const available = types.filter((entry) => entry.result.totalItems > 0);
@@ -60,8 +62,15 @@ export async function CategoryTypePicker({
                       <ProductImage src={product.imageUrl} alt="" sizes="96px" className="p-1.5" />
                     </div>
                   ))}
+                  {/* Types with fewer than four products keep the full strip; the grid's line colour would show. */}
+                  {Array.from(
+                    { length: Math.max(0, GLIMPSE_SIZE - result.items.length) },
+                    (_, i) => (
+                      <div key={`empty-${i}`} className="aspect-square bg-surface" aria-hidden />
+                    ),
+                  )}
                 </div>
-                <p className="flex items-center justify-between px-5 py-3 text-[15px] font-medium text-action-600">
+                <p className="flex items-center justify-between px-5 py-3 text-[16px] font-medium text-action-600">
                   Xem {result.totalItems} sản phẩm {type.name.toLowerCase()}
                   <ArrowRight
                     className="size-4 transition-transform group-hover:translate-x-1"

@@ -245,7 +245,7 @@ function Swatch({ label, className }: { label: string; className: string }) {
   return (
     <div className="w-24">
       <div className={`h-12 rounded-md ${className}`} />
-      <p className="mt-1 font-mono text-[11px] text-muted">{label}</p>
+      <p className="mt-1 font-mono text-[12px] text-muted">{label}</p>
     </div>
   );
 }

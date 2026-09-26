@@ -7,6 +7,7 @@ import { SearchBox } from "@/components/layout/SearchBox";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
+import { cn } from "@/lib/cn";
 import { getBrands, getCategories, listProducts, searchProducts } from "@/lib/api/catalog";
 import { resolveSearchIntent } from "@/lib/search-intent";
 import { routes } from "@/lib/routes";
@@ -79,9 +80,11 @@ async function Results({ searchParams }: { searchParams: PageProps<"/san-pham">[
   const criteria = { q, brand, page, facets: true };
   const result = q ? await searchProducts(criteria) : await listProducts(criteria);
   const params = { q, brand, view };
+  // No brand facet (e.g. only unbranded capacitors match) means no sidebar, so no sidebar column either.
+  const hasFilters = (result.facets?.brands.length ?? 0) > 0;
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]">
+    <div className={cn("mt-8 grid grid-cols-1 gap-8", hasFilters && "lg:grid-cols-[248px_1fr]")}>
       <Filters
         facets={result.facets}
         activeBrand={brand}

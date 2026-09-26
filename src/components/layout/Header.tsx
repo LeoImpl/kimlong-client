@@ -26,7 +26,7 @@ export function Header() {
   return (
     <header>
       <div className="hidden bg-navy md:block">
-        <Container className="flex h-9 items-center justify-end text-[13px] lg:justify-between text-white/70">
+        <Container className="flex h-9 items-center justify-end text-[14px] text-white/70 lg:justify-between">
           <p className="hidden lg:block">
             Phụ tùng máy nén khí và thiết bị tự động hóa, giao hàng toàn quốc
           </p>
@@ -37,7 +37,7 @@ export function Header() {
       </div>
 
       <div className="sticky top-0 z-40 border-b border-line bg-page">
-        <Container className="flex h-16 items-center gap-3 lg:gap-6">
+        <Container className="flex h-[72px] items-center gap-3 lg:gap-6">
           <Suspense fallback={<Logo />}>
             <CompanyLogo />
           </Suspense>
@@ -47,11 +47,10 @@ export function Header() {
           <div className="ml-auto flex items-center gap-2">
             <ButtonLink
               href={routes.quickOrder}
-              size="sm"
-              className="h-10"
+              className="px-3 sm:px-5"
               aria-label="Đặt hàng nhanh theo mã hoặc tải file CSV"
             >
-              <FileUp className="size-4" strokeWidth={1.5} aria-hidden />
+              <FileUp className="size-[18px]" strokeWidth={1.75} aria-hidden />
               <span className="hidden sm:inline">Đặt nhanh / CSV</span>
             </ButtonLink>
             <BasketBadge />
@@ -59,16 +58,21 @@ export function Header() {
         </Container>
       </div>
 
-      <div className="border-b border-line bg-page">
-        <Container className="py-2 md:py-0">
+      {/* Phones and tablets: the search (phones only, the command bar has it from md) and the category disclosure. */}
+      <div className="border-b border-line bg-page lg:hidden">
+        <Container className="py-2">
           <div className="mb-2 md:hidden">
             <SearchBox />
           </div>
-          <div className="md:hidden">
-            <Suspense fallback={<Skeleton className="h-10 w-32" />}>
-              <MobileCategories />
-            </Suspense>
-          </div>
+          <Suspense fallback={<Skeleton className="h-11 w-32" />}>
+            <MobileCategories />
+          </Suspense>
+        </Container>
+      </div>
+
+      {/* Desktop: the families on a graphite band edged in brass, like the rim of a nameplate. */}
+      <div className="hidden border-t-2 border-brand-500 bg-navy lg:block">
+        <Container>
           <Suspense fallback={<NavSkeleton />}>
             <CategoryNav />
           </Suspense>
@@ -125,9 +129,9 @@ async function MobileCategories() {
 
 function NavSkeleton() {
   return (
-    <div className="hidden h-11 items-center gap-6 lg:flex" aria-hidden>
-      {["w-36", "w-28", "w-32", "w-24"].map((width) => (
-        <Skeleton key={width} className={`h-3 ${width}`} />
+    <div className="flex h-12 items-center gap-8" aria-hidden>
+      {["w-44", "w-40", "w-48", "w-24"].map((width) => (
+        <Skeleton key={width} className={`h-3 ${width} bg-white/10`} />
       ))}
     </div>
   );

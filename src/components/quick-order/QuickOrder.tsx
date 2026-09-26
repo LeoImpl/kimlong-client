@@ -255,7 +255,7 @@ export function QuickOrder() {
           <table className="w-full border-collapse text-sm">
             <caption className="sr-only">Nhập mã sản phẩm và số lượng</caption>
             <thead>
-              <tr className="bg-surface text-left text-[13px] font-medium text-muted">
+              <tr className="bg-surface text-left text-[14px] font-medium text-muted">
                 <th scope="col" className="w-10 border-b border-line px-3 py-2 text-right">
                   #
                 </th>
@@ -292,7 +292,7 @@ export function QuickOrder() {
                       autoComplete="off"
                       spellCheck={false}
                       maxLength={64}
-                      className="h-9 w-full min-w-44 rounded border border-transparent bg-transparent px-2 font-mono text-[13px] text-ink uppercase placeholder:text-muted placeholder:normal-case hover:border-line focus:border-action-600 focus:bg-page"
+                      className="h-9 w-full min-w-44 rounded border border-transparent bg-transparent px-2 font-mono text-[14px] text-ink uppercase placeholder:text-muted placeholder:normal-case hover:border-line focus:border-action-600 focus:bg-page"
                     />
                   </td>
                   <td className="border-b border-line px-2 py-1.5">
@@ -309,7 +309,7 @@ export function QuickOrder() {
                       }
                       onKeyDown={(event) => onCellKeyDown(event, index)}
                       aria-label={`Số lượng dòng ${index + 1}`}
-                      className="h-9 w-full rounded border border-transparent bg-transparent px-2 text-right font-mono text-[13px] text-ink hover:border-line focus:border-action-600 focus:bg-page"
+                      className="h-9 w-full rounded border border-transparent bg-transparent px-2 text-right font-mono text-[14px] text-ink hover:border-line focus:border-action-600 focus:bg-page"
                     />
                   </td>
                   <td className="border-b border-line px-3 py-1.5">

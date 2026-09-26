@@ -97,7 +97,7 @@ export function VariantOrderMatrix({
             Danh sách mã sản phẩm — nhập số lượng để thêm vào yêu cầu báo giá
           </caption>
           <thead>
-            <tr className="bg-surface text-left text-[13px] font-medium whitespace-nowrap text-muted">
+            <tr className="bg-surface text-left text-[14px] font-medium whitespace-nowrap text-muted">
               <th scope="col" className="border-b border-line px-4 py-2.5">
                 Mã sản phẩm
               </th>
@@ -143,7 +143,7 @@ export function VariantOrderMatrix({
                       <PartNumber value={variant.partNumber} copyTabbable={false} />
                       {inBasket.has(variant.partNumber) && (
                         <span
-                          className="inline-flex items-center gap-1 rounded bg-success-soft whitespace-nowrap px-1.5 py-0.5 text-[11px] font-medium text-success"
+                          className="inline-flex items-center gap-1 rounded bg-success-soft whitespace-nowrap px-1.5 py-0.5 text-[12px] font-medium text-success"
                           title="Đã có trong yêu cầu báo giá"
                         >
                           <Check className="size-3" strokeWidth={2} aria-hidden />
@@ -169,7 +169,7 @@ export function VariantOrderMatrix({
                   ))}
                   {showPrice && (
                     <td className="border-b border-line px-3 py-2 text-right">
-                      <Price price={variant.price} className="font-mono text-[13px]" />
+                      <Price price={variant.price} className="font-mono text-[14px]" />
                     </td>
                   )}
                   <td className="border-b border-line px-4 py-1.5 text-right">
@@ -186,7 +186,7 @@ export function VariantOrderMatrix({
                       onFocus={(event) => event.currentTarget.select()}
                       aria-label={`Số lượng mã ${variant.partNumber}`}
                       className={cn(
-                        "h-9 w-24 rounded-md border bg-page px-2 text-right font-mono text-[13px] text-ink",
+                        "h-9 w-24 rounded-md border bg-page px-2 text-right font-mono text-[14px] text-ink",
                         "placeholder:text-line-strong focus:border-action-600",
                         quantity > 0 ? "border-action-500" : "border-line-strong",
                       )}

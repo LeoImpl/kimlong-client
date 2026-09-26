@@ -57,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="vi">
       <body
-        className={`${sans.variable} ${display.variable} ${mono.variable} font-sans text-[15px] antialiased sm:text-base`}
+        className={`${sans.variable} ${display.variable} ${mono.variable} font-sans text-[16px] antialiased sm:text-base`}
       >
         <a
           href="#main"

@@ -174,7 +174,7 @@ function Fact({
   if (!value) return null;
   return (
     <div className="p-4">
-      <dt className="text-[13px] text-muted">{label}</dt>
+      <dt className="text-[14px] text-muted">{label}</dt>
       <dd className={`mt-1 font-medium text-ink ${mono ? "font-mono" : ""}`}>
         {href ? (
           <a href={href} className="text-action-600 hover:underline">

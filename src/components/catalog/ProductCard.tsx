@@ -34,9 +34,9 @@ export function ProductCard({
 
       <div className="flex flex-1 flex-col p-3 sm:p-4">
         {product.brand && (
-          <p className="text-[13px] font-medium text-brand-700">{product.brand.name}</p>
+          <p className="text-[14px] font-medium text-brand-700">{product.brand.name}</p>
         )}
-        <h3 className="mt-0.5 font-sans text-[15px] leading-snug font-medium">
+        <h3 className="mt-0.5 font-sans text-[16px] leading-snug font-medium">
           <Link
             href={routes.product(product.slug)}
             className="transition-colors after:absolute after:inset-0 group-hover:text-action-700"
@@ -50,16 +50,19 @@ export function ProductCard({
           <ul className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-dashed border-line pt-2.5">
             {product.partNumbers.slice(0, 3).map((partNumber) => (
               <li key={partNumber} className="min-w-0 break-all">
-                <PartNumber value={partNumber} copyable={false} className="text-[13px]" />
+                <PartNumber value={partNumber} copyable={false} className="text-[14px]" />
               </li>
             ))}
             {extra > 0 && <li className="font-mono text-xs text-muted">+{extra}</li>}
           </ul>
         )}
 
-        <div className="mt-auto flex items-center justify-between pt-3 pb-3 text-[13px]">
+        <div className="mt-auto flex items-center justify-between pt-3 pb-3 text-[14px]">
           <Price price={product.price} />
-          <span className="text-muted">{product.variantCount} mã</span>
+          {/* Unbranded supplies (capacitors, lamps) have no part numbers; "0 mã" reads as out of stock. */}
+          {product.variantCount > 0 && (
+            <span className="text-muted">{product.variantCount} mã</span>
+          )}
         </div>
         <CardQuoteAction product={product} />
       </div>

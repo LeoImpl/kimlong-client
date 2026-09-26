@@ -8,6 +8,7 @@ import { ProductListing } from "@/components/catalog/ProductListing";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
+import { cn } from "@/lib/cn";
 import { categoryPath, findCategory, getCategories, listProducts } from "@/lib/api/catalog";
 import type { CategoryNode } from "@/lib/api/types";
 import { JsonLd, breadcrumbJsonLd } from "@/lib/seo";
@@ -114,6 +115,9 @@ async function Listing({
   const result = await listProducts({ category: category.slug, brand, page, facets: true });
   const basePath = routes.category(category.slug);
   const params = { brand, view };
+  // The sidebar only offers brand facets; products without a brand (capacitors, lamps) have none, and the
+  // listing must not fall into the sidebar's 248px column.
+  const hasFilters = (result.facets?.brands.length ?? 0) > 0;
 
   return (
     <>
@@ -123,7 +127,7 @@ async function Listing({
         </Suspense>
       )}
 
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[248px_1fr]">
+      <div className={cn("mt-8 grid grid-cols-1 gap-8", hasFilters && "lg:grid-cols-[248px_1fr]")}>
         <Filters facets={result.facets} activeBrand={brand} basePath={basePath} params={params} />
         <ProductListing
           result={result}

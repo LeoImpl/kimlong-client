@@ -46,7 +46,7 @@ export async function CategoryTabs({
                 href={`${routes.category(tab.slug)}${query}`}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "group inline-flex h-10 items-center gap-2 rounded-md border px-3.5 text-[15px] font-medium transition-colors",
+                  "group inline-flex h-10 items-center gap-2 rounded-md border px-3.5 text-[16px] font-medium transition-colors",
                   isActive
                     ? "border-action-600 bg-action-600 text-white"
                     : "border-line-strong bg-page text-body hover:border-action-500 hover:text-action-700",

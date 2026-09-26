@@ -142,7 +142,7 @@ function CategoryFacets({ facets, brandSlug }: { facets: Facets | null; brandSlu
               className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm text-body transition-colors hover:bg-surface hover:text-ink"
             >
               <span>{category.name}</span>
-              <span className="font-mono text-[11px] text-muted">{category.count}</span>
+              <span className="font-mono text-[12px] text-muted">{category.count}</span>
             </Link>
           </li>
         ))}

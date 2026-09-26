@@ -68,7 +68,7 @@ export default function Home() {
 
             {/* The nameplate: the site's one bold device, holding the one thing it is for. */}
             <div className="plate mt-8 animate-rise px-5 pt-6 pb-5 [animation-delay:160ms] sm:px-8 sm:pt-7 sm:pb-7">
-              <p className="text-[15px] font-medium text-ink" aria-hidden>
+              <p className="text-[16px] font-medium text-ink" aria-hidden>
                 Mã sản phẩm, part number hoặc hãng
               </p>
               <SearchBox size="lg" placeholder="Ví dụ 1613900100" className="mt-2" />
@@ -108,7 +108,7 @@ export default function Home() {
                   before the click. */}
               <table className="mt-5 w-full text-sm" aria-label="Ví dụ kết quả đối chiếu mã">
                 <thead>
-                  <tr className="border-b border-line text-left text-[13px] text-muted">
+                  <tr className="border-b border-line text-left text-[14px] text-muted">
                     <th scope="col" className="py-1.5 font-medium">
                       Mã
                     </th>
@@ -219,7 +219,7 @@ async function CatalogueStats() {
     <dl className="plate-cells mt-6 [--cell:6rem]">
       {stats.map((stat) => (
         <div key={stat.label}>
-          <dt className="text-[13px] text-muted">{stat.label}</dt>
+          <dt className="text-[14px] text-muted">{stat.label}</dt>
           <dd className="font-display text-2xl font-semibold text-action-700">
             <CountUp value={stat.value} />
           </dd>
@@ -296,7 +296,7 @@ function TrustBar() {
               </span>
               <span className="leading-tight">
                 <span className="block font-semibold text-ink">{title}</span>
-                <span className="block text-[13px] text-muted">{detail}</span>
+                <span className="block text-[14px] text-muted">{detail}</span>
               </span>
             </li>
           ))}
@@ -343,7 +343,7 @@ function SearchExample({ q }: { q: string }) {
   return (
     <Link
       href={routes.search(q)}
-      className="font-mono text-[13px] text-action-600 underline decoration-action-200 underline-offset-4 transition-colors hover:decoration-action-600"
+      className="font-mono text-[14px] text-action-600 underline decoration-action-200 underline-offset-4 transition-colors hover:decoration-action-600"
     >
       {q}
     </Link>
@@ -365,7 +365,7 @@ async function Categories() {
         action={
           <Link
             href={routes.categories}
-            className="group inline-flex items-center gap-1 text-[15px] font-medium text-action-600 hover:underline"
+            className="group inline-flex items-center gap-1 text-[16px] font-medium text-action-600 hover:underline"
           >
             Xem tất cả danh mục
             <ArrowRight
@@ -434,7 +434,7 @@ async function FeaturedProducts() {
         action={
           <Link
             href={routes.products}
-            className="group inline-flex items-center gap-1 text-[15px] font-medium text-action-600 hover:underline"
+            className="group inline-flex items-center gap-1 text-[16px] font-medium text-action-600 hover:underline"
           >
             Tất cả {result.totalItems} sản phẩm
             <ArrowRight

@@ -27,7 +27,7 @@ export function MobileNav({ categories }: { categories: CategoryNode[] }) {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-controls="mobile-nav"
-        className="flex h-10 items-center gap-2 rounded-md border border-line-strong px-3 text-sm font-medium text-ink"
+        className="flex h-11 items-center gap-2 rounded-[5px] border border-line-strong bg-page px-4 text-sm font-semibold text-ink shadow-[0_1px_0_rgb(28_34_39/0.06)] transition-colors hover:border-action-500 hover:text-action-700 aria-expanded:border-action-600 aria-expanded:text-action-700"
       >
         <svg
           viewBox="0 0 20 20"

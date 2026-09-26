@@ -60,7 +60,7 @@ export function Filters({
         <div className="flex flex-wrap gap-1.5 border-b border-line px-4 py-3">
           <Link
             href={href({ brand: undefined })}
-            className="inline-flex items-center gap-1 rounded-md border border-line-strong bg-surface px-2 py-0.5 text-[13px] font-medium text-ink hover:border-muted"
+            className="inline-flex items-center gap-1 rounded-md border border-line-strong bg-surface px-2 py-0.5 text-[14px] font-medium text-ink hover:border-muted"
             aria-label={`Bỏ lọc thương hiệu ${activeBrandName}`}
           >
             {activeBrandName}
@@ -90,7 +90,7 @@ export function Filters({
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <details open className="group border-b border-line last:border-b-0">
-      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-[15px] font-semibold text-ink transition-colors select-none hover:bg-surface [&::-webkit-details-marker]:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 text-[16px] font-semibold text-ink transition-colors select-none hover:bg-surface [&::-webkit-details-marker]:hidden">
         {title}
         <ChevronDown
           className="size-4 text-muted transition-transform group-open:rotate-180"
@@ -123,7 +123,7 @@ function Option({
         href={href}
         aria-current={active ? "true" : undefined}
         className={cn(
-          "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[15px] transition-colors",
+          "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-[16px] transition-colors",
           active
             ? "bg-action-50 font-medium text-action-800"
             : "text-body hover:bg-surface hover:text-ink",
@@ -146,7 +146,7 @@ function Option({
         )}
         <span className="flex-1">{label}</span>
         {count !== undefined && (
-          <span className="font-mono text-[11px] text-muted tabular-nums">{count}</span>
+          <span className="font-mono text-[12px] text-muted tabular-nums">{count}</span>
         )}
       </Link>
     </li>

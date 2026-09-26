@@ -9,7 +9,11 @@ import {
   Factory,
   Funnel,
   Gauge,
+  Lightbulb,
   Radar,
+  RotateCw,
+  Spline,
+  Zap,
   Wind,
   type LucideIcon,
 } from "lucide-react";
@@ -35,6 +39,11 @@ const typeIcons: Record<string, LucideIcon> = {
   "cap-ket-noi": Cable,
   "plc-va-module": CircuitBoard,
   "bien-tan": Gauge,
+  encoder: RotateCw,
+  "tu-dien": Zap,
+  "day-dien-cuc-han": Spline,
+  "bong-den-han-cao-tan": Lightbulb,
+  "den-led": Lightbulb,
 };
 
 /** The icon for a category: its own if it is a known type, else its family's, else a neutral box. */

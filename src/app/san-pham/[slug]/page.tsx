@@ -116,7 +116,7 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
         <div className="lg:col-span-7">
           {/* The nameplate: the facts a buyer checks against the part in their hand, boxed like its rating plate. */}
           <div className="plate px-5 pt-6 pb-5 sm:px-8 sm:pt-8 sm:pb-7">
-            <p className="flex flex-wrap items-center gap-x-2 text-[15px]">
+            <p className="flex flex-wrap items-center gap-x-2 text-[16px]">
               {product.brand && (
                 <Link
                   href={routes.brand(product.brand.slug)}
@@ -265,7 +265,7 @@ function PlateFields({ product }: { product: ProductDetail }) {
     <dl className="plate-cells mt-6">
       {shown.length > 0 && (
         <div className="col-span-full">
-          <dt className="text-[13px] text-muted">
+          <dt className="text-[14px] text-muted">
             {product.variants.length > 1 ? `${product.variants.length} mã sản phẩm` : "Mã sản phẩm"}
           </dt>
           <dd className="mt-0.5 flex flex-wrap items-center gap-x-5 gap-y-1">
@@ -273,7 +273,7 @@ function PlateFields({ product }: { product: ProductDetail }) {
               <PartNumber
                 key={variant.partNumber}
                 value={variant.partNumber}
-                className="text-[17px]"
+                className="text-[18px]"
               />
             ))}
             {more > 0 && (
@@ -286,15 +286,15 @@ function PlateFields({ product }: { product: ProductDetail }) {
       )}
       {facts.map((fact) => (
         <div key={fact.name}>
-          <dt className="text-[13px] text-muted">{fact.name}</dt>
+          <dt className="text-[14px] text-muted">{fact.name}</dt>
           <dd className="mt-0.5 font-medium text-ink">{fact.value}</dd>
         </div>
       ))}
       <div className="col-span-full bg-surface">
-        <dt className="text-[13px] text-muted">Đơn giá</dt>
+        <dt className="text-[14px] text-muted">Đơn giá</dt>
         <dd className="mt-0.5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
           <Price price={product.price} className="font-display text-2xl font-semibold" />
-          <span className="max-w-sm text-[13px] text-muted">
+          <span className="max-w-sm text-[14px] text-muted">
             Giá sỉ theo số lượng và thời điểm đặt hàng. Gửi yêu cầu để nhận báo giá chính xác qua
             email.
           </span>

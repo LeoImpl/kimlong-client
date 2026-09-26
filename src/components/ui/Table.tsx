@@ -21,7 +21,7 @@ export function Th({ className, ...props }: React.ThHTMLAttributes<HTMLTableCell
   return (
     <th
       className={cn(
-        "border-b border-line bg-surface px-3 py-2 text-left text-[13px] font-medium whitespace-nowrap text-muted",
+        "border-b border-line bg-surface px-3 py-2 text-left text-[14px] font-medium whitespace-nowrap text-muted",
         className,
       )}
       {...props}
@@ -61,8 +61,8 @@ export function SpecList({
           key={item.name}
           className="grid grid-cols-1 gap-1 px-1 py-2.5 transition-colors hover:bg-surface sm:grid-cols-3 sm:gap-4"
         >
-          <dt className="text-[15px] text-muted">{item.name}</dt>
-          <dd className="font-mono text-[13px] text-ink sm:col-span-2">{item.value}</dd>
+          <dt className="text-[16px] text-muted">{item.name}</dt>
+          <dd className="font-mono text-[14px] text-ink sm:col-span-2">{item.value}</dd>
         </div>
       ))}
     </dl>

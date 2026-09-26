@@ -37,13 +37,13 @@ export function Logo({ src, className }: { src?: string | null; className?: stri
       aria-label="Kim Long — trang chủ"
     >
       <span
-        className="plate plate-dark flex h-8 w-11 items-center justify-center border-brand-500 font-display text-[15px] font-semibold text-brand-300 [--rivet-inset:4px]"
+        className="plate plate-dark flex h-8 w-11 items-center justify-center border-brand-500 font-display text-[16px] font-semibold text-brand-300 [--rivet-inset:4px]"
         aria-hidden
       >
         KL
       </span>
       <span className="leading-none">
-        <span className="block font-display text-[22px] font-semibold text-ink">Kim Long</span>
+        <span className="block font-display text-[23px] font-semibold text-ink">Kim Long</span>
         <span className="mt-0.5 hidden text-xs text-muted sm:block">Thiết bị công nghiệp</span>
       </span>
     </Link>

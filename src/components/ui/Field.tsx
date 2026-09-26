@@ -1,7 +1,7 @@
 import { cn } from "@/lib/cn";
 
 const control =
-  "w-full rounded-md border bg-page px-3 text-[15px] text-ink placeholder:text-muted " +
+  "w-full rounded-md border bg-page px-3 text-[16px] text-ink placeholder:text-muted " +
   "transition-colors focus:border-action-600 disabled:bg-surface disabled:text-muted";
 
 /** Invalid fields are marked with a colour *and* a message, never colour alone. */

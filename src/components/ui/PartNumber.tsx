@@ -37,7 +37,7 @@ export function PartNumber({
   }
 
   return (
-    <span className={cn("group/pn inline-flex items-center gap-1 text-[13px]", className)}>
+    <span className={cn("group/pn inline-flex items-center gap-1 text-[14px]", className)}>
       <span className="font-mono font-medium text-ink select-all">{value}</span>
       {copyable && (
         <button

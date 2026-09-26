@@ -17,7 +17,7 @@ export function ProductTable({ products }: { products: ProductSummary[] }) {
         <table className="w-full border-collapse text-sm">
           <caption className="sr-only">Danh sách sản phẩm</caption>
           <thead>
-            <tr className="bg-surface text-left text-[13px] font-medium whitespace-nowrap text-muted">
+            <tr className="bg-surface text-left text-[14px] font-medium whitespace-nowrap text-muted">
               <th scope="col" className="border-b border-line px-4 py-2.5">
                 Sản phẩm
               </th>
@@ -56,7 +56,7 @@ export function ProductTable({ products }: { products: ProductSummary[] }) {
                       </Link>
                     </div>
                   </td>
-                  <td className="border-b border-line px-3 py-2.5 text-[13px] font-medium whitespace-nowrap text-brand-700">
+                  <td className="border-b border-line px-3 py-2.5 text-[14px] font-medium whitespace-nowrap text-brand-700">
                     {product.brand?.name ?? "—"}
                   </td>
                   <td className="border-b border-line px-3 py-2.5">

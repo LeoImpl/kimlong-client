@@ -26,7 +26,7 @@ export function Footer() {
           </Suspense>
           <div>
             <h2 className="text-lg text-white">Thông tin</h2>
-            <ul className="mt-3 space-y-2 text-[15px] text-white/70">
+            <ul className="mt-3 space-y-2 text-[16px] text-white/70">
               <li>
                 <Link href={routes.about} className="hover:text-white">
                   Giới thiệu
@@ -87,9 +87,9 @@ async function CompanyColumn() {
         />
       )}
       <h2 className="text-lg leading-snug text-white">{company.legalName}</h2>
-      {company.tagline && <p className="mt-3 text-[15px] text-white/70">{company.tagline}</p>}
+      {company.tagline && <p className="mt-3 text-[16px] text-white/70">{company.tagline}</p>}
       {company.headquarters && (
-        <p className="mt-3 text-[15px] text-white/70">{company.headquarters}</p>
+        <p className="mt-3 text-[16px] text-white/70">{company.headquarters}</p>
       )}
       {company.foundedYear && (
         <p className="mt-2 text-sm text-white/50">Thành lập năm {company.foundedYear}</p>
@@ -104,7 +104,7 @@ async function CategoryColumn() {
   return (
     <div>
       <h2 className="text-lg text-white">Danh mục</h2>
-      <ul className="mt-3 space-y-2 text-[15px] text-white/70">
+      <ul className="mt-3 space-y-2 text-[16px] text-white/70">
         {categories.map((category) => (
           <li key={category.slug}>
             <Link href={routes.category(category.slug)} className="hover:text-white">
@@ -128,7 +128,7 @@ async function ContactColumn() {
   return (
     <div>
       <h2 className="text-lg text-white">Liên hệ</h2>
-      <ul className="mt-3 space-y-2 text-[15px] text-white/70">
+      <ul className="mt-3 space-y-2 text-[16px] text-white/70">
         {hotlines.map((hotline) => (
           <li key={hotline.phone}>
             <a
@@ -166,7 +166,7 @@ async function Copyright() {
   await connection();
   const company = await getCompany();
   return (
-    <p className="text-[13px] text-white/50">
+    <p className="text-[14px] text-white/50">
       © {new Date().getFullYear()} {company.legalName}. Mọi thông tin sản phẩm chỉ mang tính tham
       khảo, vui lòng liên hệ để được báo giá chính xác.
     </p>

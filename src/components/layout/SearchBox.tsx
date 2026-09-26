@@ -79,10 +79,11 @@ export function SearchBox({
         autoComplete="off"
         spellCheck={false}
         className={cn(
-          "peer w-full rounded-md border border-line-strong bg-page pl-10 text-ink",
-          "transition-colors placeholder:text-muted hover:border-muted focus:border-action-600",
+          "peer w-full rounded-[5px] border border-line-strong bg-surface pl-10 text-ink",
+          "transition-[border-color,background-color,box-shadow] placeholder:text-muted hover:border-muted",
+          "focus:border-action-600 focus:bg-page focus:shadow-[0_0_0_3px_var(--color-action-100)] focus:outline-none",
           shortcut ? "pr-28" : "pr-20",
-          size === "lg" ? "h-14 pl-11 text-lg" : "h-10 text-[15px]",
+          size === "lg" ? "h-14 pl-11 text-lg" : "h-11 text-[16px]",
         )}
       />
       <Search
@@ -95,7 +96,7 @@ export function SearchBox({
       />
       {shortcut && (
         <kbd
-          className="pointer-events-none absolute top-1/2 right-17 hidden -translate-y-1/2 rounded border border-line-strong bg-page px-1.5 font-mono text-[11px] text-muted peer-focus:hidden lg:block"
+          className="pointer-events-none absolute top-1/2 right-17 hidden -translate-y-1/2 rounded border border-line-strong bg-page px-1.5 font-mono text-[12px] text-muted peer-focus:hidden lg:block"
           aria-hidden
         >
           /
@@ -104,9 +105,9 @@ export function SearchBox({
       <button
         type="submit"
         className={cn(
-          "absolute top-1/2 right-1 -translate-y-1/2 rounded-sm bg-action-600 font-semibold text-white",
-          "transition-colors hover:bg-action-700",
-          size === "lg" ? "h-12 px-6 text-base" : "h-8 px-4 text-sm",
+          "absolute top-1/2 right-1 -translate-y-1/2 rounded-[4px] bg-linear-to-b from-action-500 to-action-600 font-semibold text-white",
+          "shadow-[inset_0_1px_0_rgb(255_255_255/0.22),inset_0_-2px_0_rgb(0_0_0/0.14)] transition-colors hover:from-action-600 hover:to-action-700",
+          size === "lg" ? "h-12 px-6 text-base" : "h-9 px-4 text-sm",
         )}
       >
         Tìm

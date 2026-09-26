@@ -70,7 +70,7 @@ export async function CategoryTypePicker({
                     ),
                   )}
                 </div>
-                <p className="flex items-center justify-between px-5 py-3 text-[15px] font-medium text-action-600">
+                <p className="flex items-center justify-between px-5 py-3 text-[16px] font-medium text-action-600">
                   Xem {result.totalItems} sản phẩm {type.name.toLowerCase()}
                   <ArrowRight
                     className="size-4 transition-transform group-hover:translate-x-1"

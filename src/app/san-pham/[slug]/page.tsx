@@ -145,7 +145,8 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
 
             {/* Two ways in, on purpose: the matrix for a buyer collecting a service kit, the quick form for the
                 visitor after one part who would otherwise just close the tab. */}
-            <div className="mt-6 flex flex-wrap items-start gap-3">
+            {/* Bottom-aligned: the quantity field carries a label above it, the buttons do not. */}
+            <div className="mt-6 flex flex-wrap items-end gap-3">
               {product.variants.length > 1 ? (
                 <ButtonLink href="#dat-hang" size="lg">
                   <ArrowDown className="size-4" strokeWidth={1.5} aria-hidden />

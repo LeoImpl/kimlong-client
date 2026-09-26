@@ -59,7 +59,10 @@ export function ProductCard({
 
         <div className="mt-auto flex items-center justify-between pt-3 pb-3 text-[13px]">
           <Price price={product.price} />
-          <span className="text-muted">{product.variantCount} mã</span>
+          {/* Unbranded supplies (capacitors, lamps) have no part numbers; "0 mã" reads as out of stock. */}
+          {product.variantCount > 0 && (
+            <span className="text-muted">{product.variantCount} mã</span>
+          )}
         </div>
         <CardQuoteAction product={product} />
       </div>

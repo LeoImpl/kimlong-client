@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { connection } from "next/server";
 import { getBrands, getCategories, flattenCategories, getProductSlugs } from "@/lib/api/catalog";
+import { listArticles } from "@/lib/api/articles";
 import { env } from "@/lib/env";
 import { routes } from "@/lib/routes";
 
@@ -17,10 +18,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // `use cache`, so serving it at request time costs nothing after the first crawl.
   await connection();
 
-  const [products, categories, brands] = await Promise.all([
+  const [products, categories, brands, articles] = await Promise.all([
     getProductSlugs(),
     getCategories(),
     getBrands(),
+    // At most 100 per page is the API's limit; a second page can be added when there are that many articles.
+    listArticles(0, 100),
   ]);
 
   const url = (path: string) => `${env.siteUrl}${path}`;
@@ -30,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: url(routes.products), changeFrequency: "weekly", priority: 0.8 },
     { url: url(routes.categories), changeFrequency: "monthly", priority: 0.6 },
     { url: url(routes.brands), changeFrequency: "monthly", priority: 0.6 },
+    { url: url(routes.articles), changeFrequency: "weekly", priority: 0.7 },
     { url: url(routes.about), changeFrequency: "yearly", priority: 0.5 },
     { url: url(routes.contact), changeFrequency: "yearly", priority: 0.5 },
 
@@ -43,6 +47,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: url(routes.brand(brand.slug)),
       changeFrequency: "weekly" as const,
       priority: 0.6,
+    })),
+
+    ...articles.items.map((article) => ({
+      url: url(routes.article(article.slug)),
+      lastModified: new Date(article.publishedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
     })),
 
     // The pages that earn the traffic: one per product, with the date it really changed.

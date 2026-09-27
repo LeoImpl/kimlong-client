@@ -1,6 +1,6 @@
 import { env } from "@/lib/env";
 import { routes } from "@/lib/routes";
-import type { CompanyProfile, ProductDetail } from "@/lib/api/types";
+import type { Article, CompanyProfile, ProductDetail } from "@/lib/api/types";
 
 /**
  * Structured data.
@@ -110,6 +110,29 @@ export function organizationJsonLd(company: CompanyProfile) {
         availableLanguage: ["vi"],
       })),
     }),
+  };
+}
+
+/**
+ * `Article` for a technical article: Google shows the date and the picture in the result, and ties the article to
+ * the company as its publisher.
+ */
+export function articleJsonLd(article: Article, company: CompanyProfile | null) {
+  const publisher = company
+    ? { "@type": "Organization", name: company.legalName, url: env.siteUrl }
+    : { "@type": "Organization", name: "Kim Long", url: env.siteUrl };
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.summary,
+    url: absoluteUrl(routes.article(article.slug)),
+    mainEntityOfPage: absoluteUrl(routes.article(article.slug)),
+    datePublished: article.publishedAt,
+    inLanguage: "vi-VN",
+    ...(article.coverImageUrl && { image: [absoluteUrl(article.coverImageUrl)] }),
+    author: publisher,
+    publisher,
   };
 }
 

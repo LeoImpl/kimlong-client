@@ -94,6 +94,31 @@ export type CompanyProfile = Omit<
   technicalDocuments: DocumentLink[];
 };
 
+/**
+ * Articles. A body block carries only the fields of its `type` (see the platform's `ArticleBlockResponse`), so the
+ * union is restated per type: a renderer that switches on `type` then gets `level` and `text` as non-null for a
+ * heading, and so on, without guards.
+ */
+export type ArticleSummary = Concrete<Schemas["PublicArticleSummaryResponse"]>;
+export type SpecRow = Concrete<Schemas["SpecRowResponse"]>;
+export type ArticleBlock =
+  | { type: "heading"; level: 2 | 3; text: string }
+  | { type: "paragraph"; text: string }
+  | { type: "list"; ordered: boolean; items: string[] }
+  | { type: "image"; imageUrl: string; caption: string | null }
+  | { type: "specs"; rows: SpecRow[] };
+
+export type Article = Omit<Concrete<Schemas["PublicArticleResponse"]>, "body"> & {
+  body: ArticleBlock[];
+};
+
+export type ArticlePage = Omit<
+  Concrete<Schemas["PageResponsePublicArticleSummaryResponse"]>,
+  "items"
+> & {
+  items: ArticleSummary[];
+};
+
 /** Quote request submission. `website` is the honeypot and must always be sent empty. */
 export type Contact = Concrete<Schemas["ContactDto"]>;
 export type QuoteLine = Concrete<Schemas["LineRequest"]>;

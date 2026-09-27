@@ -13,6 +13,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { connection } from "next/server";
+import { ArticleGrid } from "@/components/article/ArticleCard";
 import { ProductGrid } from "@/components/catalog/ProductCard";
 import { BrandMarquee } from "@/components/catalog/BrandMarquee";
 import { categoryIcon } from "@/components/catalog/categoryStyle";
@@ -21,6 +22,7 @@ import { SearchBox } from "@/components/layout/SearchBox";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container, SectionHeading } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
+import { listArticles } from "@/lib/api/articles";
 import { flattenCategories, getBrands, getCategories, listProducts } from "@/lib/api/catalog";
 import { getCompany, getPartners } from "@/lib/api/company";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
@@ -157,6 +159,12 @@ export default function Home() {
       <Container className="py-12 lg:py-16">
         <Suspense fallback={<ProductsSkeleton />}>
           <FeaturedProducts />
+        </Suspense>
+      </Container>
+
+      <Container className="pb-16">
+        <Suspense fallback={<ProductsSkeleton />}>
+          <LatestArticles />
         </Suspense>
       </Container>
 
@@ -450,6 +458,37 @@ async function FeaturedProducts() {
         className="mb-6"
       />
       <ProductGrid products={result.items} />
+    </>
+  );
+}
+
+/** The newest guides: what brings buyers in from search before they have a part number. */
+async function LatestArticles() {
+  await connection();
+  const result = await listArticles(0, 3).catch(() => null);
+  if (!result || result.items.length === 0) return null;
+
+  return (
+    <>
+      <SectionHeading
+        title="Kiến thức chọn phụ tùng"
+        description="Khi nào cần thay, cách đọc mã model và lưu ý khi mua hàng chính hãng."
+        action={
+          <Link
+            href={routes.articles}
+            className="group inline-flex items-center gap-1 text-[17px] font-medium text-action-600 hover:underline"
+          >
+            Tất cả bài viết
+            <ArrowRight
+              className="size-4 transition-transform group-hover:translate-x-0.5"
+              strokeWidth={1.5}
+              aria-hidden
+            />
+          </Link>
+        }
+        className="mb-6"
+      />
+      <ArticleGrid articles={result.items} />
     </>
   );
 }

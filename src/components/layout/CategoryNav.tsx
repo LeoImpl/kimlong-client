@@ -53,6 +53,11 @@ export async function CategoryNav() {
           </NavLink>
         </li>
         <li className="flex">
+          <NavLink href={routes.articles} className={item} activeClassName={itemActive}>
+            Bài viết
+          </NavLink>
+        </li>
+        <li className="flex">
           <NavLink href={routes.about} className={item} activeClassName={itemActive}>
             Giới thiệu
           </NavLink>

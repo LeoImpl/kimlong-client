@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { ArrowDown, Check, FileDown } from "lucide-react";
+import { ArticleGrid } from "@/components/article/ArticleCard";
 import { AddToQuote } from "@/components/quote/AddToQuote";
 import { QuickQuoteForm } from "@/components/quote/QuickQuoteForm";
 import { ProductGallery } from "@/components/catalog/ProductGallery";
@@ -17,6 +18,7 @@ import { Skeleton } from "@/components/ui/Feedback";
 import { PartNumber } from "@/components/ui/PartNumber";
 import { Price } from "@/components/ui/Price";
 import { SpecList } from "@/components/ui/Table";
+import { listArticlesForProduct } from "@/lib/api/articles";
 import { getProduct, listProducts } from "@/lib/api/catalog";
 import { getCompany, primaryHotline } from "@/lib/api/company";
 import type { ProductDetail } from "@/lib/api/types";
@@ -235,6 +237,10 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
         </section>
       )}
 
+      <Suspense fallback={null}>
+        <ArticlesAboutProduct slug={product.slug} />
+      </Suspense>
+
       {category && (
         <Suspense fallback={<RelatedSkeleton />}>
           <RelatedProducts categorySlug={category.slug} exclude={product.slug} />
@@ -346,6 +352,24 @@ async function QuickQuote({
       partNumbers={partNumbers}
       hotline={primaryHotline(company)?.phone ?? null}
     />
+  );
+}
+
+/** Guides that link this product: how to choose it, when to replace it. Absent when none do. */
+async function ArticlesAboutProduct({ slug }: { slug: string }) {
+  await connection();
+  const result = await listArticlesForProduct(slug).catch(() => null);
+  if (!result || result.items.length === 0) return null;
+
+  return (
+    <section className="mt-16">
+      <SectionHeading
+        title="Bài viết hướng dẫn"
+        description="Cách chọn đúng mã, khi nào cần thay và thông số kỹ thuật."
+        className="mb-6"
+      />
+      <ArticleGrid articles={result.items.slice(0, 3)} />
+    </section>
   );
 }
 

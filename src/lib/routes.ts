@@ -16,4 +16,6 @@ export const routes = {
   brands: "/thuong-hieu",
   brand: (slug: string) => `/thuong-hieu/${encodeURIComponent(slug)}`,
   search: (q: string) => `/san-pham?q=${encodeURIComponent(q)}`,
+  articles: "/bai-viet",
+  article: (slug: string) => `/bai-viet/${encodeURIComponent(slug)}`,
 } as const;

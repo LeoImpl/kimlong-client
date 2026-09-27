@@ -38,6 +38,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href={routes.articles} className="hover:text-white">
+                  Bài viết kỹ thuật
+                </Link>
+              </li>
+              <li>
                 <Link href={routes.brands} className="hover:text-white">
                   Thương hiệu
                 </Link>

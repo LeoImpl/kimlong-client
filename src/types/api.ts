@@ -174,6 +174,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/public/v1/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Published articles, newest first; `product` keeps those that link that product */
+        get: operations["list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/public/v1/articles/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Article page */
+        get: operations["article"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -362,6 +396,51 @@ export interface components {
             description?: string | null;
             websiteUrl?: string | null;
             logoUrl?: string | null;
+        };
+        PageResponsePublicArticleSummaryResponse: {
+            items?: components["schemas"]["PublicArticleSummaryResponse"][];
+            /** Format: int32 */
+            page?: number;
+            /** Format: int32 */
+            size?: number;
+            /** Format: int64 */
+            totalItems?: number;
+            /** Format: int32 */
+            totalPages?: number;
+        };
+        PublicArticleSummaryResponse: {
+            slug?: string;
+            title?: string;
+            summary?: string;
+            coverImageUrl?: string | null;
+            /** Format: date-time */
+            publishedAt?: string;
+        };
+        ArticleBlockResponse: {
+            /** @enum {string} */
+            type?: "heading" | "paragraph" | "list" | "image" | "specs";
+            /** Format: int32 */
+            level?: number | null;
+            text?: string | null;
+            ordered?: boolean | null;
+            items?: string[] | null;
+            imageUrl?: string | null;
+            caption?: string | null;
+            rows?: components["schemas"]["SpecRowResponse"][] | null;
+        };
+        PublicArticleResponse: {
+            slug?: string;
+            title?: string;
+            summary?: string;
+            coverImageUrl?: string | null;
+            /** Format: date-time */
+            publishedAt?: string;
+            body?: components["schemas"]["ArticleBlockResponse"][];
+            relatedProducts?: string[];
+        };
+        SpecRowResponse: {
+            label?: string;
+            value?: string;
         };
     };
     responses: never;
@@ -585,6 +664,52 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["PublicBrandResponse"][];
+                };
+            };
+        };
+    };
+    list: {
+        parameters: {
+            query?: {
+                product?: string;
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PageResponsePublicArticleSummaryResponse"];
+                };
+            };
+        };
+    };
+    article: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PublicArticleResponse"];
                 };
             };
         };

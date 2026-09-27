@@ -21,8 +21,10 @@ export function SectionHeading({
   return (
     <div className={cn("flex flex-wrap items-end justify-between gap-3", className)}>
       <div>
-        <h2 className="text-2xl sm:text-[1.75rem] sm:leading-tight">{title}</h2>
-        {description && <p className="mt-1 text-body">{description}</p>}
+        <h2 className="text-[1.75rem] leading-tight sm:text-[2rem]">{title}</h2>
+        {/* A brass rule under each section title, like the stamped line under a plate's heading. */}
+        <span className="mt-2 block h-1 w-14 rounded-full bg-brand-500" aria-hidden />
+        {description && <p className="mt-2 text-body">{description}</p>}
       </div>
       {action}
     </div>

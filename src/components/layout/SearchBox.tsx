@@ -83,7 +83,7 @@ export function SearchBox({
           "transition-[border-color,background-color,box-shadow] placeholder:text-muted hover:border-muted",
           "focus:border-action-600 focus:bg-page focus:shadow-[0_0_0_3px_var(--color-action-100)] focus:outline-none",
           shortcut ? "pr-28" : "pr-20",
-          size === "lg" ? "h-14 pl-11 text-lg" : "h-11 text-[16px]",
+          size === "lg" ? "h-14 pl-11 text-lg" : "h-11 text-[17px]",
         )}
       />
       <Search
@@ -96,7 +96,7 @@ export function SearchBox({
       />
       {shortcut && (
         <kbd
-          className="pointer-events-none absolute top-1/2 right-17 hidden -translate-y-1/2 rounded border border-line-strong bg-page px-1.5 font-mono text-[12px] text-muted peer-focus:hidden lg:block"
+          className="pointer-events-none absolute top-1/2 right-17 hidden -translate-y-1/2 rounded border border-line-strong bg-page px-1.5 font-mono text-xs text-muted peer-focus:hidden lg:block"
           aria-hidden
         >
           /

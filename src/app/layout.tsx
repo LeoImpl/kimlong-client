@@ -12,14 +12,14 @@ import "./globals.css";
 const sans = Barlow({
   variable: "--font-barlow",
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 const display = Barlow_Condensed({
   variable: "--font-barlow-condensed",
   subsets: ["latin", "vietnamese"],
-  weight: ["500", "600"],
+  weight: ["500", "600", "700"],
   display: "swap",
 });
 
@@ -57,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="vi">
       <body
-        className={`${sans.variable} ${display.variable} ${mono.variable} font-sans text-[16px] antialiased sm:text-base`}
+        className={`${sans.variable} ${display.variable} ${mono.variable} font-sans text-[17px] antialiased sm:text-base`}
       >
         <a
           href="#main"

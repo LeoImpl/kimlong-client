@@ -26,7 +26,7 @@ export function Header() {
   return (
     <header>
       <div className="hidden bg-navy md:block">
-        <Container className="flex h-9 items-center justify-end text-[14px] text-white/70 lg:justify-between">
+        <Container className="flex h-10 items-center justify-end text-[15px] text-white/80 lg:justify-between">
           <p className="hidden lg:block">
             Phụ tùng máy nén khí và thiết bị tự động hóa, giao hàng toàn quốc
           </p>
@@ -50,7 +50,7 @@ export function Header() {
               className="px-3 sm:px-5"
               aria-label="Đặt hàng nhanh theo mã hoặc tải file CSV"
             >
-              <FileUp className="size-[18px]" strokeWidth={1.75} aria-hidden />
+              <FileUp className="size-5" strokeWidth={2} aria-hidden />
               <span className="hidden sm:inline">Đặt nhanh / CSV</span>
             </ButtonLink>
             <BasketBadge />
@@ -93,9 +93,9 @@ async function ContactStrip() {
     <p className="flex items-center gap-5">
       <a
         href={telHref(hotline.phone)}
-        className="flex items-center gap-1.5 font-medium text-white hover:text-brand-300"
+        className="flex items-center gap-1.5 text-lg font-bold text-brand-300 hover:text-brand-200"
       >
-        <Phone className="size-3.5" strokeWidth={1.5} aria-hidden />
+        <Phone className="size-4" strokeWidth={2} aria-hidden />
         <span className="font-mono">{formatPhone(hotline.phone)}</span>
       </a>
       <a

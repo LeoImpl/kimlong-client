@@ -17,10 +17,11 @@ export function formatPrice(amount: number, currency: string): string {
 export function Price({ price, className }: { price: PriceValue | null; className?: string }) {
   if (hasFixedPrice(price) && price?.amount != null) {
     return (
-      <span className={cn("font-semibold text-ink", className)}>
+      <span className={cn("font-bold text-ink", className)}>
         {formatPrice(price.amount, price.currency ?? "VND")}
       </span>
     );
   }
-  return <span className={cn("font-medium text-ink", className)}>Liên hệ</span>;
+  // Bold brass: "ask us" is the answer on almost every card, so it reads as an invitation, not a gap.
+  return <span className={cn("font-bold text-brand-700", className)}>Liên hệ</span>;
 }

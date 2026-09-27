@@ -15,7 +15,7 @@ import { routes } from "@/lib/routes";
  * guessing which size the buyer meant would put the wrong part on the quote.
  *
  * It sits above the card's full-size link (`relative z-10`), so pressing it never also opens the product. It is
- * outlined at rest and fills when the card is hovered: a grid of eight solid buttons would shout over the parts.
+ * tinted blue at rest and fills when the card is hovered: a grid of eight solid buttons would shout over the parts.
  */
 export function CardQuoteAction({ product }: { product: ProductSummary }) {
   const [added, setAdded] = useState(false);
@@ -27,14 +27,14 @@ export function CardQuoteAction({ product }: { product: ProductSummary }) {
   }, [added]);
 
   const base =
-    "relative z-10 inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md text-sm font-semibold " +
+    "relative z-10 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-md text-base font-bold " +
     "transition-[color,background-color,border-color,transform] duration-150 active:scale-[0.98]";
 
   if (product.variantCount > 1) {
     return (
       <Link
         href={`${routes.product(product.slug)}#dat-hang`}
-        className={`${base} border border-line-strong bg-page text-ink group-hover:border-action-600 group-hover:text-action-700`}
+        className={`${base} border border-action-200 bg-action-50 text-action-700 group-hover:border-action-600 group-hover:bg-action-100`}
       >
         Chọn trong {product.variantCount} mã
         <ChevronRight className="size-4" strokeWidth={1.5} aria-hidden />
@@ -62,7 +62,7 @@ export function CardQuoteAction({ product }: { product: ProductSummary }) {
       className={
         added
           ? `${base} bg-success text-white`
-          : `${base} border border-action-600 bg-page text-action-600 group-hover:bg-action-600 group-hover:text-white hover:bg-action-700`
+          : `${base} border border-action-600 bg-action-50 text-action-700 group-hover:bg-action-600 group-hover:text-white hover:bg-action-700`
       }
     >
       {added ? (

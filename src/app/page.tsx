@@ -54,7 +54,8 @@ export default function Home() {
         <StructuredData />
       </Suspense>
 
-      {/* The page's one orchestrated moment: headline, plate and quick-order panel arrive in sequence. */}
+      {/* The page's one orchestrated moment: headline, plate and quick-order panel arrive in sequence, then the
+          plate is scanned once. */}
       <section className="bg-linear-to-b from-action-50 to-canvas">
         <Container className="grid gap-10 py-10 sm:py-14 lg:grid-cols-12 lg:gap-12 lg:py-16">
           <div className="lg:col-span-7">
@@ -67,8 +68,8 @@ export default function Home() {
             </p>
 
             {/* The nameplate: the site's one bold device, holding the one thing it is for. */}
-            <div className="plate mt-8 animate-rise px-5 pt-6 pb-5 [animation-delay:160ms] sm:px-8 sm:pt-7 sm:pb-7">
-              <p className="text-[16px] font-medium text-ink" aria-hidden>
+            <div className="plate plate-scan mt-8 animate-rise px-5 pt-6 pb-5 [animation-delay:160ms] sm:px-8 sm:pt-7 sm:pb-7">
+              <p className="text-[17px] font-medium text-ink" aria-hidden>
                 Mã sản phẩm, part number hoặc hãng
               </p>
               <SearchBox size="lg" placeholder="Ví dụ 1613900100" className="mt-2" />
@@ -85,7 +86,7 @@ export default function Home() {
           </div>
 
           <aside
-            className="animate-rise self-end [animation-delay:260ms] lg:col-span-5"
+            className="relative animate-rise self-end [animation-delay:260ms] lg:col-span-5"
             aria-labelledby="quick-order-heading"
           >
             <div className="rounded-lg border border-line bg-page p-5 shadow-[0_12px_32px_-16px_rgb(31_90_171/0.35)] sm:p-6">
@@ -108,7 +109,7 @@ export default function Home() {
                   before the click. */}
               <table className="mt-5 w-full text-sm" aria-label="Ví dụ kết quả đối chiếu mã">
                 <thead>
-                  <tr className="border-b border-line text-left text-[14px] text-muted">
+                  <tr className="border-b border-line text-left text-[15px] text-muted">
                     <th scope="col" className="py-1.5 font-medium">
                       Mã
                     </th>
@@ -178,16 +179,18 @@ export default function Home() {
           <div className="flex flex-wrap gap-3">
             <ButtonLink
               href={routes.quickOrder}
+              variant="secondary"
               size="lg"
-              className="bg-page text-action-700 hover:bg-action-50"
+              className="border-white text-action-700 hover:border-white hover:bg-action-50"
             >
               <FileUp className="size-4" strokeWidth={1.5} aria-hidden />
               Gửi danh sách mã
             </ButtonLink>
             <ButtonLink
               href={routes.contact}
+              variant="ghost"
               size="lg"
-              className="border border-white/40 bg-transparent text-white hover:bg-white/10"
+              className="border border-white/40 text-white hover:bg-white/10 hover:text-white"
             >
               Liên hệ tư vấn
             </ButtonLink>
@@ -219,7 +222,7 @@ async function CatalogueStats() {
     <dl className="plate-cells mt-6 [--cell:6rem]">
       {stats.map((stat) => (
         <div key={stat.label}>
-          <dt className="text-[14px] text-muted">{stat.label}</dt>
+          <dt className="text-[15px] text-muted">{stat.label}</dt>
           <dd className="font-display text-2xl font-semibold text-action-700">
             <CountUp value={stat.value} />
           </dd>
@@ -291,12 +294,12 @@ function TrustBar() {
         <ul className="grid grid-cols-2 gap-px bg-line lg:grid-cols-4">
           {items.map(({ icon: Icon, title, detail }) => (
             <li key={title} className="group flex items-center gap-3 bg-page px-2 py-4 sm:px-4">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-md bg-action-50 text-action-600 transition-colors group-hover:bg-action-600 group-hover:text-white">
-                <Icon className="size-5" strokeWidth={1.5} aria-hidden />
+              <span className="flex size-12 shrink-0 items-center justify-center rounded-md bg-action-600 text-white shadow-[0_6px_14px_-8px_rgb(31_90_171/0.8)] transition-colors group-hover:bg-brand-500 group-hover:text-ink">
+                <Icon className="size-6" strokeWidth={2} aria-hidden />
               </span>
               <span className="leading-tight">
-                <span className="block font-semibold text-ink">{title}</span>
-                <span className="block text-[14px] text-muted">{detail}</span>
+                <span className="block text-lg font-bold text-ink">{title}</span>
+                <span className="block text-[15px] text-muted">{detail}</span>
               </span>
             </li>
           ))}
@@ -343,7 +346,7 @@ function SearchExample({ q }: { q: string }) {
   return (
     <Link
       href={routes.search(q)}
-      className="font-mono text-[14px] text-action-600 underline decoration-action-200 underline-offset-4 transition-colors hover:decoration-action-600"
+      className="font-mono text-[15px] text-action-600 underline decoration-action-200 underline-offset-4 transition-colors hover:decoration-action-600"
     >
       {q}
     </Link>
@@ -365,7 +368,7 @@ async function Categories() {
         action={
           <Link
             href={routes.categories}
-            className="group inline-flex items-center gap-1 text-[16px] font-medium text-action-600 hover:underline"
+            className="group inline-flex items-center gap-1 text-[17px] font-medium text-action-600 hover:underline"
           >
             Xem tất cả danh mục
             <ArrowRight
@@ -434,7 +437,7 @@ async function FeaturedProducts() {
         action={
           <Link
             href={routes.products}
-            className="group inline-flex items-center gap-1 text-[16px] font-medium text-action-600 hover:underline"
+            className="group inline-flex items-center gap-1 text-[17px] font-medium text-action-600 hover:underline"
           >
             Tất cả {result.totalItems} sản phẩm
             <ArrowRight

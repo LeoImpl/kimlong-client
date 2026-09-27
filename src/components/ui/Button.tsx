@@ -11,7 +11,7 @@ type Size = "sm" | "md" | "lg";
  * `ArrowRight`) nudges forward on hover, the site's "go on" cue.
  */
 const base =
-  "relative inline-flex items-center justify-center gap-2 rounded-[5px] font-semibold tracking-[0.01em] " +
+  "relative inline-flex items-center justify-center gap-2 rounded-[5px] font-bold tracking-[0.01em] " +
   "transition-[color,background-color,border-color,box-shadow,transform] duration-150 ease-out " +
   "hover:-translate-y-px active:translate-y-px " +
   "disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none whitespace-nowrap [&_svg]:shrink-0 " +
@@ -31,11 +31,11 @@ const variants: Record<Variant, string> = {
   dark:
     `${solid} bg-linear-to-b from-navy-hover to-navy text-white ` +
     "hover:from-navy hover:to-navy hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.18),inset_0_-2px_0_rgb(0_0_0/0.2),0_8px_18px_-8px_rgb(28_34_39/0.7)]",
-  // Brass, for the single most important action where graphite would disappear (on a dark ground). Polished:
-  // lighter at the top like a machined plate catching the light.
+  // Brass, the highlight: the one action a page most wants taken (send the quote, call us). Polished: lighter at
+  // the top like a machined plate catching the light. Graphite text on brass-300 is 8:1.
   accent:
-    `${solid} border border-brand-500 bg-linear-to-b from-brand-200 to-brand-300 text-ink ` +
-    "hover:from-brand-100 hover:to-brand-200 hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.5),inset_0_-2px_0_rgb(0_0_0/0.1),0_8px_18px_-8px_rgb(168_123_42/0.8)]",
+    `${solid} border border-brand-600 bg-linear-to-b from-brand-200 to-brand-400 text-ink ` +
+    "hover:from-brand-100 hover:to-brand-300 hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.5),inset_0_-2px_0_rgb(0_0_0/0.1),0_8px_18px_-8px_rgb(168_123_42/0.8)]",
   secondary:
     "border border-line-strong bg-page text-ink shadow-[0_1px_0_rgb(28_34_39/0.06)] " +
     "hover:border-action-500 hover:text-action-700 hover:shadow-[0_6px_14px_-8px_rgb(31_90_171/0.45)] active:bg-action-50",
@@ -43,11 +43,11 @@ const variants: Record<Variant, string> = {
   danger: `${solid} bg-danger text-white hover:brightness-110`,
 };
 
-// md and lg meet the 44px touch target; sm is for dense rows (tables, cards) where a row is the target.
+// Generous targets for older hands: md and lg exceed the 44px touch target; sm is for dense rows (tables, cards).
 const sizes: Record<Size, string> = {
-  sm: "h-9 px-3.5 text-sm",
-  md: "h-11 px-5 text-sm",
-  lg: "h-13 px-7 text-base",
+  sm: "h-10 px-4 text-sm",
+  md: "h-12 px-5 text-base",
+  lg: "h-14 px-7 text-lg",
 };
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

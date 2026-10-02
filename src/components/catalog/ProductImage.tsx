@@ -4,6 +4,10 @@ import { cn } from "@/lib/cn";
 /**
  * A product photo, or the placeholder. The placeholder is not hypothetical — `xy-lanh-tieu-chuan-crdng` has no
  * image at all — so it has to look deliberate rather than broken.
+ *
+ * The photo ignores pointer events and cannot be dragged, so right-click "Save image", drag-to-desktop and the iOS
+ * long-press menu do not offer the file. This only slows casual copying: the real protection is the logo the API
+ * burns into every product photo. Clicks still reach the enclosing link or button.
  */
 export function ProductImage({
   src,
@@ -44,7 +48,11 @@ export function ProductImage({
       sizes={sizes}
       loading={eager ? "eager" : "lazy"}
       fetchPriority={eager ? "high" : "auto"}
-      className={cn("object-contain", className)}
+      draggable={false}
+      className={cn(
+        "pointer-events-none object-contain select-none [-webkit-touch-callout:none]",
+        className,
+      )}
     />
   );
 }

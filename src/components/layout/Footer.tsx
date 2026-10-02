@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getCategories } from "@/lib/api/catalog";
 import { formatPhone, getCompany, telHref, zaloHref } from "@/lib/api/company";
+import { hotlineHours } from "@/lib/copy";
 import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { routes } from "@/lib/routes";
@@ -145,6 +146,7 @@ async function ContactColumn() {
             {hotline.label && <span className="block text-white/50">{hotline.label}</span>}
           </li>
         ))}
+        {hotlines.length > 0 && <li className="text-brand-300/90">{hotlineHours.full}</li>}
         <li>
           <a href={`mailto:${company.email}`} className="hover:text-white">
             {company.email}

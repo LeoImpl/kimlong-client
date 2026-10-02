@@ -3,6 +3,7 @@ import { connection } from "next/server";
 import { FileUp, Mail, MessageCircle, Phone } from "lucide-react";
 import { getCategories } from "@/lib/api/catalog";
 import { formatPhone, getCompany, primaryHotline, telHref, zaloHref } from "@/lib/api/company";
+import { hotlineHours } from "@/lib/copy";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
@@ -93,10 +94,13 @@ async function ContactStrip() {
     <p className="flex items-center gap-5">
       <a
         href={telHref(hotline.phone)}
+        title={hotlineHours.full}
         className="flex items-center gap-1.5 text-lg font-bold text-brand-300 hover:text-brand-200"
       >
         <Phone className="size-4" strokeWidth={2} aria-hidden />
+        <span className="text-[15px] font-medium text-white/80">{hotlineHours.short}</span>
         <span className="font-mono">{formatPhone(hotline.phone)}</span>
+        <span className="sr-only">, {hotlineHours.full}</span>
       </a>
       <a
         href={zaloHref(hotline.phone)}

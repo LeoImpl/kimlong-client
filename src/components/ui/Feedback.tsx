@@ -29,7 +29,7 @@ export function EmptyState({
     >
       <p className="font-display text-xl font-semibold text-ink">{title}</p>
       {description && <p className="mx-auto mt-1.5 max-w-md text-sm text-body">{description}</p>}
-      {action && <div className="mt-5 flex justify-center gap-3">{action}</div>}
+      {action && <div className="mt-5 flex flex-wrap justify-center gap-3">{action}</div>}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { Filters } from "@/components/catalog/Filters";
 import { ProductListing } from "@/components/catalog/ProductListing";
+import { ProductNotListed } from "@/components/catalog/ProductNotListed";
 import { SearchBox } from "@/components/layout/SearchBox";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Container } from "@/components/ui/Container";
@@ -101,7 +102,8 @@ async function Results({ searchParams }: { searchParams: PageProps<"/san-pham">[
           result={result}
           basePath={routes.products}
           params={params}
-          emptyTitle={q ? `Không tìm thấy “${q}”` : "Chưa có sản phẩm nào"}
+          emptyTitle="Chưa có sản phẩm nào"
+          empty={q ? <ProductNotListed query={q} /> : undefined}
         />
       </div>
     </div>

@@ -26,6 +26,7 @@ export function ProductListing({
   params,
   emptyTitle = "Không tìm thấy sản phẩm nào",
   emptyDescription = "Thử tìm bằng mã sản phẩm (ví dụ 1613900100), hoặc gọi cho chúng tôi — kho còn nhiều mã chưa lên website.",
+  empty,
 }: {
   result: ProductPage;
   basePath: string;
@@ -33,8 +34,11 @@ export function ProductListing({
   params: Record<string, string | undefined>;
   emptyTitle?: string;
   emptyDescription?: string;
+  /** Replaces the whole empty state, e.g. the search page's "not listed yet". */
+  empty?: React.ReactNode;
 }) {
   if (result.items.length === 0) {
+    if (empty) return empty;
     return (
       <EmptyState
         title={emptyTitle}

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { MessageCircle, Phone } from "lucide-react";
 import { formatPhone, getCompany, primaryHotline, telHref, zaloHref } from "@/lib/api/company";
+import { hotlineHours } from "@/lib/copy";
 
 /**
  * Sticky call/Zalo bar on phones. A large share of Vietnamese B2B buyers would rather phone than fill in a form,
@@ -29,8 +30,11 @@ async function Bar() {
         href={telHref(hotline.phone)}
         className="flex h-14 items-center justify-center gap-2 bg-linear-to-b from-brand-200 to-brand-400 text-base font-bold text-ink"
       >
-        <Phone className="size-5" strokeWidth={2} aria-hidden />
-        Gọi {formatPhone(hotline.phone)}
+        <Phone className="size-5 shrink-0" strokeWidth={2} aria-hidden />
+        <span className="flex flex-col leading-tight">
+          <span>Gọi {formatPhone(hotline.phone)}</span>
+          <span className="text-xs font-medium text-ink/75">{hotlineHours.compact}</span>
+        </span>
       </a>
       <a
         href={zaloHref(hotline.phone)}

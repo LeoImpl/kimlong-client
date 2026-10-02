@@ -24,8 +24,8 @@ export default function BrandsPage() {
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Thương hiệu" }]} />
       <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">Thương hiệu</h1>
       <p className="mt-2 max-w-3xl text-body">
-        Chúng tôi cung cấp phụ tùng và thiết bị chính hãng của các hãng dưới đây. Chọn một hãng để
-        xem sản phẩm.
+        Kim Long là đại lý phân phối chính thức tại Việt Nam của các hãng dưới đây, cam kết hàng
+        chính hãng, đầy đủ chứng từ nguồn gốc. Chọn một hãng để xem sản phẩm.
       </p>
 
       <Suspense fallback={<GridSkeleton />}>

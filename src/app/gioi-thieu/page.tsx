@@ -8,6 +8,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Container, SectionHeading } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { getCompany, getPartners } from "@/lib/api/company";
+import { distributorClaim, hotlineHours } from "@/lib/copy";
 import { formatPhone, telHref } from "@/lib/phone";
 import { routes } from "@/lib/routes";
 
@@ -74,7 +75,7 @@ async function Profile() {
         <Fact label="Thành lập" value={company.foundedYear ? String(company.foundedYear) : null} />
         <Fact label="Mã số thuế" value={company.taxCode} mono />
         <Fact
-          label="Hotline"
+          label={hotlineHours.short}
           value={hotline ? formatPhone(hotline.phone) : null}
           href={hotline ? telHref(hotline.phone) : undefined}
         />
@@ -196,8 +197,8 @@ async function Partners() {
   return (
     <section className="mt-16">
       <SectionHeading
-        title="Hãng chúng tôi phân phối"
-        description="Hàng chính hãng, chứng từ đầy đủ."
+        title={distributorClaim.title}
+        description={distributorClaim.description}
         action={
           <Link
             href={routes.brands}

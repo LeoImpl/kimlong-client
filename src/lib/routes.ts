@@ -6,6 +6,8 @@ export const routes = {
   home: "/",
   about: "/gioi-thieu",
   contact: "/lien-he",
+  /** The contact form with a quote request for `item` already written: for something not in the catalogue. */
+  quoteFor: (item: string) => `/lien-he?ma=${encodeURIComponent(item)}`,
   quote: "/yeu-cau-bao-gia",
   quoteSent: "/yeu-cau-bao-gia/da-gui",
   quickOrder: "/dat-hang-nhanh",

@@ -6,6 +6,7 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { Container } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
 import { formatPhone, getCompany, primaryHotline, telHref, zaloHref } from "@/lib/api/company";
+import { hotlineHours } from "@/lib/copy";
 import { routes } from "@/lib/routes";
 
 export const metadata: Metadata = {
@@ -16,19 +17,19 @@ export const metadata: Metadata = {
   alternates: { canonical: routes.contact },
 };
 
-export default function ContactPage() {
+export default function ContactPage({ searchParams }: PageProps<"/lien-he">) {
   return (
     <Container className="py-6 lg:py-10">
       <Breadcrumb items={[{ name: "Trang chủ", href: routes.home }, { name: "Liên hệ" }]} />
       <h1 className="mt-4 text-[2rem] leading-tight sm:text-[2.5rem]">Liên hệ</h1>
       <p className="mt-2 max-w-2xl text-body">
-        Gọi trực tiếp nếu bạn cần gấp, hoặc gửi yêu cầu tư vấn để chúng tôi tìm đúng mã sản phẩm cho
-        máy của bạn.
+        Hotline của Kim Long trực 24/7, kể cả cuối tuần và ngày lễ — hãy gọi ngay khi cần gấp, hoặc
+        gửi yêu cầu tư vấn để chúng tôi tìm đúng mã sản phẩm cho máy của bạn.
       </p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_340px]">
         <Suspense fallback={<Skeleton className="h-[32rem]" />}>
-          <Form />
+          <Form searchParams={searchParams} />
         </Suspense>
         <Suspense fallback={<Skeleton className="h-64" />}>
           <ContactDetails />
@@ -38,11 +39,21 @@ export default function ContactPage() {
   );
 }
 
-async function Form() {
+/** `?ma=` comes from a search with no match: the request for that item is already written, the buyer only adds a quantity. */
+async function Form({ searchParams }: { searchParams: PageProps<"/lien-he">["searchParams"] }) {
   await connection();
-  const company = await getCompany();
-  return <ConsultationForm hotline={primaryHotline(company)?.phone ?? null} />;
+  const [company, { ma }] = await Promise.all([getCompany(), searchParams]);
+  const item = (Array.isArray(ma) ? ma[0] : ma)?.trim().slice(0, MAX_ITEM_LENGTH);
+  return (
+    <ConsultationForm
+      hotline={primaryHotline(company)?.phone ?? null}
+      initialMessage={item ? `Tôi cần báo giá sản phẩm: ${item}\nSố lượng: ` : ""}
+    />
+  );
 }
+
+/** A part number or a short product name; anything longer is not a search someone typed. */
+const MAX_ITEM_LENGTH = 120;
 
 async function ContactDetails() {
   await connection();
@@ -70,6 +81,7 @@ async function ContactDetails() {
               >
                 {formatPhone(hotline.phone)}
               </a>
+              <span className="block text-muted">{hotlineHours.full}</span>
             </dd>
           </div>
         ))}

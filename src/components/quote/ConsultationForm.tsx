@@ -23,10 +23,17 @@ import { focusFirstInvalid, useSubmission } from "./submission";
  * This is the path for the buyer who does not know the part number — "máy nén khí GA22, cần lọc dầu" — and it
  * is worth as much as a quote, because sales can identify the part from the machine.
  */
-export function ConsultationForm({ hotline }: { hotline: string | null }) {
+export function ConsultationForm({
+  hotline,
+  initialMessage = "",
+}: {
+  hotline: string | null;
+  /** Pre-written request, e.g. for an item the buyer searched for and did not find. */
+  initialMessage?: string;
+}) {
   const router = useRouter();
   const [contact, setContact] = useState<ContactValues>(emptyContact);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(initialMessage);
   const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<Errors<ContactValues> & { message?: string }>({});
   const { state, submit } = useSubmission();

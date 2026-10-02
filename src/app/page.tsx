@@ -26,6 +26,7 @@ import { listArticles } from "@/lib/api/articles";
 import { flattenCategories, getBrands, getCategories, listProducts } from "@/lib/api/catalog";
 import { getCompany, getPartners } from "@/lib/api/company";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
+import { distributorClaim } from "@/lib/copy";
 import { routes } from "@/lib/routes";
 import { env } from "@/lib/env";
 
@@ -502,8 +503,8 @@ async function Partners() {
   return (
     <>
       <SectionHeading
-        title="Hãng chúng tôi phân phối"
-        description="Hàng chính hãng, có chứng từ đầy đủ."
+        title={distributorClaim.title}
+        description={distributorClaim.description}
         className="mb-6"
       />
       <BrandMarquee brands={partners} />

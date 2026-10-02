@@ -3,11 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import { Phone } from "lucide-react";
+import { categoryIcon } from "@/components/catalog/categoryStyle";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container, SectionHeading } from "@/components/ui/Container";
 import { Skeleton } from "@/components/ui/Feedback";
+import { getCategories, listProducts } from "@/lib/api/catalog";
 import { getCompany, getPartners } from "@/lib/api/company";
+import { groupSections, paragraphs } from "@/lib/about";
+import type { CompanySection } from "@/lib/api/types";
+import { cn } from "@/lib/cn";
 import { distributorClaim, hotlineHours } from "@/lib/copy";
 import { formatPhone, telHref } from "@/lib/phone";
 import { routes } from "@/lib/routes";
@@ -20,8 +26,8 @@ import { routes } from "@/lib/routes";
 export const metadata: Metadata = {
   title: "Giới thiệu",
   description:
-    "Kim Long — nhà cung cấp phụ tùng máy nén khí chính hãng và thiết bị tự động hóa công nghiệp cho nhà máy " +
-    "tại Việt Nam.",
+    "Kim Long — đại lý phân phối chính thức phụ tùng máy nén khí và thiết bị tự động hóa chính hãng cho nhà " +
+    "máy tại Việt Nam. Tư vấn đúng mã, hotline 24/7, giao hàng toàn quốc.",
   alternates: { canonical: routes.about },
 };
 
@@ -65,12 +71,31 @@ async function Profile() {
   return (
     <>
       <header className="mt-4 max-w-3xl">
-        <h1 className="text-[2rem] leading-tight sm:text-[2.5rem]">{company.legalName}</h1>
-        {company.tagline && <p className="mt-3 text-lg text-body">{company.tagline}</p>}
+        <p className="font-mono text-sm tracking-wide text-brand-700 uppercase">Giới thiệu</p>
+        <h1 className="mt-2 text-[2rem] leading-tight text-balance sm:text-[2.5rem]">
+          {company.legalName}
+        </h1>
+        {company.tagline && <p className="mt-3 text-xl text-body">{company.tagline}</p>}
+        <div className="mt-6 flex flex-wrap gap-3">
+          <ButtonLink href={routes.contact} size="lg">
+            Liên hệ tư vấn
+          </ButtonLink>
+          {hotline && (
+            <ButtonLink
+              href={telHref(hotline.phone)}
+              variant="secondary"
+              size="lg"
+              title={hotlineHours.full}
+            >
+              <Phone className="size-5" strokeWidth={2} aria-hidden />
+              {hotlineHours.short}: {formatPhone(hotline.phone)}
+            </ButtonLink>
+          )}
+        </div>
       </header>
 
       {/* The facts a buyer checks: who we are legally, where, since when, and a number that is answered. */}
-      <dl className="plate-cells mt-8 [--cell:12rem]">
+      <dl className="plate-cells mt-10 [--cell:12rem]">
         <Fact label="Trụ sở" value={company.headquarters} />
         <Fact label="Thành lập" value={company.foundedYear ? String(company.foundedYear) : null} />
         <Fact label="Mã số thuế" value={company.taxCode} mono />
@@ -81,38 +106,32 @@ async function Profile() {
         />
       </dl>
 
-      {company.aboutSections.length > 0 && (
-        <div className="mt-12 max-w-3xl space-y-10">
-          {company.aboutSections.map((section) => (
-            <section key={section.title}>
-              <h2 className="text-2xl">{section.title}</h2>
-              <div className="mt-3 space-y-3 text-body">
-                {section.body.split(/\n{2,}/).map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      )}
+      <AboutSections sections={company.aboutSections} />
+
+      <Suspense fallback={<Skeleton className="mt-16 h-72" />}>
+        <SupplyFields />
+      </Suspense>
 
       {company.highlights.length > 0 && (
         <section className="mt-16">
           <SectionHeading title="Vì sao khách hàng chọn Kim Long" className="mb-6" />
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {company.highlights.map((highlight) => (
-              <li key={highlight.title} className="rounded-lg border border-line bg-page p-5">
-                <h3 className="text-xl">{highlight.title}</h3>
-                <p className="mt-2 text-sm text-body">{highlight.body}</p>
+          <ol className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+            {company.highlights.map((highlight, index) => (
+              <li key={highlight.title} className="bg-page p-5 sm:p-6">
+                <span className="font-mono text-sm font-semibold text-brand-700" aria-hidden>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-2 text-xl leading-snug">{highlight.title}</h3>
+                <p className="mt-2 text-[15px] text-body">{highlight.body}</p>
               </li>
             ))}
-          </ul>
+          </ol>
         </section>
       )}
 
       {company.milestones.length > 0 && (
         <section className="mt-16 max-w-3xl">
-          <SectionHeading title="Chặng đường" className="mb-6" />
+          <SectionHeading title="Chặng đường phát triển" className="mb-6" />
           <ol className="space-y-6 border-l border-line pl-6">
             {[...company.milestones]
               .sort((a, b) => a.year - b.year)
@@ -157,6 +176,178 @@ async function Profile() {
         </section>
       )}
     </>
+  );
+}
+
+/**
+ * The company introduction, laid out by the shape of each section rather than by its title, so the back office
+ * can rename, reorder or add sections freely:
+ * - the first section opens the page as the lead;
+ * - consecutive one-paragraph sections (vision, mission) become statement cards side by side;
+ * - a section whose every paragraph reads "Term: explanation" (values, steps) becomes a numbered grid;
+ * - anything else is prose.
+ */
+function AboutSections({ sections }: { sections: CompanySection[] }) {
+  return (
+    <>
+      {groupSections(sections).map((block, index) => {
+        switch (block.kind) {
+          case "lead":
+            return (
+              <section
+                key={block.section.title}
+                className="mt-14 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-14"
+              >
+                <div>
+                  <h2 className="text-[1.75rem] leading-tight sm:text-[2rem]">
+                    {block.section.title}
+                  </h2>
+                  <span className="mt-2 block h-1 w-14 rounded-full bg-brand-500" aria-hidden />
+                </div>
+                <div className="space-y-4 text-lg leading-relaxed text-body">
+                  {paragraphs(block.section.body).map((paragraph, position) => (
+                    <p key={position} className={position === 0 ? "text-ink" : undefined}>
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            );
+          case "statements":
+            return (
+              <div key={`statements-${index}`} className="mt-14 grid gap-4 md:grid-cols-2">
+                {block.sections.map((section) => (
+                  <section
+                    key={section.title}
+                    className="rounded-lg border border-line border-t-4 border-t-brand-500 bg-page p-6 sm:p-8"
+                  >
+                    <h2 className="font-mono text-sm font-semibold tracking-wide text-brand-700 uppercase">
+                      {section.title}
+                    </h2>
+                    <p className="mt-3 text-xl leading-snug text-ink">{section.body}</p>
+                  </section>
+                ))}
+              </div>
+            );
+          case "items":
+            return (
+              <section key={block.section.title} className="mt-16">
+                <SectionHeading title={block.section.title} className="mb-6" />
+                <ol
+                  className={cn(
+                    "grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2",
+                    itemColumns[block.items.length] ?? "lg:grid-cols-4",
+                  )}
+                >
+                  {block.items.map((item, position) => (
+                    <li key={item.term} className="bg-page p-5 sm:p-6">
+                      <span className="font-mono text-sm font-semibold text-brand-700" aria-hidden>
+                        {String(position + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="mt-2 text-xl leading-snug">{item.term}</h3>
+                      <p className="mt-2 text-[15px] text-body">{item.text}</p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            );
+          case "prose":
+            return (
+              <section key={block.section.title} className="mt-16 max-w-3xl">
+                <SectionHeading title={block.section.title} className="mb-4" />
+                <div className="space-y-3 text-[17px] leading-relaxed text-body">
+                  {paragraphs(block.section.body).map((paragraph, position) => (
+                    <p key={position}>{paragraph}</p>
+                  ))}
+                </div>
+              </section>
+            );
+        }
+      })}
+    </>
+  );
+}
+
+/** Literal class names, so Tailwind finds them. */
+const itemColumns: Record<number, string> = {
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+  5: "lg:grid-cols-5",
+};
+
+/**
+ * What we supply, built from the catalogue rather than written in the profile: the product types, the brands
+ * actually stocked and the number of products per family can then never contradict the shop.
+ */
+async function SupplyFields() {
+  await connection();
+  const families = await getCategories();
+  const listings = await Promise.all(
+    families.map((family) => listProducts({ category: family.slug, size: 1, facets: true })),
+  );
+
+  return (
+    <section className="mt-16">
+      <SectionHeading
+        title="Lĩnh vực cung ứng"
+        description="Ba nhóm sản phẩm chủ lực, tra cứu được ngay trên website theo mã hoặc theo hãng."
+        className="mb-6"
+      />
+      <ul className="grid gap-px overflow-hidden rounded-lg border border-line bg-line md:grid-cols-3">
+        {families.map((family, index) => {
+          const Icon = categoryIcon(family.slug);
+          const listing = listings[index];
+          const brands = listing?.facets?.brands ?? [];
+          return (
+            <li key={family.slug} className="flex flex-col bg-page p-5 sm:p-6">
+              <span className="flex size-11 items-center justify-center rounded-md bg-action-50 text-action-600">
+                <Icon className="size-6" strokeWidth={1.5} aria-hidden />
+              </span>
+              <h3 className="mt-3 text-2xl leading-tight">
+                <Link href={routes.category(family.slug)} className="hover:underline">
+                  {family.name}
+                </Link>
+              </h3>
+              {listing && listing.totalItems > 0 && (
+                <p className="mt-1 text-sm text-muted">
+                  {listing.totalItems} sản phẩm trên website
+                </p>
+              )}
+              {family.children.length > 0 && (
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {family.children.map((type) => (
+                    <li key={type.slug}>
+                      <Link
+                        href={routes.category(type.slug)}
+                        className="inline-block rounded-sm border border-line px-2 py-1 text-sm text-body hover:border-action-600 hover:text-action-700"
+                      >
+                        {type.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {brands.length > 0 && (
+                <p className="mt-auto pt-5 text-sm text-body">
+                  <span className="text-muted">Thương hiệu: </span>
+                  {brands.map((brand, position) => (
+                    <span key={brand.slug}>
+                      {position > 0 && ", "}
+                      <Link
+                        href={routes.brand(brand.slug)}
+                        className="hover:text-action-700 hover:underline"
+                      >
+                        {brand.name}
+                      </Link>
+                    </span>
+                  ))}
+                </p>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 

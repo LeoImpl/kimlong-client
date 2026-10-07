@@ -16,7 +16,9 @@ import { routes } from "@/lib/routes";
 
 /**
  * The site shell's top half: a navy utility strip (who to call), the command bar (search, quick order, the quote
- * basket) and the category row.
+ * basket) and the category row. Only the strip scrolls away; the command bar and the category row stay pinned to
+ * the top, so search and the menu are one glance away on a long product list. `--header-h` in globals.css holds
+ * their height for anchors and sticky sidebars: update it when this block changes height.
  *
  * Every part that needs the API sits behind its own `<Suspense>`: the frame — logo, search box, calls to action —
  * is static HTML in the build, and the category tree and phone number stream in on the first request and are
@@ -25,7 +27,7 @@ import { routes } from "@/lib/routes";
  */
 export function Header() {
   return (
-    <header>
+    <>
       <div className="hidden bg-navy md:block">
         <Container className="flex h-10 items-center justify-end text-[15px] text-white/80 lg:justify-between">
           <p className="hidden lg:block">
@@ -37,49 +39,52 @@ export function Header() {
         </Container>
       </div>
 
-      <div className="sticky top-0 z-40 border-b border-line bg-page">
-        <Container className="flex h-[72px] items-center gap-3 lg:gap-6">
-          <Suspense fallback={<Logo />}>
-            <CompanyLogo />
-          </Suspense>
-          <div className="hidden flex-1 md:flex">
-            <SearchBox className="max-w-2xl" shortcut />
-          </div>
-          <div className="ml-auto flex items-center gap-2">
-            <ButtonLink
-              href={routes.quickOrder}
-              className="px-3 sm:px-5"
-              aria-label="Đặt hàng nhanh theo mã hoặc tải file CSV"
-            >
-              <FileUp className="size-5" strokeWidth={2} aria-hidden />
-              <span className="hidden sm:inline">Đặt nhanh / CSV</span>
-            </ButtonLink>
-            <BasketBadge />
-          </div>
-        </Container>
-      </div>
+      {/* Sticky on <header> itself, not on a child: a sticky child only sticks while its parent is on screen. */}
+      <header className="sticky top-0 z-40 shadow-[0_6px_16px_-12px_rgb(28_34_39/0.45)]">
+        <div className="border-b border-line bg-page">
+          <Container className="flex h-[72px] items-center gap-3 lg:gap-6">
+            <Suspense fallback={<Logo />}>
+              <CompanyLogo />
+            </Suspense>
+            <div className="hidden flex-1 md:flex">
+              <SearchBox className="max-w-2xl" shortcut />
+            </div>
+            <div className="ml-auto flex items-center gap-2">
+              <ButtonLink
+                href={routes.quickOrder}
+                className="px-3 sm:px-5"
+                aria-label="Đặt hàng nhanh theo mã hoặc tải file CSV"
+              >
+                <FileUp className="size-5" strokeWidth={2} aria-hidden />
+                <span className="hidden sm:inline">Đặt nhanh / CSV</span>
+              </ButtonLink>
+              <BasketBadge />
+            </div>
+          </Container>
+        </div>
 
-      {/* Phones and tablets: the search (phones only, the command bar has it from md) and the category disclosure. */}
-      <div className="border-b border-line bg-page lg:hidden">
-        <Container className="py-2">
-          <div className="mb-2 md:hidden">
-            <SearchBox />
-          </div>
-          <Suspense fallback={<Skeleton className="h-11 w-32" />}>
-            <MobileCategories />
-          </Suspense>
-        </Container>
-      </div>
+        {/* Phones and tablets: the search (phones only, the command bar has it from md) and the category disclosure. */}
+        <div className="border-b border-line bg-page lg:hidden">
+          <Container className="py-2">
+            <div className="mb-2 md:hidden">
+              <SearchBox />
+            </div>
+            <Suspense fallback={<Skeleton className="h-11 w-32" />}>
+              <MobileCategories />
+            </Suspense>
+          </Container>
+        </div>
 
-      {/* Desktop: the families on a graphite band edged in brass, like the rim of a nameplate. */}
-      <div className="hidden border-t-2 border-brand-500 bg-navy lg:block">
-        <Container>
-          <Suspense fallback={<NavSkeleton />}>
-            <CategoryNav />
-          </Suspense>
-        </Container>
-      </div>
-    </header>
+        {/* Desktop: the families on a graphite band edged in brass, like the rim of a nameplate. */}
+        <div className="hidden border-t-2 border-brand-500 bg-navy lg:block">
+          <Container>
+            <Suspense fallback={<NavSkeleton />}>
+              <CategoryNav />
+            </Suspense>
+          </Container>
+        </div>
+      </header>
+    </>
   );
 }
 

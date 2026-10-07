@@ -120,7 +120,7 @@ async function ArticleContent({ params }: PageProps<"/bai-viet/[slug]">) {
         </article>
 
         <aside className="space-y-6 lg:col-span-4">
-          <div className="space-y-6 lg:sticky lg:top-24">
+          <div className="space-y-6 lg:sticky lg:top-[calc(var(--header-h)+1.5rem)]">
             <Suspense fallback={<Skeleton className="h-64" />}>
               <ProductsInArticle slugs={article.relatedProducts} />
             </Suspense>

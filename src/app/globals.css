@@ -136,6 +136,14 @@
 
 :root {
   color-scheme: light;
+  /* Height of the sticky header (command bar + category row, see Header.tsx): phones also carry the search row. */
+  --header-h: 11.625rem;
+  @media (width >= 48rem) {
+    --header-h: 8.375rem;
+  }
+  @media (width >= 64rem) {
+    --header-h: 7.6875rem;
+  }
 }
 
 /* Medium is the reading weight: Barlow's regular is thin at text sizes, and a firmer stroke reads better for tired
@@ -472,4 +480,6 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* In-page links (#dat-hang, article headings) land below the sticky header, not under it. */
+  scroll-padding-top: calc(var(--header-h) + 1rem);
 }

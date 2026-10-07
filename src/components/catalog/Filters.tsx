@@ -42,7 +42,7 @@ export function Filters({
   return (
     <aside
       aria-label="Bộ lọc"
-      className="self-start overflow-hidden rounded-lg border border-line bg-page lg:sticky lg:top-24"
+      className="self-start overflow-hidden rounded-lg border border-line bg-page lg:sticky lg:top-[calc(var(--header-h)+1.5rem)]"
     >
       <div className="flex items-center justify-between border-b border-line px-4 py-3">
         <h2 className="text-lg">Bộ lọc</h2>

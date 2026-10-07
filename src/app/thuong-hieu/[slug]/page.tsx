@@ -131,7 +131,7 @@ function CategoryFacets({ facets, brandSlug }: { facets: Facets | null; brandSlu
   return (
     <aside
       aria-label="Danh mục"
-      className="self-start overflow-hidden rounded-lg border border-line bg-page lg:sticky lg:top-24"
+      className="self-start overflow-hidden rounded-lg border border-line bg-page lg:sticky lg:top-[calc(var(--header-h)+1.5rem)]"
     >
       <h2 className="border-b border-line px-4 py-3 text-lg">Danh mục</h2>
       <ul className="space-y-0.5 p-2">

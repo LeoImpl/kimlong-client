@@ -23,13 +23,13 @@ function Block({ block }: { block: ArticleBlock }) {
       return block.level === 2 ? (
         <h2
           id={anchor(block.text)}
-          className="mt-12 scroll-mt-28 text-[1.75rem] leading-tight first:mt-0 sm:text-[2rem]"
+          className="mt-12 text-[1.75rem] leading-tight first:mt-0 sm:text-[2rem]"
         >
           {block.text}
           <span className="mt-2 block h-1 w-14 rounded-full bg-brand-500" aria-hidden />
         </h2>
       ) : (
-        <h3 id={anchor(block.text)} className="mt-8 scroll-mt-28 text-[1.375rem] leading-snug">
+        <h3 id={anchor(block.text)} className="mt-8 text-[1.375rem] leading-snug">
           {block.text}
         </h3>
       );

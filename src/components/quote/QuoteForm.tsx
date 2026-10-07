@@ -132,7 +132,10 @@ export function QuoteForm({ hotline }: { hotline: string | null }) {
         </Field>
       </section>
 
-      <section aria-labelledby="contact-heading" className="lg:sticky lg:top-24 lg:self-start">
+      <section
+        aria-labelledby="contact-heading"
+        className="lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:self-start"
+      >
         <div className="rounded-lg border border-line bg-page p-5">
           <h2 id="contact-heading" className="text-xl">
             Thông tin liên hệ

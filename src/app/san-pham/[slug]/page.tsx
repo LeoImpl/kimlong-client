@@ -207,7 +207,7 @@ async function Product({ params }: PageProps<"/san-pham/[slug]">) {
       </div>
 
       {product.variants.length > 0 && (
-        <section id="dat-hang" className="mt-14 scroll-mt-24">
+        <section id="dat-hang" className="mt-14">
           <SectionHeading
             title="Đặt hàng theo mã"
             description="Nhập số lượng cho từng mã, rồi nhấn Tab hoặc Enter để sang mã kế tiếp."

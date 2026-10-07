@@ -358,7 +358,7 @@ export function QuickOrder() {
         </div>
       </section>
 
-      <aside className="lg:sticky lg:top-24 lg:self-start">
+      <aside className="lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:self-start">
         <div className="rounded-lg border border-line bg-page p-5">
           <h2 className="text-lg">Tóm tắt</h2>
           <dl className="mt-4 space-y-2.5 text-sm">

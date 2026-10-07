@@ -7,7 +7,8 @@ import { routes } from "@/lib/routes";
 
 /**
  * Category navigation on a phone. A disclosure rather than a full-screen overlay: the tree is two levels and
- * sixteen nodes, so a panel that pushes the page down is simpler and never traps focus.
+ * sixteen nodes, so a panel that pushes the page down is simpler and never traps focus. The header is sticky, so the
+ * panel scrolls on its own and stops above the bottom of the screen (and, on phones, above the contact bar).
  */
 export function MobileNav({ categories }: { categories: CategoryNode[] }) {
   const [open, setOpen] = useState(false);
@@ -46,7 +47,7 @@ export function MobileNav({ categories }: { categories: CategoryNode[] }) {
         <nav
           id="mobile-nav"
           aria-label="Danh mục sản phẩm"
-          className="mt-3 rounded-lg border border-line bg-page p-2"
+          className="mt-3 max-h-[calc(100dvh-var(--header-h)-5rem)] md:max-h-[calc(100dvh-var(--header-h)-1.5rem)] overflow-y-auto overscroll-contain rounded-lg border border-line bg-page p-2"
         >
           <ul className="divide-y divide-line">
             {categories.map((root) => (

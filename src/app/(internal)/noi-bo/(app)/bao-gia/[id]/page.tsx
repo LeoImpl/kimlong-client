@@ -4,9 +4,16 @@ import { notFound } from "next/navigation";
 import { PageHeader, Panel } from "@/components/internal/PageHeader";
 import { QuotationActions } from "@/components/internal/QuotationActions";
 import { QuotationComposer } from "@/components/internal/QuotationComposer";
+import { QuotationFiles } from "@/components/internal/QuotationFiles";
 import { QuotationStatusBadge } from "@/components/internal/StatusBadge";
 import { Alert } from "@/components/ui/Feedback";
-import { getCustomer, getQuotation, getSettings } from "@/lib/internal/api";
+import {
+  getCustomer,
+  getQuotation,
+  getSellerStatus,
+  getSettings,
+  listDocuments,
+} from "@/lib/internal/api";
 import { formatDay, formatInstant, todayIso } from "@/lib/internal/format";
 import { internalRoutes } from "@/lib/internal/routes";
 
@@ -18,15 +25,26 @@ export const metadata: Metadata = { title: "Báo giá" };
  */
 export const instant = false;
 
+/** What the seller header of a printed quotation needs, in the words of the warning. */
+const sellerDetails: Record<string, string> = {
+  taxCode: "mã số thuế",
+  address: "địa chỉ",
+  logo: "logo (PNG hoặc JPEG)",
+  bankAccount: "tài khoản ngân hàng",
+};
+
 export default async function QuotationPage({ params }: PageProps<"/noi-bo/bao-gia/[id]">) {
   const { id } = await params;
   const quotation = await getQuotation(id);
   // Also the answer for a quotation of another salesperson's customer.
   if (!quotation) notFound();
-  const [settings, customer] = await Promise.all([
+  const [settings, customer, documents, seller] = await Promise.all([
     getSettings(),
     getCustomer(quotation.customerId),
+    listDocuments(quotation.id),
+    getSellerStatus(),
   ]);
+  const missing = seller.missing.map((item) => sellerDetails[item] ?? item);
 
   return (
     <>
@@ -92,6 +110,20 @@ export default async function QuotationPage({ params }: PageProps<"/noi-bo/bao-g
 
         <Panel title="Thao tác">
           <QuotationActions quotation={quotation} />
+        </Panel>
+
+        <Panel title="File báo giá">
+          {missing.length > 0 && (
+            <Alert
+              tone="warning"
+              className="mb-3"
+              title="Thông tin Kim Long in trên báo giá còn thiếu"
+            >
+              Chưa có: {missing.join(", ")}. File vẫn xuất được nhưng phần đó sẽ để trống; quản trị
+              viên bổ sung trong hồ sơ công ty và cấu hình hệ thống.
+            </Alert>
+          )}
+          <QuotationFiles quotation={quotation} documents={documents} />
         </Panel>
 
         {/* Remounted for another quotation, so nothing typed into one leaks into the next. */}

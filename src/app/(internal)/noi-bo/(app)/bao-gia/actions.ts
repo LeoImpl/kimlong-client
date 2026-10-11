@@ -5,11 +5,12 @@ import {
   changeQuotationStatus,
   cloneQuotation,
   createQuotation,
+  exportDocument,
   lookupProducts,
   updateQuotation,
 } from "@/lib/internal/api";
 import { integerInput, quotationInput, textInput } from "@/lib/internal/inputs";
-import type { ProductMatch, QuotationStatus } from "@/lib/internal/types";
+import type { ProductMatch, QuotationStatus, StoredDocument } from "@/lib/internal/types";
 
 const STATUSES: readonly QuotationStatus[] = ["WAITING", "NEGOTIATING", "LOST"];
 
@@ -72,6 +73,22 @@ export async function lookupProductsAction(raw: unknown): Promise<ActionResult<P
       .filter((value): value is string => value !== null)
       .slice(0, 200);
     return success(await lookupProducts([...new Set(partNumbers)]));
+  } catch (error) {
+    return failure(error);
+  }
+}
+
+/** Renders the stored quotation to PDF or Excel and keeps the file; the browser then downloads it by ID. */
+export async function exportDocumentAction(
+  id: unknown,
+  format: unknown,
+): Promise<ActionResult<StoredDocument>> {
+  try {
+    const quotationId = textInput(id, 36);
+    if (!quotationId || (format !== "PDF" && format !== "XLSX")) {
+      return { ok: false, message: "Yêu cầu không hợp lệ." };
+    }
+    return success(await exportDocument(quotationId, format));
   } catch (error) {
     return failure(error);
   }

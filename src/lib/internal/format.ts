@@ -122,3 +122,9 @@ export const webRequestStatuses: Record<string, { label: string; tone: Tone }> =
   CLOSED: { label: "Đã đóng", tone: "neutral" },
   CANCELLED: { label: "Đã hủy", tone: "neutral" },
 };
+
+/** "T3", "Q1" or "2026": the short name of a revenue period on charts and in tables. */
+export function periodLabel(point: { period: string; year: number; index: number | null }): string {
+  if (point.index === null) return String(point.year);
+  return point.period.includes("Q") ? `Q${point.index}` : `T${point.index}`;
+}

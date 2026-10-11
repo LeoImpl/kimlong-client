@@ -6,6 +6,7 @@ import { QuotationActions } from "@/components/internal/QuotationActions";
 import { QuotationComposer } from "@/components/internal/QuotationComposer";
 import { QuotationFiles } from "@/components/internal/QuotationFiles";
 import { QuotationStatusBadge } from "@/components/internal/StatusBadge";
+import { WinQuotation } from "@/components/internal/WinQuotation";
 import { Alert } from "@/components/ui/Feedback";
 import {
   getCustomer,
@@ -13,6 +14,7 @@ import {
   getSellerStatus,
   getSettings,
   listDocuments,
+  searchOrders,
 } from "@/lib/internal/api";
 import { formatDay, formatInstant, todayIso } from "@/lib/internal/format";
 import { internalRoutes } from "@/lib/internal/routes";
@@ -45,6 +47,14 @@ export default async function QuotationPage({ params }: PageProps<"/noi-bo/bao-g
     getSellerStatus(),
   ]);
   const missing = seller.missing.map((item) => sellerDetails[item] ?? item);
+  // The order a won quotation became, found by the quotation number it carries.
+  const order =
+    quotation.status === "WON"
+      ? (await searchOrders({ q: quotation.number, size: 5 })).items.find(
+          (candidate) => candidate.quotationNumber === quotation.number,
+        )
+      : undefined;
+  const today = todayIso();
 
   return (
     <>
@@ -108,7 +118,21 @@ export default async function QuotationPage({ params }: PageProps<"/noi-bo/bao-g
           </p>
         )}
 
-        <Panel title="Thao tác">
+        {order && (
+          <Alert tone="success" title="Báo giá đã chốt">
+            Đơn hàng{" "}
+            <Link
+              href={internalRoutes.order(order.id)}
+              className="font-mono font-semibold underline underline-offset-2"
+            >
+              {order.number}
+            </Link>{" "}
+            được tạo từ báo giá này.
+          </Alert>
+        )}
+
+        <Panel title="Thao tác" bodyClassName="space-y-3">
+          <WinQuotation quotation={quotation} today={today} />
           <QuotationActions quotation={quotation} />
         </Panel>
 
@@ -132,7 +156,7 @@ export default async function QuotationPage({ params }: PageProps<"/noi-bo/bao-g
           quotation={quotation}
           customer={customer}
           settings={settings}
-          today={todayIso()}
+          today={today}
         />
       </div>
     </>

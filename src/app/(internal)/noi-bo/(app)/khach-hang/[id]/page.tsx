@@ -5,13 +5,21 @@ import { Plus } from "lucide-react";
 import { AssigneeControl } from "@/components/internal/AssigneeControl";
 import { CustomerForm } from "@/components/internal/CustomerForm";
 import { PageHeader, Panel } from "@/components/internal/PageHeader";
+import { OrderTable } from "@/components/internal/OrderTable";
 import { QuotationTable } from "@/components/internal/QuotationTable";
 import { Badge } from "@/components/ui/Badge";
 import { ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/Feedback";
 import { cn } from "@/lib/cn";
-import { getCustomer, getMe, listStaff, searchQuotations } from "@/lib/internal/api";
-import { formatInstant } from "@/lib/internal/format";
+import {
+  getCustomer,
+  getCustomerSummary,
+  getMe,
+  listStaff,
+  searchOrders,
+  searchQuotations,
+} from "@/lib/internal/api";
+import { formatDay, formatInstant, formatNumber, formatVnd } from "@/lib/internal/format";
 import { internalRoutes, param } from "@/lib/internal/routes";
 
 export const metadata: Metadata = { title: "Hồ sơ khách hàng" };
@@ -25,6 +33,7 @@ export const instant = false;
 const tabs = [
   { key: "thong-tin", label: "Thông tin" },
   { key: "bao-gia", label: "Báo giá" },
+  { key: "don-hang", label: "Đơn hàng" },
 ] as const;
 
 export default async function CustomerPage({
@@ -64,6 +73,8 @@ export default async function CustomerPage({
         ]}
       />
 
+      <CustomerFigures customerId={customer.id} />
+
       <nav aria-label="Hồ sơ khách hàng" className="mb-4 flex gap-1 border-b border-line">
         {tabs.map((item) => (
           <Link
@@ -85,6 +96,7 @@ export default async function CustomerPage({
       {tab === "bao-gia" && (
         <CustomerQuotations customerId={customer.id} active={customer.active} />
       )}
+      {tab === "don-hang" && <CustomerOrders customerId={customer.id} />}
 
       <div className={cn("space-y-4", tab !== "thong-tin" && "hidden")}>
         {me.admin && (
@@ -119,5 +131,70 @@ async function CustomerQuotations({ customerId, active }: { customerId: string; 
       </div>
       <QuotationTable quotations={quotations.items} showCustomer={false} />
     </div>
+  );
+}
+
+async function CustomerOrders({ customerId }: { customerId: string }) {
+  const orders = await searchOrders({ customerId, includeCancelled: true, size: 100 });
+  if (orders.items.length === 0) {
+    return (
+      <EmptyState
+        title="Chưa có đơn hàng của khách hàng này"
+        description="Đơn hàng được tạo khi bấm THẮNG trên một báo giá đã gửi."
+      />
+    );
+  }
+  return (
+    <div className="space-y-3">
+      <p className="text-sm text-muted">
+        {orders.totalItems} đơn hàng, mới nhất trước (gồm cả đơn đã hủy)
+      </p>
+      <OrderTable orders={orders.items} showCustomer={false} />
+    </div>
+  );
+}
+
+/** The customer at a glance: what was quoted, what was won, and what is still owed. */
+async function CustomerFigures({ customerId }: { customerId: string }) {
+  const summary = await getCustomerSummary(customerId);
+  const quotations =
+    summary.quotationsDraft +
+    summary.quotationsOpen +
+    summary.quotationsWon +
+    summary.quotationsLost;
+  const figures = [
+    {
+      label: "Báo giá",
+      value: formatNumber(quotations),
+      detail: `${summary.quotationsOpen} đang mở · ${summary.quotationsWon} đã chốt · ${summary.quotationsLost} không thành công`,
+    },
+    {
+      label: "Đơn hàng",
+      value: formatNumber(summary.orders),
+      detail: summary.lastOrderDate
+        ? `Gần nhất ${formatDay(summary.lastOrderDate)}`
+        : "Chưa có đơn",
+    },
+    {
+      label: "Doanh thu trước VAT",
+      value: formatVnd(summary.revenueNet),
+      detail: `Sau VAT ${formatVnd(summary.revenueGross)}`,
+    },
+    {
+      label: "Còn phải thu",
+      value: formatVnd(summary.outstanding),
+      detail: `Đã thu ${formatVnd(summary.paid)}`,
+    },
+  ];
+  return (
+    <dl className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      {figures.map((figure) => (
+        <div key={figure.label} className="rounded-lg border border-line bg-page px-4 py-3">
+          <dt className="text-xs font-medium text-muted">{figure.label}</dt>
+          <dd className="mt-1 font-mono text-xl font-semibold text-ink">{figure.value}</dd>
+          <dd className="mt-0.5 text-xs text-muted">{figure.detail}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }

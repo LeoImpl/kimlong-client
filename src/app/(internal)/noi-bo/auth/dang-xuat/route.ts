@@ -9,6 +9,11 @@ import { LOGIN_PATH, REFRESH_COOKIE } from "@/lib/internal/tokens";
  * cannot sign a salesperson out (the session cookies are `SameSite=Lax` and are not sent on a cross-site POST).
  */
 export async function POST(request: NextRequest) {
+  // Defence in depth on top of SameSite: a form on another origin is refused outright.
+  const origin = request.headers.get("origin");
+  if (origin && origin !== new URL(internalConfig.siteUrl).origin) {
+    return new NextResponse(null, { status: 403 });
+  }
   const refresh = await readRefreshSession(request.cookies.get(REFRESH_COOKIE)?.value);
   if (refresh) await endSession(refresh.refreshToken);
 

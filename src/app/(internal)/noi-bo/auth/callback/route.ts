@@ -6,6 +6,7 @@ import {
 } from "@/lib/internal/cookies";
 import { internalConfig } from "@/lib/internal/config";
 import { completeLogin } from "@/lib/internal/oidc";
+import { clientAddress, loginLimiter } from "@/lib/internal/rate-limit";
 import {
   FORBIDDEN_PATH,
   LOGIN_COOKIE,
@@ -26,6 +27,8 @@ export async function GET(request: NextRequest) {
     response.cookies.set(cleared.name, cleared.value, cleared.options);
     return response;
   };
+
+  if (!loginLimiter.allow(clientAddress(request.headers))) return failed("qua-nhieu");
 
   const attempt = await readLoginAttempt(request.cookies.get(LOGIN_COOKIE)?.value);
   // No attempt cookie: the login took more than ten minutes, or the callback URL was opened out of the blue.

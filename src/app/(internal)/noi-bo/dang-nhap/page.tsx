@@ -10,6 +10,7 @@ const errors: Record<string, string> = {
   "het-han": "Phiên đăng nhập đã quá hạn. Vui lòng bấm đăng nhập lại.",
   "dang-nhap": "Đăng nhập không thành công. Vui lòng thử lại.",
   "may-chu": "Chưa kết nối được máy chủ đăng nhập. Vui lòng thử lại sau ít phút.",
+  "qua-nhieu": "Quá nhiều lần đăng nhập từ địa chỉ này. Vui lòng đợi vài phút rồi thử lại.",
 };
 
 export default function LoginPage({ searchParams }: PageProps<"/noi-bo/dang-nhap">) {

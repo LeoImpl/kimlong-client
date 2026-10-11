@@ -5,6 +5,10 @@ send a quote request. Next.js (App Router) + TypeScript + Tailwind.
 
 Plan and progress live in the workspace: `.claude/docs/client-plan.md`, `.claude/docs/client-progress.md`.
 
+The same app also serves the **internal sales area** under `/noi-bo` (customers, quotations, orders, dashboard)
+for staff who sign in through Keycloak. It shares the document and fonts with the storefront and nothing else: no
+link leads from one to the other. See [The internal area](#the-internal-area-noi-bo).
+
 ## Why server rendering
 
 Buyers arrive by searching a part number on Google, and sales share product links on Zalo. Google's renderer is a
@@ -43,6 +47,7 @@ npm run dev                    # http://localhost:3000
 | `npm run typecheck`               | `tsc --noEmit`                                                          |
 | `npm run lint` / `npm run format` | ESLint / Prettier                                                       |
 | `npm run gen:api`                 | Regenerates `src/types/api.ts` from the API's OpenAPI document          |
+| `npm run gen:api:admin`           | Regenerates `src/types/admin-api.ts` (admin zone, used by `/noi-bo`)    |
 
 ## Configuration
 
@@ -54,6 +59,16 @@ All configuration is environment variables, so one image runs anywhere (see `.en
 | `NEXT_PUBLIC_API_BASE_URL` | browser           | Only the quote request submission. Must be in the API's `CORS_ALLOWED_ORIGINS` |
 | `NEXT_PUBLIC_SITE_URL`     | metadata, sitemap | The single canonical domain in production                                      |
 | `NEXT_PUBLIC_LANGUAGE`     | API client        | `Accept-Language`; `vi` in v1                                                  |
+
+The internal area adds four server-only variables, read at runtime (the storefront works without them):
+
+| Variable                   | Notes                                                                                 |
+| -------------------------- | ------------------------------------------------------------------------------------- |
+| `KEYCLOAK_ISSUER_URL`      | The realm as the browser reaches it; public HTTPS in production                       |
+| `KEYCLOAK_BACKCHANNEL_URL` | Optional: the same realm as this server reaches it (Docker service name)              |
+| `KEYCLOAK_CLIENT_ID`       | Confidential client, `kimlong-internal`; redirect URI `<site>/noi-bo/auth/callback`   |
+| `KEYCLOAK_CLIENT_SECRET`   | Never reuse the local value in production                                             |
+| `SESSION_SECRET`           | At least 32 characters; encrypts the session cookies; changing it signs everybody out |
 
 `NEXT_PUBLIC_*` values are baked into the browser bundle at build time, which is why the Dockerfile takes them as
 build arguments rather than runtime environment.
@@ -71,6 +86,41 @@ backend blip should never fail a deploy. The first request fills the cache inste
 `src/types/api.ts` is generated from the platform's OpenAPI document and must not be edited by hand. The ergonomic
 types in `src/lib/api/types.ts` are derived from it, so an API change breaks the build rather than turning into
 `undefined` in production.
+
+## The internal area (`/noi-bo`)
+
+```
+src/app/(site)/…                      the public storefront (route group: no URL changed)
+src/app/(internal)/noi-bo/            login page, "no access" page, auth route handlers
+src/app/(internal)/noi-bo/(app)/      the working area: dashboard, khach-hang, bao-gia, gia-da-chao, don-hang, yeu-cau-web
+src/proxy.ts                          session check and token renewal, only for /noi-bo
+src/lib/internal/                     session, OIDC, API client, pricing, formats
+src/components/internal/              the screens' components
+```
+
+**Login.** Authorization Code + PKCE against Keycloak, entirely on the Next server (`src/lib/internal/oidc.ts`,
+`openid-client`). The tokens live in two encrypted, `httpOnly`, `SameSite=Lax` cookies scoped to `Path=/noi-bo`
+(`iron-session` seals): the browser never sees a token, and the public pages never receive the cookies.
+
+**Three access checks.** `proxy.ts` redirects visitors without a session and accounts without a staff role;
+`requireStaff()` (`src/lib/internal/session.ts`) checks the role again in every page, server action and route
+handler — a server action is a public POST endpoint; and the platform's admin zone verifies the token itself and
+limits each salesperson to their own customers. A record of a colleague is a 404 everywhere.
+
+**Token renewal.** Keycloak access tokens live five minutes and Next can write cookies only in the proxy, route
+handlers and server actions — so the proxy renews an expiring token before a page renders, and an open tab pings
+`/noi-bo/auth/phien` every four minutes to keep the session alive. When the session is gone the page stays as it
+is and the login opens in a new tab; a quotation being written is also kept in local storage and offered back.
+
+**Data.** Every call goes from the server through `staffFetch` with the salesperson's token, uncached; server
+actions return an `ActionResult` with a Vietnamese message and the API's correlation ID. Quotation files are
+downloaded through a route handler that passes the stored bytes on.
+
+**Arithmetic.** `src/lib/internal/pricing.ts` previews totals, VAT, the suggested price and margins in the browser
+with the same rules and test figures as the platform's `PricingTest`; what is saved and printed is always computed
+by the platform.
+
+Local accounts (password = username): `staff` and `staff2` (salespeople), `admin`, and `customer`, which is refused.
 
 ## Container
 

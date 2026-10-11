@@ -7,6 +7,12 @@ import { internalRoutes } from "@/lib/internal/routes";
 
 export const metadata: Metadata = { title: "Thêm khách hàng" };
 
+/**
+ * Internal pages read the session and private data, so a navigation waits for the server (behind the area's
+ * `loading.tsx`); they are deliberately not validated as "instant".
+ */
+export const instant = false;
+
 export default async function NewCustomerPage() {
   await requireStaff();
   const draft: CustomerDraft | undefined = undefined;

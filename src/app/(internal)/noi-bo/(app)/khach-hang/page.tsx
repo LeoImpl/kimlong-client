@@ -13,6 +13,12 @@ import { internalRoutes, pageParam, param, withQuery } from "@/lib/internal/rout
 
 export const metadata: Metadata = { title: "Khách hàng" };
 
+/**
+ * Internal pages read the session and private data, so a navigation waits for the server (behind the area's
+ * `loading.tsx`); they are deliberately not validated as "instant".
+ */
+export const instant = false;
+
 const UNASSIGNED = "chua-co";
 
 export default async function CustomersPage({ searchParams }: PageProps<"/noi-bo/khach-hang">) {

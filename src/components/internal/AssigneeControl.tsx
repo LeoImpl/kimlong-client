@@ -30,7 +30,7 @@ export function AssigneeControl({ customer, staff }: { customer: Customer; staff
         assignee || null,
       );
       setResult(response);
-      if (response.ok) router.refresh();
+      if (response.ok) startTransition(() => router.refresh());
     });
   }
 

@@ -1,18 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Plus } from "lucide-react";
 import { AssigneeControl } from "@/components/internal/AssigneeControl";
 import { CustomerForm } from "@/components/internal/CustomerForm";
 import { PageHeader, Panel } from "@/components/internal/PageHeader";
+import { QuotationTable } from "@/components/internal/QuotationTable";
 import { Badge } from "@/components/ui/Badge";
+import { ButtonLink } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/Feedback";
 import { cn } from "@/lib/cn";
-import { getCustomer, getMe, listStaff } from "@/lib/internal/api";
+import { getCustomer, getMe, listStaff, searchQuotations } from "@/lib/internal/api";
 import { formatInstant } from "@/lib/internal/format";
 import { internalRoutes, param } from "@/lib/internal/routes";
 
 export const metadata: Metadata = { title: "Hồ sơ khách hàng" };
 
-const tabs = [{ key: "thong-tin", label: "Thông tin" }] as const;
+/**
+ * Internal pages read the session and private data, so a navigation waits for the server (behind the area's
+ * `loading.tsx`); they are deliberately not validated as "instant".
+ */
+export const instant = false;
+
+const tabs = [
+  { key: "thong-tin", label: "Thông tin" },
+  { key: "bao-gia", label: "Báo giá" },
+] as const;
 
 export default async function CustomerPage({
   params,
@@ -69,7 +82,11 @@ export default async function CustomerPage({
         ))}
       </nav>
 
-      <div className="space-y-4">
+      {tab === "bao-gia" && (
+        <CustomerQuotations customerId={customer.id} active={customer.active} />
+      )}
+
+      <div className={cn("space-y-4", tab !== "thong-tin" && "hidden")}>
         {me.admin && (
           <Panel title="Nhân viên phụ trách">
             <AssigneeControl customer={customer} staff={staff} />
@@ -80,5 +97,27 @@ export default async function CustomerPage({
         </Panel>
       </div>
     </>
+  );
+}
+
+async function CustomerQuotations({ customerId, active }: { customerId: string; active: boolean }) {
+  const quotations = await searchQuotations({ customerId, size: 100 });
+  const create = active ? (
+    <ButtonLink href={internalRoutes.newQuotationFor(customerId)} size="sm">
+      <Plus className="size-4" strokeWidth={2} aria-hidden />
+      Tạo báo giá cho khách này
+    </ButtonLink>
+  ) : null;
+  if (quotations.items.length === 0) {
+    return <EmptyState title="Chưa có báo giá cho khách hàng này" action={create} />;
+  }
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-muted">{quotations.totalItems} báo giá, mới nhất trước</p>
+        {create}
+      </div>
+      <QuotationTable quotations={quotations.items} showCustomer={false} />
+    </div>
   );
 }

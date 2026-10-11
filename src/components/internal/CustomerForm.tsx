@@ -95,7 +95,7 @@ export function CustomerForm({
       if (customer) {
         // Stay on the profile; the refresh brings the new version, so the next save does not conflict.
         setSaved(true);
-        router.refresh();
+        startTransition(() => router.refresh());
       } else {
         router.push(afterSave ?? internalRoutes.customer(response.data.id));
       }

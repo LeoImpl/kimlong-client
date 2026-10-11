@@ -4,6 +4,12 @@ import { getMe } from "@/lib/internal/api";
 
 export const metadata: Metadata = { title: "Tổng quan" };
 
+/**
+ * Internal pages read the session and private data, so a navigation waits for the server (behind the area's
+ * `loading.tsx`); they are deliberately not validated as "instant".
+ */
+export const instant = false;
+
 export default async function DashboardPage() {
   const me = await getMe();
   return (

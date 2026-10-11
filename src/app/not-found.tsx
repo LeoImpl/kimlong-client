@@ -1,6 +1,7 @@
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SearchBox } from "@/components/layout/SearchBox";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import { routes } from "@/lib/routes";
 
 /**
@@ -8,23 +9,28 @@ import { routes } from "@/lib/routes";
  * the warehouse carries. So this page offers a search and a phone call, not an apology.
  */
 export default function NotFound() {
+  // Unmatched URLs render in the root layout, which no longer carries the public header and footer.
   return (
-    <Container className="py-16 text-center lg:py-24">
-      <p className="text-sm font-medium text-brand-700">404</p>
-      <h1 className="mt-2 text-[2rem] leading-tight sm:text-[2.5rem]">Không tìm thấy trang này</h1>
-      <p className="mx-auto mt-3 max-w-lg text-body">
-        Có thể sản phẩm chưa được đăng lên website. Thử tìm bằng mã sản phẩm, hoặc liên hệ để chúng
-        tôi kiểm tra trong kho.
-      </p>
-      <div className="mx-auto mt-8 max-w-xl">
-        <SearchBox size="lg" />
-      </div>
-      <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <ButtonLink href={routes.home}>Về trang chủ</ButtonLink>
-        <ButtonLink href={routes.contact} variant="secondary">
-          Liên hệ
-        </ButtonLink>
-      </div>
-    </Container>
+    <SiteChrome>
+      <Container className="py-16 text-center lg:py-24">
+        <p className="text-sm font-medium text-brand-700">404</p>
+        <h1 className="mt-2 text-[2rem] leading-tight sm:text-[2.5rem]">
+          Không tìm thấy trang này
+        </h1>
+        <p className="mx-auto mt-3 max-w-lg text-body">
+          Có thể sản phẩm chưa được đăng lên website. Thử tìm bằng mã sản phẩm, hoặc liên hệ để
+          chúng tôi kiểm tra trong kho.
+        </p>
+        <div className="mx-auto mt-8 max-w-xl">
+          <SearchBox size="lg" />
+        </div>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <ButtonLink href={routes.home}>Về trang chủ</ButtonLink>
+          <ButtonLink href={routes.contact} variant="secondary">
+            Liên hệ
+          </ButtonLink>
+        </div>
+      </Container>
+    </SiteChrome>
   );
 }

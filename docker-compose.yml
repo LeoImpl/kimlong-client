@@ -16,6 +16,15 @@ services:
     environment:
       # Server-side calls go over the shared Docker network, straight to the API container.
       API_BASE_URL: ${API_BASE_URL:-http://app:8080}
+      # Internal area (/noi-bo). The browser reaches Keycloak on the published port, this container on the
+      # Docker network; the secrets below are the local realm's and must be replaced in production.
+      KEYCLOAK_ISSUER_URL: ${KEYCLOAK_ISSUER_URL:-http://localhost:8180/realms/kimlong}
+      KEYCLOAK_BACKCHANNEL_URL: ${KEYCLOAK_BACKCHANNEL_URL:-http://keycloak:8080/realms/kimlong}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-kimlong-internal}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-kimlong-internal-local-secret}
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET (at least 32 characters) in .env}
+      # Read at runtime too: the internal area builds its Keycloak redirect URI from it.
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
     ports:
       - "${CLIENT_PORT:-3000}:3000"
     networks:

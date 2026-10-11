@@ -63,6 +63,15 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
         ],
       },
+      // The staff area: never stored by a browser or an intermediary, never indexed. The proxy sets the same
+      // headers; these also cover responses it does not produce, such as a prerendered shell.
+      {
+        source: "/noi-bo/:path*",
+        headers: [
+          { key: "Cache-Control", value: "private, no-store" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+        ],
+      },
     ];
   },
 };

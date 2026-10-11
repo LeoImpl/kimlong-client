@@ -14,7 +14,7 @@ import {
   Trash2,
   TriangleAlert,
 } from "lucide-react";
-import { resolvePartNumbers } from "@/app/dat-hang-nhanh/actions";
+import { resolvePartNumbers } from "@/app/(site)/dat-hang-nhanh/actions";
 import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Feedback";
 import { DEFAULT_UNIT, MAX_LINES, MAX_QUANTITY, type BasketLine } from "@/lib/basket";

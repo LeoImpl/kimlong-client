@@ -4,7 +4,8 @@ import { InternalNav, InternalNavFallback } from "@/components/internal/Internal
 import { SessionKeepAlive } from "@/components/internal/SessionKeepAlive";
 import { SignOutButton } from "@/components/internal/SignOutButton";
 import { Skeleton } from "@/components/ui/Feedback";
-import { getMe } from "@/lib/internal/api";
+import { ApiError } from "@/lib/api/problem";
+import { countPendingWebRequests, getMe } from "@/lib/internal/api";
 import { internalRoutes } from "@/lib/internal/routes";
 
 /**
@@ -59,7 +60,14 @@ export default function InternalAppLayout({ children }: Readonly<{ children: Rea
 }
 
 async function Navigation() {
-  return <InternalNav />;
+  // Website requests nobody has taken yet, shown as a count on the menu. The menu must never fail because of it.
+  let pending = 0;
+  try {
+    pending = await countPendingWebRequests();
+  } catch (error) {
+    if (!(error instanceof ApiError)) throw error;
+  }
+  return <InternalNav badges={{ [internalRoutes.webRequests]: pending }} />;
 }
 
 async function UserPanel({ light = false }: { light?: boolean }) {

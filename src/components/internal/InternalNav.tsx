@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, type LucideIcon } from "lucide-react";
+import { Building2, LayoutDashboard, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { internalRoutes } from "@/lib/internal/routes";
 
@@ -16,6 +16,7 @@ interface NavItem {
 
 const items: NavItem[] = [
   { href: internalRoutes.dashboard, label: "Tổng quan", icon: LayoutDashboard, exact: true },
+  { href: internalRoutes.customers, label: "Khách hàng", icon: Building2 },
 ];
 
 export function InternalNav({ badges = {} }: { badges?: Record<string, number> }) {

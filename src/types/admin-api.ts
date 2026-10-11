@@ -4,6 +4,73 @@
  */
 
 export interface paths {
+  "/api/admin/v1/sales/quotations/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["get"];
+    /** Replace the customer, lines and terms of a quotation that is not won or lost */
+    put: operations["update"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/orders/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["get_1"];
+    /** Correct the actual selling prices and quantities, until the goods are delivered */
+    put: operations["revise"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/customers/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["get_2"];
+    put: operations["update_1"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/customers/{id}/assignee": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /** Administrators only: put another salesperson in charge of the customer */
+    put: operations["reassign"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/admin/v1/quote-requests/{id}/quotation": {
     parameters: {
       query?: never;
@@ -28,7 +95,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get"];
+    get: operations["get_3"];
     /** Change the alternative text */
     put: operations["describe"];
     post?: never;
@@ -48,7 +115,7 @@ export interface paths {
     /** Company profile in all languages, with its version */
     get: operations["profile"];
     /** Replace the company profile (optimistic locking on version) */
-    put: operations["update"];
+    put: operations["update_2"];
     post?: never;
     delete?: never;
     options?: never;
@@ -63,8 +130,8 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_1"];
-    put: operations["update_1"];
+    get: operations["get_4"];
+    put: operations["update_3"];
     post?: never;
     delete: operations["delete_1"];
     options?: never;
@@ -79,8 +146,8 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_2"];
-    put: operations["update_2"];
+    get: operations["get_5"];
+    put: operations["update_4"];
     post?: never;
     delete: operations["delete_2"];
     options?: never;
@@ -95,8 +162,8 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_3"];
-    put: operations["update_3"];
+    get: operations["get_6"];
+    put: operations["update_5"];
     post?: never;
     delete: operations["delete_3"];
     options?: never;
@@ -111,8 +178,8 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_4"];
-    put: operations["update_4"];
+    get: operations["get_7"];
+    put: operations["update_6"];
     post?: never;
     delete: operations["delete_4"];
     options?: never;
@@ -127,10 +194,199 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_5"];
-    put: operations["update_5"];
+    get: operations["get_8"];
+    put: operations["update_7"];
     post?: never;
     delete: operations["delete_5"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/web-requests/{id}/quotation": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Write a draft quotation with the lines of a request the caller has taken */
+    post: operations["createQuotation"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/web-requests/{id}/claim": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Take the request: the caller becomes its assignee */
+    post: operations["claim"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quotations": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Search quotations, newest first (default: all statuses) */
+    get: operations["list"];
+    put?: never;
+    /** Create a draft quotation; it gets the next number of the year */
+    post: operations["create"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quotations/{id}/win": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Win a quotation: it becomes WON and an order with its lines is created, in one transaction */
+    post: operations["win"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quotations/{id}/status": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Mark a quotation as sent, under negotiation or lost, or reopen a lost one */
+    post: operations["changeStatus"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quotations/{id}/documents": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Files exported from the quotation, newest first */
+    get: operations["list_1"];
+    put?: never;
+    /** Export the quotation as it is now (format=pdf or xlsx) and keep the file */
+    post: operations["export"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quotations/{id}/clone": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Copy a quotation into a new draft, optionally for another customer */
+    post: operations["duplicate"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/orders/{id}/payments": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Record money received; the payment status follows from the total collected */
+    post: operations["recordPayment"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/orders/{id}/delivery": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations["changeDelivery"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/orders/{id}/cancel": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Cancel an order nothing was delivered or paid for; its quotation reopens */
+    post: operations["cancel"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/customers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Search customers, newest first */
+    get: operations["list_2"];
+    put?: never;
+    /** Create a customer; the caller becomes the salesperson in charge */
+    post: operations["create_1"];
+    delete?: never;
     options?: never;
     head?: never;
     patch?: never;
@@ -228,7 +484,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["cancel"];
+    post: operations["cancel_1"];
     delete?: never;
     options?: never;
     head?: never;
@@ -277,7 +533,7 @@ export interface paths {
     get?: never;
     put?: never;
     /** Record a payment received (bank transfer or cash on delivery) */
-    post: operations["recordPayment"];
+    post: operations["recordPayment_1"];
     delete?: never;
     options?: never;
     head?: never;
@@ -325,7 +581,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["cancel_1"];
+    post: operations["cancel_2"];
     delete?: never;
     options?: never;
     head?: never;
@@ -357,7 +613,7 @@ export interface paths {
       cookie?: never;
     };
     /** Media library, newest first */
-    get: operations["list"];
+    get: operations["list_3"];
     put?: never;
     /** Upload an image (JPEG, PNG, WebP) or a PDF document */
     post: operations["upload"];
@@ -375,9 +631,9 @@ export interface paths {
       cookie?: never;
     };
     /** All partner brands, including hidden ones */
-    get: operations["list_1"];
+    get: operations["list_4"];
     put?: never;
-    post: operations["create"];
+    post: operations["create_2"];
     delete?: never;
     options?: never;
     head?: never;
@@ -392,10 +648,10 @@ export interface paths {
       cookie?: never;
     };
     /** Search products in any status (default: all statuses) */
-    get: operations["list_2"];
+    get: operations["list_5"];
     put?: never;
     /** Create a product as a draft */
-    post: operations["create_1"];
+    post: operations["create_3"];
     delete?: never;
     options?: never;
     head?: never;
@@ -457,9 +713,9 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["list_3"];
+    get: operations["list_6"];
     put?: never;
-    post: operations["create_2"];
+    post: operations["create_4"];
     delete?: never;
     options?: never;
     head?: never;
@@ -473,9 +729,9 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["list_4"];
+    get: operations["list_7"];
     put?: never;
-    post: operations["create_3"];
+    post: operations["create_5"];
     delete?: never;
     options?: never;
     head?: never;
@@ -490,10 +746,10 @@ export interface paths {
       cookie?: never;
     };
     /** All articles, drafts first */
-    get: operations["list_5"];
+    get: operations["list_8"];
     put?: never;
     /** Create a draft article */
-    post: operations["create_4"];
+    post: operations["create_6"];
     delete?: never;
     options?: never;
     head?: never;
@@ -534,6 +790,57 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/admin/v1/sales/web-requests": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** All website requests, newest first (open=true: only those still waiting for an outcome) */
+    get: operations["list_9"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/web-requests/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** A request with its lines; 404 when a colleague has taken it */
+    get: operations["get_9"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/web-requests/pending": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Number of open requests nobody has taken yet */
+    get: operations["pending"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/admin/v1/sales/staff": {
     parameters: {
       query?: never;
@@ -543,6 +850,176 @@ export interface paths {
     };
     /** Everyone who has used the internal sales area */
     get: operations["staff"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/settings": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Target margin, rounding and defaults used by the quotation form */
+    get: operations["settings"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/seller": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Which company details printed on quotations are still missing */
+    get: operations["seller"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/reports/revenue": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Revenue and order count by=month or quarter of a year, or by=year for the last five years */
+    get: operations["revenue"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/reports/overview": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Customers, sent quotations and their value, orders won and revenue before and after VAT */
+    get: operations["overview"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/reports/customers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Customers with quotations or orders in the period, highest revenue first */
+    get: operations["customers"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quoted-prices": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Prices offered for a part number (or its beginning) in sent quotations, newest first */
+    get: operations["quotedPrices"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quotations/{id}/documents/{documentId}/content": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Download a file exactly as it was exported */
+    get: operations["content"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/quotations/price-suggestion": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** The selling price that leaves the target margin over the unit costs (dong) */
+    get: operations["suggestPrice"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/products/lookup": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Catalogue products for the given part numbers; unknown ones are left out */
+    get: operations["lookupProducts"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/orders": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Search orders, newest first (cancelled orders only with includeCancelled) */
+    get: operations["list_10"];
     put?: never;
     post?: never;
     delete?: never;
@@ -568,6 +1045,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/admin/v1/sales/customers/{id}/summary": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** One customer at a glance: quotations by outcome, orders, revenue and what is still owed */
+    get: operations["customerSummary"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/admin/v1/quote-requests": {
     parameters: {
       query?: never;
@@ -576,7 +1070,7 @@ export interface paths {
       cookie?: never;
     };
     /** Search requests, newest first (default: all statuses) */
-    get: operations["list_6"];
+    get: operations["list_11"];
     put?: never;
     post?: never;
     delete?: never;
@@ -592,7 +1086,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_6"];
+    get: operations["get_10"];
     put?: never;
     post?: never;
     delete?: never;
@@ -609,7 +1103,7 @@ export interface paths {
       cookie?: never;
     };
     /** Search orders, newest first (default: all statuses) */
-    get: operations["list_7"];
+    get: operations["list_12"];
     put?: never;
     post?: never;
     delete?: never;
@@ -625,7 +1119,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_7"];
+    get: operations["get_11"];
     put?: never;
     post?: never;
     delete?: never;
@@ -638,6 +1132,237 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    SalesQuotationLineRequest: {
+      partNumber?: string | null;
+      name?: string | null;
+      unit?: string | null;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int64 */
+      unitPrice?: number;
+      /** Format: int64 */
+      unitCost?: number | null;
+      /** Format: int64 */
+      fixedCost?: number | null;
+      leadTime?: string | null;
+      note?: string | null;
+    };
+    SalesQuotationRequest: {
+      /** Format: int64 */
+      version?: number | null;
+      /** Format: uuid */
+      customerId?: string;
+      contactName?: string | null;
+      contactPhone?: string | null;
+      contactEmail?: string | null;
+      /** Format: date */
+      quoteDate?: string | null;
+      /** Format: date */
+      validUntil?: string | null;
+      /** @enum {string} */
+      vatRate?: "NOT_SUBJECT" | "VAT_0" | "VAT_5" | "VAT_8" | "VAT_10";
+      paymentTerms?: string | null;
+      deliveryTerms?: string | null;
+      warrantyTerms?: string | null;
+      note?: string | null;
+      lines?: components["schemas"]["SalesQuotationLineRequest"][];
+    };
+    CustomerSnapshotView: {
+      companyName?: string;
+      taxCode?: string | null;
+      taxAddress?: string | null;
+      contactName?: string | null;
+      contactPhone?: string | null;
+      contactEmail?: string | null;
+    };
+    SalesQuotationLineView: {
+      /** Format: uuid */
+      productId?: string | null;
+      partNumber?: string | null;
+      name?: string | null;
+      unit?: string | null;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int64 */
+      unitPrice?: number;
+      /** Format: int64 */
+      unitCost?: number | null;
+      /** Format: int64 */
+      fixedCost?: number;
+      leadTime?: string | null;
+      note?: string | null;
+      /** Format: int64 */
+      total?: number;
+      /** Format: int64 */
+      suggestedPrice?: number | null;
+      /** Format: int64 */
+      unitProfit?: number | null;
+      /** Format: double */
+      marginPercent?: number | null;
+      belowTarget?: boolean;
+    };
+    SalesQuotationView: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: int64 */
+      version?: number;
+      number?: string;
+      /** Format: date */
+      quoteDate?: string;
+      /** @enum {string} */
+      status?: "DRAFT" | "WAITING" | "NEGOTIATING" | "WON" | "LOST";
+      /** Format: uuid */
+      customerId?: string;
+      customer?: components["schemas"]["CustomerSnapshotView"];
+      /** Format: date */
+      validUntil?: string | null;
+      /** @enum {string} */
+      vatRate?: "NOT_SUBJECT" | "VAT_0" | "VAT_5" | "VAT_8" | "VAT_10";
+      /** Format: int32 */
+      vatPercent?: number | null;
+      paymentTerms?: string | null;
+      deliveryTerms?: string | null;
+      warrantyTerms?: string | null;
+      note?: string | null;
+      createdBy?: components["schemas"]["StaffRefView"];
+      /** Format: uuid */
+      clonedFrom?: string | null;
+      /** Format: uuid */
+      webRequestId?: string | null;
+      webRequestReference?: string | null;
+      lines?: components["schemas"]["SalesQuotationLineView"][];
+      /** Format: int64 */
+      subtotal?: number;
+      /** Format: int64 */
+      vatAmount?: number;
+      /** Format: int64 */
+      total?: number;
+      /** Format: int64 */
+      profit?: number | null;
+      /** Format: double */
+      marginPercent?: number | null;
+      lostReason?: string | null;
+      /** Format: date-time */
+      sentAt?: string | null;
+      /** Format: date-time */
+      createdAt?: string;
+      editable?: boolean;
+    };
+    StaffRefView: {
+      userId?: string;
+      name?: string;
+    };
+    ReviseOrderRequest: {
+      /** Format: int64 */
+      version?: number;
+      /** Format: date */
+      orderDate?: string | null;
+      lines?: components["schemas"]["SalesQuotationLineRequest"][];
+      note?: string | null;
+    };
+    OrderPaymentView: {
+      /** Format: int64 */
+      amount?: number;
+      /** Format: date */
+      paidOn?: string;
+      /** @enum {string} */
+      method?: "BANK_TRANSFER" | "CASH" | "OTHER";
+      reference?: string | null;
+      note?: string | null;
+      recordedBy?: components["schemas"]["StaffRefView"];
+      /** Format: date-time */
+      recordedAt?: string;
+    };
+    SalesOrderView: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: int64 */
+      version?: number;
+      number?: string;
+      /** Format: date */
+      orderDate?: string;
+      /** Format: uuid */
+      customerId?: string;
+      customer?: components["schemas"]["CustomerSnapshotView"];
+      /** Format: uuid */
+      quotationId?: string;
+      quotationNumber?: string;
+      /** @enum {string} */
+      vatRate?: "NOT_SUBJECT" | "VAT_0" | "VAT_5" | "VAT_8" | "VAT_10";
+      /** Format: int32 */
+      vatPercent?: number | null;
+      /** @enum {string} */
+      deliveryStatus?: "NOT_DELIVERED" | "DELIVERING" | "DELIVERED";
+      /** Format: date */
+      deliveredOn?: string | null;
+      lines?: components["schemas"]["SalesQuotationLineView"][];
+      /** Format: int64 */
+      subtotal?: number;
+      /** Format: int64 */
+      vatAmount?: number;
+      /** Format: int64 */
+      total?: number;
+      /** Format: int64 */
+      paid?: number;
+      /** Format: int64 */
+      outstanding?: number;
+      /** @enum {string} */
+      paymentStatus?: "UNPAID" | "PARTIALLY_PAID" | "PAID";
+      payments?: components["schemas"]["OrderPaymentView"][];
+      /** Format: int64 */
+      profit?: number | null;
+      /** Format: double */
+      marginPercent?: number | null;
+      cancelled?: boolean;
+      /** Format: date-time */
+      cancelledAt?: string | null;
+      cancelReason?: string | null;
+      note?: string | null;
+      createdBy?: components["schemas"]["StaffRefView"];
+      /** Format: date-time */
+      createdAt?: string;
+      editable?: boolean;
+    };
+    CustomerContactDto: {
+      name?: string;
+      title?: string | null;
+      phone?: string | null;
+      email?: string | null;
+    };
+    CustomerRequest: {
+      /** Format: int64 */
+      version?: number | null;
+      taxCode?: string | null;
+      companyName?: string;
+      taxAddress?: string | null;
+      representative?: string | null;
+      industry?: string | null;
+      contacts?: components["schemas"]["CustomerContactDto"][];
+      note?: string | null;
+      active?: boolean;
+    };
+    CustomerView: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: int64 */
+      version?: number;
+      taxCode?: string | null;
+      companyName?: string;
+      taxAddress?: string | null;
+      representative?: string | null;
+      industry?: string | null;
+      contacts?: components["schemas"]["CustomerContactDto"][];
+      assignee?: components["schemas"]["StaffRefView"] | null;
+      note?: string | null;
+      active?: boolean;
+      /** Format: date-time */
+      createdAt?: string;
+    };
+    AssigneeRequest: {
+      /** Format: int64 */
+      version?: number;
+      assigneeUserId?: string | null;
+    };
     QuotationRequest: {
       /** Format: int64 */
       version?: number;
@@ -987,6 +1712,106 @@ export interface components {
       /** Format: int64 */
       version?: number;
     };
+    WebRequestQuotationRequest: {
+      /** Format: uuid */
+      customerId?: string | null;
+    };
+    WebRequestDetailView: {
+      /** Format: uuid */
+      id?: string;
+      reference?: string;
+      consultation?: boolean;
+      status?: string;
+      open?: boolean;
+      /** Format: date-time */
+      submittedAt?: string;
+      contactName?: string;
+      company?: string | null;
+      email?: string;
+      phone?: string;
+      taxCode?: string | null;
+      address?: string | null;
+      message?: string | null;
+      lines?: components["schemas"]["WebRequestLineView"][];
+      /** @enum {string} */
+      access?: "FREE" | "MINE" | "TAKEN" | "ADMIN";
+      assignee?: components["schemas"]["StaffRefView"] | null;
+      quotation?: components["schemas"]["WebRequestQuotationView"] | null;
+      /** Format: uuid */
+      matchingCustomerId?: string | null;
+    };
+    WebRequestLineView: {
+      productName?: string | null;
+      partNumber?: string | null;
+      description?: string | null;
+      /** Format: int32 */
+      quantity?: number;
+      unit?: string | null;
+    };
+    WebRequestQuotationView: {
+      /** Format: uuid */
+      id?: string;
+      number?: string;
+      /** @enum {string} */
+      status?: "DRAFT" | "WAITING" | "NEGOTIATING" | "WON" | "LOST";
+    };
+    WinQuotationRequest: {
+      /** Format: int64 */
+      version?: number;
+      /** Format: date */
+      orderDate?: string | null;
+      note?: string | null;
+    };
+    QuotationStatusRequest: {
+      /** Format: int64 */
+      version?: number;
+      /** @enum {string} */
+      status?: "DRAFT" | "WAITING" | "NEGOTIATING" | "WON" | "LOST";
+      reason?: string | null;
+    };
+    DocumentView: {
+      /** Format: uuid */
+      id?: string;
+      /** @enum {string} */
+      format?: "PDF" | "XLSX";
+      filename?: string;
+      templateVersion?: string;
+      checksumSha256?: string;
+      /** Format: int64 */
+      sizeBytes?: number;
+      /** Format: date-time */
+      createdAt?: string;
+      createdBy?: components["schemas"]["StaffRefView"];
+    };
+    CloneQuotationRequest: {
+      /** Format: uuid */
+      customerId?: string | null;
+    };
+    OrderPaymentRequest: {
+      /** Format: int64 */
+      version?: number;
+      /** Format: int64 */
+      amount?: number;
+      /** Format: date */
+      paidOn?: string | null;
+      /** @enum {string} */
+      method?: "BANK_TRANSFER" | "CASH" | "OTHER";
+      reference?: string | null;
+      note?: string | null;
+    };
+    DeliveryRequest: {
+      /** Format: int64 */
+      version?: number;
+      /** @enum {string} */
+      status?: "NOT_DELIVERED" | "DELIVERING" | "DELIVERED";
+      /** Format: date */
+      deliveredOn?: string | null;
+    };
+    CancelOrderRequest: {
+      /** Format: int64 */
+      version?: number;
+      reason?: string | null;
+    };
     VersionedRequest: {
       /** Format: int64 */
       version?: number;
@@ -1110,12 +1935,248 @@ export interface components {
       /** Format: uuid */
       quoteRequestId?: string | null;
     };
+    PageResponseWebRequestRowView: {
+      items?: components["schemas"]["WebRequestRowView"][];
+      /** Format: int32 */
+      page?: number;
+      /** Format: int32 */
+      size?: number;
+      /** Format: int64 */
+      totalItems?: number;
+      /** Format: int32 */
+      totalPages?: number;
+    };
+    WebRequestRowView: {
+      /** Format: uuid */
+      id?: string;
+      reference?: string;
+      consultation?: boolean;
+      status?: string;
+      open?: boolean;
+      /** Format: date-time */
+      submittedAt?: string;
+      company?: string | null;
+      contactName?: string | null;
+      /** Format: int32 */
+      lineCount?: number;
+      /** @enum {string} */
+      access?: "FREE" | "MINE" | "TAKEN" | "ADMIN";
+      assignee?: components["schemas"]["StaffRefView"] | null;
+      quotation?: components["schemas"]["WebRequestQuotationView"] | null;
+    };
+    WebRequestPendingView: {
+      /** Format: int64 */
+      pending?: number;
+    };
     StaffView: {
       userId?: string;
       username?: string;
       name?: string;
       email?: string | null;
       admin?: boolean;
+    };
+    SalesSettingsView: {
+      /** Format: int32 */
+      targetMarginPercent?: number;
+      /** Format: int64 */
+      priceRounding?: number;
+      /** @enum {string} */
+      defaultVatRate?: "NOT_SUBJECT" | "VAT_0" | "VAT_5" | "VAT_8" | "VAT_10";
+      /** Format: int32 */
+      defaultValidDays?: number;
+    };
+    SellerStatusView: {
+      legalName?: string;
+      missing?: string[];
+    };
+    SalesRevenuePointView: {
+      period?: string;
+      /** Format: int32 */
+      year?: number;
+      /** Format: int32 */
+      index?: number | null;
+      /** Format: int64 */
+      revenueNet?: number;
+      /** Format: int64 */
+      revenueGross?: number;
+      /** Format: int64 */
+      orders?: number;
+    };
+    SalesOverviewView: {
+      /** Format: int32 */
+      year?: number | null;
+      /** Format: int64 */
+      customers?: number;
+      /** Format: int64 */
+      quotationsSent?: number;
+      /** Format: int64 */
+      quotationValueNet?: number;
+      /** Format: int64 */
+      quotationValueGross?: number;
+      /** Format: int64 */
+      ordersWon?: number;
+      /** Format: int64 */
+      revenueNet?: number;
+      /** Format: int64 */
+      revenueGross?: number;
+      /** Format: int64 */
+      outstanding?: number;
+    };
+    SalesCustomerRevenueView: {
+      /** Format: uuid */
+      customerId?: string;
+      customerName?: string;
+      assignee?: components["schemas"]["StaffRefView"] | null;
+      /** Format: int64 */
+      quotationsSent?: number;
+      /** Format: int64 */
+      orders?: number;
+      /** Format: int64 */
+      revenueNet?: number;
+      /** Format: int64 */
+      revenueGross?: number;
+      /** Format: int64 */
+      outstanding?: number;
+    };
+    QuotedPriceView: {
+      /** Format: uuid */
+      quotationId?: string;
+      quotationNumber?: string;
+      /** Format: date */
+      quoteDate?: string;
+      /** @enum {string} */
+      status?: "DRAFT" | "WAITING" | "NEGOTIATING" | "WON" | "LOST";
+      /** Format: uuid */
+      customerId?: string;
+      customerName?: string;
+      partNumber?: string | null;
+      name?: string | null;
+      unit?: string | null;
+      /** Format: int32 */
+      quantity?: number;
+      /** Format: int64 */
+      unitPrice?: number;
+      /** Format: int64 */
+      unitCost?: number | null;
+    };
+    PageResponseSalesQuotationSummaryView: {
+      items?: components["schemas"]["SalesQuotationSummaryView"][];
+      /** Format: int32 */
+      page?: number;
+      /** Format: int32 */
+      size?: number;
+      /** Format: int64 */
+      totalItems?: number;
+      /** Format: int32 */
+      totalPages?: number;
+    };
+    SalesQuotationSummaryView: {
+      /** Format: uuid */
+      id?: string;
+      number?: string;
+      /** Format: date */
+      quoteDate?: string;
+      /** @enum {string} */
+      status?: "DRAFT" | "WAITING" | "NEGOTIATING" | "WON" | "LOST";
+      /** Format: uuid */
+      customerId?: string;
+      customerName?: string;
+      /** Format: int64 */
+      subtotal?: number;
+      /** Format: int64 */
+      total?: number;
+      /** Format: int32 */
+      lineCount?: number;
+      /** Format: date */
+      validUntil?: string | null;
+      createdByName?: string;
+      assignee?: components["schemas"]["StaffRefView"] | null;
+      webRequestReference?: string | null;
+    };
+    PriceSuggestionView: {
+      /** Format: int64 */
+      suggestedPrice?: number;
+      /** Format: int32 */
+      targetMarginPercent?: number;
+    };
+    ProductMatchView: {
+      requested?: string;
+      /** Format: uuid */
+      productId?: string;
+      slug?: string;
+      name?: string;
+      partNumber?: string | null;
+      /** Format: int64 */
+      listPrice?: number | null;
+    };
+    PageResponseSalesOrderSummaryView: {
+      items?: components["schemas"]["SalesOrderSummaryView"][];
+      /** Format: int32 */
+      page?: number;
+      /** Format: int32 */
+      size?: number;
+      /** Format: int64 */
+      totalItems?: number;
+      /** Format: int32 */
+      totalPages?: number;
+    };
+    SalesOrderSummaryView: {
+      /** Format: uuid */
+      id?: string;
+      number?: string;
+      /** Format: date */
+      orderDate?: string;
+      /** Format: uuid */
+      customerId?: string;
+      customerName?: string;
+      quotationNumber?: string;
+      /** Format: int64 */
+      subtotal?: number;
+      /** Format: int64 */
+      total?: number;
+      /** Format: int64 */
+      paid?: number;
+      /** @enum {string} */
+      deliveryStatus?: "NOT_DELIVERED" | "DELIVERING" | "DELIVERED";
+      /** @enum {string} */
+      paymentStatus?: "UNPAID" | "PARTIALLY_PAID" | "PAID";
+      cancelled?: boolean;
+      assignee?: components["schemas"]["StaffRefView"] | null;
+    };
+    PageResponseCustomerView: {
+      items?: components["schemas"]["CustomerView"][];
+      /** Format: int32 */
+      page?: number;
+      /** Format: int32 */
+      size?: number;
+      /** Format: int64 */
+      totalItems?: number;
+      /** Format: int32 */
+      totalPages?: number;
+    };
+    SalesCustomerSummaryView: {
+      /** Format: int64 */
+      quotationsDraft?: number;
+      /** Format: int64 */
+      quotationsOpen?: number;
+      /** Format: int64 */
+      quotationsWon?: number;
+      /** Format: int64 */
+      quotationsLost?: number;
+      /** Format: int64 */
+      orders?: number;
+      /** Format: int64 */
+      revenueNet?: number;
+      /** Format: int64 */
+      revenueGross?: number;
+      /** Format: int64 */
+      paid?: number;
+      /** Format: int64 */
+      outstanding?: number;
+      /** Format: date */
+      lastQuotationDate?: string | null;
+      /** Format: date */
+      lastOrderDate?: string | null;
     };
     AdminQuoteRequestSummary: {
       /** Format: uuid */
@@ -1227,6 +2288,176 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+  get: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesQuotationView"];
+        };
+      };
+    };
+  };
+  update: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SalesQuotationRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesQuotationView"];
+        };
+      };
+    };
+  };
+  get_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesOrderView"];
+        };
+      };
+    };
+  };
+  revise: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["ReviseOrderRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesOrderView"];
+        };
+      };
+    };
+  };
+  get_2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["CustomerView"];
+        };
+      };
+    };
+  };
+  update_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CustomerRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["CustomerView"];
+        };
+      };
+    };
+  };
+  reassign: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["AssigneeRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["CustomerView"];
+        };
+      };
+    };
+  };
   quote: {
     parameters: {
       query?: never;
@@ -1253,7 +2484,7 @@ export interface operations {
       };
     };
   };
-  get: {
+  get_3: {
     parameters: {
       query?: never;
       header?: never;
@@ -1343,7 +2574,7 @@ export interface operations {
       };
     };
   };
-  update: {
+  update_2: {
     parameters: {
       query?: never;
       header?: never;
@@ -1367,7 +2598,7 @@ export interface operations {
       };
     };
   };
-  get_1: {
+  get_4: {
     parameters: {
       query?: never;
       header?: never;
@@ -1389,7 +2620,7 @@ export interface operations {
       };
     };
   };
-  update_1: {
+  update_3: {
     parameters: {
       query?: never;
       header?: never;
@@ -1437,7 +2668,7 @@ export interface operations {
       };
     };
   };
-  get_2: {
+  get_5: {
     parameters: {
       query?: never;
       header?: never;
@@ -1459,7 +2690,7 @@ export interface operations {
       };
     };
   };
-  update_2: {
+  update_4: {
     parameters: {
       query?: never;
       header?: never;
@@ -1507,7 +2738,7 @@ export interface operations {
       };
     };
   };
-  get_3: {
+  get_6: {
     parameters: {
       query?: never;
       header?: never;
@@ -1529,7 +2760,7 @@ export interface operations {
       };
     };
   };
-  update_3: {
+  update_5: {
     parameters: {
       query?: never;
       header?: never;
@@ -1577,7 +2808,7 @@ export interface operations {
       };
     };
   };
-  get_4: {
+  get_7: {
     parameters: {
       query?: never;
       header?: never;
@@ -1599,7 +2830,7 @@ export interface operations {
       };
     };
   };
-  update_4: {
+  update_6: {
     parameters: {
       query?: never;
       header?: never;
@@ -1647,7 +2878,7 @@ export interface operations {
       };
     };
   };
-  get_5: {
+  get_8: {
     parameters: {
       query?: never;
       header?: never;
@@ -1669,7 +2900,7 @@ export interface operations {
       };
     };
   };
-  update_5: {
+  update_7: {
     parameters: {
       query?: never;
       header?: never;
@@ -1714,6 +2945,360 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+    };
+  };
+  createQuotation: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WebRequestQuotationRequest"];
+      };
+    };
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesQuotationView"];
+        };
+      };
+    };
+  };
+  claim: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["WebRequestDetailView"];
+        };
+      };
+    };
+  };
+  list: {
+    parameters: {
+      query?: {
+        q?: string;
+        status?: ("DRAFT" | "WAITING" | "NEGOTIATING" | "WON" | "LOST")[];
+        customerId?: string;
+        from?: string;
+        to?: string;
+        staffId?: string;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PageResponseSalesQuotationSummaryView"];
+        };
+      };
+    };
+  };
+  create: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SalesQuotationRequest"];
+      };
+    };
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesQuotationView"];
+        };
+      };
+    };
+  };
+  win: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["WinQuotationRequest"];
+      };
+    };
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesOrderView"];
+        };
+      };
+    };
+  };
+  changeStatus: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["QuotationStatusRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesQuotationView"];
+        };
+      };
+    };
+  };
+  list_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["DocumentView"][];
+        };
+      };
+    };
+  };
+  export: {
+    parameters: {
+      query: {
+        format: string;
+      };
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["DocumentView"];
+        };
+      };
+    };
+  };
+  duplicate: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CloneQuotationRequest"];
+      };
+    };
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesQuotationView"];
+        };
+      };
+    };
+  };
+  recordPayment: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["OrderPaymentRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesOrderView"];
+        };
+      };
+    };
+  };
+  changeDelivery: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["DeliveryRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesOrderView"];
+        };
+      };
+    };
+  };
+  cancel: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CancelOrderRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesOrderView"];
+        };
+      };
+    };
+  };
+  list_2: {
+    parameters: {
+      query?: {
+        q?: string;
+        staffId?: string;
+        unassigned?: boolean;
+        includeInactive?: boolean;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PageResponseCustomerView"];
+        };
+      };
+    };
+  };
+  create_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CustomerRequest"];
+      };
+    };
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["CustomerView"];
+        };
       };
     };
   };
@@ -1847,7 +3432,7 @@ export interface operations {
       };
     };
   };
-  cancel: {
+  cancel_1: {
     parameters: {
       query?: never;
       header?: never;
@@ -1925,7 +3510,7 @@ export interface operations {
       };
     };
   };
-  recordPayment: {
+  recordPayment_1: {
     parameters: {
       query?: never;
       header?: never;
@@ -2003,7 +3588,7 @@ export interface operations {
       };
     };
   };
-  cancel_1: {
+  cancel_2: {
     parameters: {
       query?: never;
       header?: never;
@@ -2053,7 +3638,7 @@ export interface operations {
       };
     };
   };
-  list: {
+  list_3: {
     parameters: {
       query?: {
         page?: number;
@@ -2109,7 +3694,7 @@ export interface operations {
       };
     };
   };
-  list_1: {
+  list_4: {
     parameters: {
       query?: never;
       header?: never;
@@ -2129,7 +3714,7 @@ export interface operations {
       };
     };
   };
-  create: {
+  create_2: {
     parameters: {
       query?: never;
       header?: never;
@@ -2153,7 +3738,7 @@ export interface operations {
       };
     };
   };
-  list_2: {
+  list_5: {
     parameters: {
       query?: {
         q?: string;
@@ -2180,7 +3765,7 @@ export interface operations {
       };
     };
   };
-  create_1: {
+  create_3: {
     parameters: {
       query?: never;
       header?: never;
@@ -2276,7 +3861,7 @@ export interface operations {
       };
     };
   };
-  list_3: {
+  list_6: {
     parameters: {
       query?: never;
       header?: never;
@@ -2296,7 +3881,7 @@ export interface operations {
       };
     };
   };
-  create_2: {
+  create_4: {
     parameters: {
       query?: never;
       header?: never;
@@ -2320,7 +3905,7 @@ export interface operations {
       };
     };
   };
-  list_4: {
+  list_7: {
     parameters: {
       query?: never;
       header?: never;
@@ -2340,7 +3925,7 @@ export interface operations {
       };
     };
   };
-  create_3: {
+  create_5: {
     parameters: {
       query?: never;
       header?: never;
@@ -2364,7 +3949,7 @@ export interface operations {
       };
     };
   };
-  list_5: {
+  list_8: {
     parameters: {
       query?: {
         page?: number;
@@ -2387,7 +3972,7 @@ export interface operations {
       };
     };
   };
-  create_4: {
+  create_6: {
     parameters: {
       query?: never;
       header?: never;
@@ -2459,6 +4044,72 @@ export interface operations {
       };
     };
   };
+  list_9: {
+    parameters: {
+      query?: {
+        open?: boolean;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PageResponseWebRequestRowView"];
+        };
+      };
+    };
+  };
+  get_9: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["WebRequestDetailView"];
+        };
+      };
+    };
+  };
+  pending: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["WebRequestPendingView"];
+        };
+      };
+    };
+  };
   staff: {
     parameters: {
       query?: never;
@@ -2475,6 +4126,238 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["StaffView"][];
+        };
+      };
+    };
+  };
+  settings: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesSettingsView"];
+        };
+      };
+    };
+  };
+  seller: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SellerStatusView"];
+        };
+      };
+    };
+  };
+  revenue: {
+    parameters: {
+      query?: {
+        by?: string;
+        year?: number;
+        staffId?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesRevenuePointView"][];
+        };
+      };
+    };
+  };
+  overview: {
+    parameters: {
+      query?: {
+        year?: number;
+        staffId?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesOverviewView"];
+        };
+      };
+    };
+  };
+  customers: {
+    parameters: {
+      query?: {
+        year?: number;
+        staffId?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesCustomerRevenueView"][];
+        };
+      };
+    };
+  };
+  quotedPrices: {
+    parameters: {
+      query: {
+        partNumber: string;
+        customerId?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["QuotedPriceView"][];
+        };
+      };
+    };
+  };
+  content: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        documentId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": string;
+        };
+      };
+    };
+  };
+  suggestPrice: {
+    parameters: {
+      query: {
+        unitCost: number;
+        fixedCost?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PriceSuggestionView"];
+        };
+      };
+    };
+  };
+  lookupProducts: {
+    parameters: {
+      query: {
+        partNumber: string[];
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ProductMatchView"][];
+        };
+      };
+    };
+  };
+  list_10: {
+    parameters: {
+      query?: {
+        q?: string;
+        delivery?: ("NOT_DELIVERED" | "DELIVERING" | "DELIVERED")[];
+        payment?: ("UNPAID" | "PARTIALLY_PAID" | "PAID")[];
+        includeCancelled?: boolean;
+        customerId?: string;
+        from?: string;
+        to?: string;
+        staffId?: string;
+        page?: number;
+        size?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["PageResponseSalesOrderSummaryView"];
         };
       };
     };
@@ -2499,7 +4382,29 @@ export interface operations {
       };
     };
   };
-  list_6: {
+  customerSummary: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesCustomerSummaryView"];
+        };
+      };
+    };
+  };
+  list_11: {
     parameters: {
       query?: {
         q?: string;
@@ -2525,7 +4430,7 @@ export interface operations {
       };
     };
   };
-  get_6: {
+  get_10: {
     parameters: {
       query?: never;
       header?: never;
@@ -2547,7 +4452,7 @@ export interface operations {
       };
     };
   };
-  list_7: {
+  list_12: {
     parameters: {
       query?: {
         q?: string;
@@ -2572,7 +4477,7 @@ export interface operations {
       };
     };
   };
-  get_7: {
+  get_11: {
     parameters: {
       query?: never;
       header?: never;

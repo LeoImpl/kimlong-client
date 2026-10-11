@@ -9,8 +9,9 @@ import { internalRoutes } from "@/lib/internal/routes";
 
 /**
  * The frame of the working area: navigation on the left, the page on the right. The frame itself is static;
- * everything that reads the session — the user panel and every page — streams in behind a Suspense boundary, as
- * Cache Components requires for request data.
+ * everything that reads the session streams in behind a Suspense boundary, as Cache Components requires for
+ * request data: the user panel behind its own, every page behind `loading.tsx`, which (unlike a boundary written
+ * here) also shows while navigating from one internal page to the next.
  */
 export default function InternalAppLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -43,7 +44,7 @@ export default function InternalAppLayout({ children }: Readonly<{ children: Rea
       </aside>
       <div className="min-w-0 flex-1">
         <main id="main" className="mx-auto w-full max-w-[1500px] px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
-          <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
+          {children}
         </main>
         {/* On a phone the user panel sits under the page instead of in the sidebar. */}
         <div className="border-t border-line px-4 py-4 lg:hidden">
@@ -82,16 +83,6 @@ async function UserPanel({ light = false }: { light?: boolean }) {
             : "h-9 border-white/20 bg-transparent px-2.5 text-white hover:border-white/50 hover:text-white"
         }
       />
-    </div>
-  );
-}
-
-function PageSkeleton() {
-  return (
-    <div className="space-y-4" aria-busy>
-      <Skeleton className="h-9 w-64" />
-      <Skeleton className="h-40 w-full" />
-      <Skeleton className="h-64 w-full" />
     </div>
   );
 }

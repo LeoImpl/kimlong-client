@@ -87,9 +87,9 @@ async function CompanyColumn() {
           src={company.logoUrl}
           alt=""
           width={800}
-          height={115}
-          sizes="195px"
-          className="mb-4 h-7 w-auto"
+          height={316}
+          sizes="162px"
+          className="mb-4 h-16 w-auto"
         />
       )}
       <h2 className="text-lg leading-snug text-white">{company.legalName}</h2>

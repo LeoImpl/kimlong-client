@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import { Barlow, Barlow_Condensed, IBM_Plex_Mono } from "next/font/google";
-import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
-import { MobileContactBar } from "@/components/layout/MobileContactBar";
 import { env } from "@/lib/env";
 import "./globals.css";
 
@@ -53,24 +50,18 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * Only what every page shares: the document, the fonts and the default metadata. The public site's header and
+ * footer live in `(site)/layout.tsx` and the staff area's frame in `(internal)/noi-bo/layout.tsx`; route groups
+ * do not appear in URLs, so no public address changed when the pages moved.
+ */
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="vi">
       <body
         className={`${sans.variable} ${display.variable} ${mono.variable} font-sans text-[17px] antialiased sm:text-base`}
       >
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-navy focus:px-4 focus:py-2 focus:text-sm focus:text-white"
-        >
-          Tới nội dung chính
-        </a>
-        <Header />
-        <main id="main">{children}</main>
-        <Footer />
-        {/* Reserves the height of the sticky mobile bar so it never covers the end of the page. */}
-        <div className="h-14 md:hidden" aria-hidden />
-        <MobileContactBar />
+        {children}
       </body>
     </html>
   );

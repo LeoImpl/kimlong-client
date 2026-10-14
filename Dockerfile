@@ -11,7 +11,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # NEXT_PUBLIC_* values are inlined into the browser bundle at build time, so they must be present here.
-# Everything the server reads is provided at runtime instead.
+# Everything the server reads is provided at runtime instead, including the internal area's Keycloak settings
+# and SESSION_SECRET (see .env.example): secrets never go into an image layer.
 ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ARG NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
 ARG NEXT_PUBLIC_LANGUAGE=vi

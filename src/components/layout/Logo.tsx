@@ -8,7 +8,7 @@ import { routes } from "@/lib/routes";
  * header passes it once the profile has loaded. Without it — during the build, while the profile streams in, or if
  * the API is down — a text wordmark stands in: a tiny graphite-and-brass nameplate with the name beside it.
  *
- * The artwork is a gold wordmark about 7:1, so it is sized by height and keeps its own width.
+ * The artwork is a gold KL mark above the wordmark, about 2.5:1, so it is sized by height and keeps its own width.
  */
 export function Logo({ src, className }: { src?: string | null; className?: string }) {
   if (src) {
@@ -22,10 +22,10 @@ export function Logo({ src, className }: { src?: string | null; className?: stri
           src={src}
           alt="Kim Long"
           width={800}
-          height={115}
-          sizes="(min-width: 640px) 223px, 167px"
+          height={316}
+          sizes="(min-width: 640px) 142px, 112px"
           loading="eager"
-          className="h-6 w-auto sm:h-8"
+          className="h-11 w-auto sm:h-14"
         />
       </Link>
     );

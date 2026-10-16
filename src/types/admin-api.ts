@@ -21,7 +21,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/admin/v1/sales/orders/{id}": {
+  "/api/admin/v1/sales/papers/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -29,6 +29,59 @@ export interface paths {
       cookie?: never;
     };
     get: operations["get_1"];
+    /** Replace the parties, dates, figures and text of a document */
+    put: operations["update_1"];
+    post?: never;
+    /** Delete a document made by mistake, with its files */
+    delete: operations["delete"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/paper-templates/{kind}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["template"];
+    /** Change a standard text (administrators); new documents start from it */
+    put: operations["saveTemplate"];
+    post?: never;
+    /** Go back to the built-in standard text (administrators) */
+    delete: operations["resetTemplate"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/paper-settings": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["settings"];
+    /** Change who signs for Kim Long and the city printed in dates (administrators) */
+    put: operations["saveSettings"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/orders/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["get_2"];
     /** Correct the actual selling prices and quantities, until the goods are delivered */
     put: operations["revise"];
     post?: never;
@@ -45,8 +98,8 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_2"];
-    put: operations["update_1"];
+    get: operations["get_3"];
+    put: operations["update_2"];
     post?: never;
     delete?: never;
     options?: never;
@@ -95,11 +148,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_3"];
+    get: operations["get_4"];
     /** Change the alternative text */
     put: operations["describe"];
     post?: never;
-    delete: operations["delete"];
+    delete: operations["delete_1"];
     options?: never;
     head?: never;
     patch?: never;
@@ -115,7 +168,7 @@ export interface paths {
     /** Company profile in all languages, with its version */
     get: operations["profile"];
     /** Replace the company profile (optimistic locking on version) */
-    put: operations["update_2"];
+    put: operations["update_3"];
     post?: never;
     delete?: never;
     options?: never;
@@ -124,22 +177,6 @@ export interface paths {
     trace?: never;
   };
   "/api/admin/v1/company/partners/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["get_4"];
-    put: operations["update_3"];
-    post?: never;
-    delete: operations["delete_1"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/v1/catalog/products/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -155,7 +192,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/admin/v1/catalog/categories/{id}": {
+  "/api/admin/v1/catalog/products/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -171,7 +208,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/admin/v1/catalog/brands/{id}": {
+  "/api/admin/v1/catalog/categories/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -187,7 +224,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/admin/v1/articles/{id}": {
+  "/api/admin/v1/catalog/brands/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -198,6 +235,22 @@ export interface paths {
     put: operations["update_7"];
     post?: never;
     delete: operations["delete_5"];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/articles/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["get_9"];
+    put: operations["update_8"];
+    post?: never;
+    delete: operations["delete_6"];
     options?: never;
     head?: never;
     patch?: never;
@@ -324,6 +377,41 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/admin/v1/sales/papers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Start a document from the standard text of its kind */
+    post: operations["create_1"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/papers/{id}/files": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Files exported from the document, newest first */
+    get: operations["files"];
+    put?: never;
+    /** Export the document as it is now (format=docx or pdf) and keep the file */
+    post: operations["export_1"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/admin/v1/sales/orders/{id}/payments": {
     parameters: {
       query?: never;
@@ -385,7 +473,7 @@ export interface paths {
     get: operations["list_2"];
     put?: never;
     /** Create a customer; the caller becomes the salesperson in charge */
-    post: operations["create_1"];
+    post: operations["create_2"];
     delete?: never;
     options?: never;
     head?: never;
@@ -633,7 +721,7 @@ export interface paths {
     /** All partner brands, including hidden ones */
     get: operations["list_4"];
     put?: never;
-    post: operations["create_2"];
+    post: operations["create_3"];
     delete?: never;
     options?: never;
     head?: never;
@@ -651,7 +739,7 @@ export interface paths {
     get: operations["list_5"];
     put?: never;
     /** Create a product as a draft */
-    post: operations["create_3"];
+    post: operations["create_4"];
     delete?: never;
     options?: never;
     head?: never;
@@ -715,7 +803,7 @@ export interface paths {
     };
     get: operations["list_6"];
     put?: never;
-    post: operations["create_4"];
+    post: operations["create_5"];
     delete?: never;
     options?: never;
     head?: never;
@@ -731,7 +819,7 @@ export interface paths {
     };
     get: operations["list_7"];
     put?: never;
-    post: operations["create_5"];
+    post: operations["create_6"];
     delete?: never;
     options?: never;
     head?: never;
@@ -749,7 +837,7 @@ export interface paths {
     get: operations["list_8"];
     put?: never;
     /** Create a draft article */
-    post: operations["create_6"];
+    post: operations["create_7"];
     delete?: never;
     options?: never;
     head?: never;
@@ -815,7 +903,7 @@ export interface paths {
       cookie?: never;
     };
     /** A request with its lines; 404 when a colleague has taken it */
-    get: operations["get_9"];
+    get: operations["get_10"];
     put?: never;
     post?: never;
     delete?: never;
@@ -866,7 +954,7 @@ export interface paths {
       cookie?: never;
     };
     /** Target margin, rounding and defaults used by the quotation form */
-    get: operations["settings"];
+    get: operations["settings_1"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1011,6 +1099,57 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/admin/v1/sales/papers/{id}/files/{fileId}/content": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Download a file exactly as it was exported */
+    get: operations["content_1"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/paper-templates": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** The standard text of every kind of document */
+    get: operations["templates"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/paper-placeholders": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Placeholders that can be used in the text of documents */
+    get: operations["placeholders"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/admin/v1/sales/orders": {
     parameters: {
       query?: never;
@@ -1020,6 +1159,23 @@ export interface paths {
     };
     /** Search orders, newest first (cancelled orders only with includeCancelled) */
     get: operations["list_10"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/admin/v1/sales/orders/{orderId}/papers": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Contracts, payment requests and delivery notes of an order, oldest first */
+    get: operations["forOrder"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1062,6 +1218,23 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/admin/v1/sales/customers/{customerId}/framework-contracts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Framework contracts of a customer, newest first */
+    get: operations["frameworks"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/admin/v1/quote-requests": {
     parameters: {
       query?: never;
@@ -1086,7 +1259,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_10"];
+    get: operations["get_11"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1119,7 +1292,7 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    get: operations["get_11"];
+    get: operations["get_12"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1264,6 +1437,125 @@ export interface components {
       userId?: string;
       name?: string;
     };
+    SalesPaperDeliveredLineDto: {
+      partNumber?: string | null;
+      name?: string | null;
+      unit?: string | null;
+      /** Format: int32 */
+      ordered?: number;
+      /** Format: int32 */
+      delivered?: number;
+      note?: string | null;
+    };
+    SalesPaperDeliveryDto: {
+      deliveredBy?: string | null;
+      receiverName?: string | null;
+      receiverTitle?: string | null;
+      contact?: string | null;
+      address?: string | null;
+      lines?: components["schemas"]["SalesPaperDeliveredLineDto"][];
+    };
+    SalesPaperInstallmentDto: {
+      /** Format: int32 */
+      percent?: number;
+      condition?: string;
+    };
+    SalesPaperPartyDto: {
+      name?: string;
+      address?: string | null;
+      taxCode?: string | null;
+      phone?: string | null;
+      email?: string | null;
+      bankAccount?: string | null;
+      representative?: string | null;
+      representativeTitle?: string | null;
+      salutation?: string | null;
+    };
+    SalesPaperRequest: {
+      /** Format: int64 */
+      version?: number;
+      number?: string;
+      /** Format: date */
+      issuedOn?: string | null;
+      buyer?: components["schemas"]["SalesPaperPartyDto"];
+      seller?: components["schemas"]["SalesPaperPartyDto"];
+      /** Format: date */
+      validUntil?: string | null;
+      /** Format: int64 */
+      creditLimit?: number | null;
+      /** Format: int32 */
+      paymentDays?: number | null;
+      /** Format: int64 */
+      amount?: number | null;
+      purpose?: string | null;
+      sections?: components["schemas"]["SalesPaperSectionDto"][];
+      installments?: components["schemas"]["SalesPaperInstallmentDto"][];
+      delivery?: components["schemas"]["SalesPaperDeliveryDto"] | null;
+    };
+    SalesPaperSectionDto: {
+      heading?: string | null;
+      body?: string;
+    };
+    SalesPaperView: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: int64 */
+      version?: number;
+      /** @enum {string} */
+      kind?: "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      label?: string;
+      number?: string;
+      /** Format: date */
+      issuedOn?: string | null;
+      /** Format: uuid */
+      customerId?: string;
+      /** Format: uuid */
+      orderId?: string | null;
+      /** Format: uuid */
+      parentId?: string | null;
+      buyer?: components["schemas"]["SalesPaperPartyDto"];
+      seller?: components["schemas"]["SalesPaperPartyDto"];
+      /** Format: date */
+      validUntil?: string | null;
+      /** Format: int64 */
+      creditLimit?: number | null;
+      /** Format: int32 */
+      paymentDays?: number | null;
+      /** Format: int64 */
+      amount?: number | null;
+      purpose?: string | null;
+      sections?: components["schemas"]["SalesPaperSectionDto"][];
+      installments?: components["schemas"]["SalesPaperInstallmentDto"][];
+      delivery?: components["schemas"]["SalesPaperDeliveryDto"] | null;
+      createdBy?: components["schemas"]["StaffRefView"];
+      /** Format: date-time */
+      createdAt?: string;
+    };
+    SalesPaperTemplateRequest: {
+      /** Format: int64 */
+      version?: number;
+      sections?: components["schemas"]["SalesPaperSectionDto"][];
+    };
+    SalesPaperTemplateView: {
+      /** @enum {string} */
+      kind?: "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      label?: string;
+      sections?: components["schemas"]["SalesPaperSectionDto"][];
+      customized?: boolean;
+      /** Format: int64 */
+      version?: number;
+      /** Format: date-time */
+      changedAt?: string | null;
+      changedBy?: string | null;
+    };
+    SalesPaperSettingsDto: {
+      /** Format: int64 */
+      version?: number;
+      signatoryName?: string;
+      signatoryTitle?: string;
+      signatorySalutation?: string | null;
+      city?: string;
+    };
     ReviseOrderRequest: {
       /** Format: int64 */
       version?: number;
@@ -1356,6 +1648,11 @@ export interface components {
       companyName?: string;
       taxAddress?: string | null;
       representative?: string | null;
+      representativeTitle?: string | null;
+      representativeSalutation?: string | null;
+      shortCode?: string | null;
+      phone?: string | null;
+      bankAccount?: string | null;
       industry?: string | null;
       contacts?: components["schemas"]["CustomerContactDto"][];
       note?: string | null;
@@ -1370,6 +1667,11 @@ export interface components {
       companyName?: string;
       taxAddress?: string | null;
       representative?: string | null;
+      representativeTitle?: string | null;
+      representativeSalutation?: string | null;
+      shortCode?: string | null;
+      phone?: string | null;
+      bankAccount?: string | null;
       industry?: string | null;
       contacts?: components["schemas"]["CustomerContactDto"][];
       assignee?: components["schemas"]["StaffRefView"] | null;
@@ -1807,6 +2109,30 @@ export interface components {
       /** Format: uuid */
       customerId?: string | null;
     };
+    SalesPaperCreateRequest: {
+      /** @enum {string} */
+      kind?: "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      /** Format: uuid */
+      orderId?: string | null;
+      /** Format: uuid */
+      customerId?: string | null;
+      /** Format: uuid */
+      frameworkId?: string | null;
+    };
+    SalesPaperFileView: {
+      /** Format: uuid */
+      id?: string;
+      /** @enum {string} */
+      format?: "PDF" | "DOCX";
+      filename?: string;
+      templateVersion?: string;
+      checksumSha256?: string;
+      /** Format: int64 */
+      sizeBytes?: number;
+      /** Format: date-time */
+      createdAt?: string;
+      createdBy?: components["schemas"]["StaffRefView"];
+    };
     OrderPaymentRequest: {
       /** Format: int64 */
       version?: number;
@@ -2129,6 +2455,11 @@ export interface components {
       /** Format: int64 */
       listPrice?: number | null;
     };
+    SalesPaperPlaceholderView: {
+      name?: string;
+      description?: string;
+      block?: boolean;
+    };
     PageResponseSalesOrderSummaryView: {
       items?: components["schemas"]["SalesOrderSummaryView"][];
       /** Format: int32 */
@@ -2373,6 +2704,193 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
+          "*/*": components["schemas"]["SalesPaperView"];
+        };
+      };
+    };
+  };
+  update_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SalesPaperRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperView"];
+        };
+      };
+    };
+  };
+  delete: {
+    parameters: {
+      query: {
+        version: number;
+      };
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  template: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        kind:
+          "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperTemplateView"];
+        };
+      };
+    };
+  };
+  saveTemplate: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        kind:
+          "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SalesPaperTemplateRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperTemplateView"];
+        };
+      };
+    };
+  };
+  resetTemplate: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        kind:
+          "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperTemplateView"];
+        };
+      };
+    };
+  };
+  settings: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperSettingsDto"];
+        };
+      };
+    };
+  };
+  saveSettings: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SalesPaperSettingsDto"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperSettingsDto"];
+        };
+      };
+    };
+  };
+  get_2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
           "*/*": components["schemas"]["SalesOrderView"];
         };
       };
@@ -2404,7 +2922,7 @@ export interface operations {
       };
     };
   };
-  get_2: {
+  get_3: {
     parameters: {
       query?: never;
       header?: never;
@@ -2426,7 +2944,7 @@ export interface operations {
       };
     };
   };
-  update_1: {
+  update_2: {
     parameters: {
       query?: never;
       header?: never;
@@ -2504,7 +3022,7 @@ export interface operations {
       };
     };
   };
-  get_3: {
+  get_4: {
     parameters: {
       query?: never;
       header?: never;
@@ -2552,7 +3070,7 @@ export interface operations {
       };
     };
   };
-  delete: {
+  delete_1: {
     parameters: {
       query: {
         version: number;
@@ -2594,7 +3112,7 @@ export interface operations {
       };
     };
   };
-  update_2: {
+  update_3: {
     parameters: {
       query?: never;
       header?: never;
@@ -2618,7 +3136,7 @@ export interface operations {
       };
     };
   };
-  get_4: {
+  get_5: {
     parameters: {
       query?: never;
       header?: never;
@@ -2640,7 +3158,7 @@ export interface operations {
       };
     };
   };
-  update_3: {
+  update_4: {
     parameters: {
       query?: never;
       header?: never;
@@ -2662,76 +3180,6 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["PartnerBrandDto"];
-        };
-      };
-    };
-  };
-  delete_1: {
-    parameters: {
-      query: {
-        version: number;
-      };
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description No Content */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  get_5: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProductDto"];
-        };
-      };
-    };
-  };
-  update_4: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["ProductRequest"];
-      };
-    };
-    responses: {
-      /** @description OK */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "*/*": components["schemas"]["ProductDto"];
         };
       };
     };
@@ -2775,7 +3223,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["CategoryDto"];
+          "*/*": components["schemas"]["ProductDto"];
         };
       };
     };
@@ -2791,7 +3239,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CategoryRequest"];
+        "application/json": components["schemas"]["ProductRequest"];
       };
     };
     responses: {
@@ -2801,7 +3249,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["CategoryDto"];
+          "*/*": components["schemas"]["ProductDto"];
         };
       };
     };
@@ -2845,7 +3293,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["BrandDto"];
+          "*/*": components["schemas"]["CategoryDto"];
         };
       };
     };
@@ -2861,7 +3309,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["BrandRequest"];
+        "application/json": components["schemas"]["CategoryRequest"];
       };
     };
     responses: {
@@ -2871,7 +3319,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["BrandDto"];
+          "*/*": components["schemas"]["CategoryDto"];
         };
       };
     };
@@ -2915,12 +3363,82 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "*/*": components["schemas"]["ArticleDto"];
+          "*/*": components["schemas"]["BrandDto"];
         };
       };
     };
   };
   update_7: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["BrandRequest"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["BrandDto"];
+        };
+      };
+    };
+  };
+  delete_5: {
+    parameters: {
+      query: {
+        version: number;
+      };
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description No Content */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  get_9: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["ArticleDto"];
+        };
+      };
+    };
+  };
+  update_8: {
     parameters: {
       query?: never;
       header?: never;
@@ -2946,7 +3464,7 @@ export interface operations {
       };
     };
   };
-  delete_5: {
+  delete_6: {
     parameters: {
       query: {
         version: number;
@@ -3193,6 +3711,76 @@ export interface operations {
       };
     };
   };
+  create_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["SalesPaperCreateRequest"];
+      };
+    };
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperView"];
+        };
+      };
+    };
+  };
+  files: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperFileView"][];
+        };
+      };
+    };
+  };
+  export_1: {
+    parameters: {
+      query: {
+        format: string;
+      };
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperFileView"];
+        };
+      };
+    };
+  };
   recordPayment: {
     parameters: {
       query?: never;
@@ -3298,7 +3886,7 @@ export interface operations {
       };
     };
   };
-  create_1: {
+  create_2: {
     parameters: {
       query?: never;
       header?: never;
@@ -3734,7 +4322,7 @@ export interface operations {
       };
     };
   };
-  create_2: {
+  create_3: {
     parameters: {
       query?: never;
       header?: never;
@@ -3785,7 +4373,7 @@ export interface operations {
       };
     };
   };
-  create_3: {
+  create_4: {
     parameters: {
       query?: never;
       header?: never;
@@ -3901,7 +4489,7 @@ export interface operations {
       };
     };
   };
-  create_4: {
+  create_5: {
     parameters: {
       query?: never;
       header?: never;
@@ -3945,7 +4533,7 @@ export interface operations {
       };
     };
   };
-  create_5: {
+  create_6: {
     parameters: {
       query?: never;
       header?: never;
@@ -3992,7 +4580,7 @@ export interface operations {
       };
     };
   };
-  create_6: {
+  create_7: {
     parameters: {
       query?: never;
       header?: never;
@@ -4088,7 +4676,7 @@ export interface operations {
       };
     };
   };
-  get_9: {
+  get_10: {
     parameters: {
       query?: never;
       header?: never;
@@ -4150,7 +4738,7 @@ export interface operations {
       };
     };
   };
-  settings: {
+  settings_1: {
     parameters: {
       query?: never;
       header?: never;
@@ -4351,6 +4939,69 @@ export interface operations {
       };
     };
   };
+  content_1: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        fileId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": string;
+        };
+      };
+    };
+  };
+  templates: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperTemplateView"][];
+        };
+      };
+    };
+  };
+  placeholders: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperPlaceholderView"][];
+        };
+      };
+    };
+  };
   list_10: {
     parameters: {
       query?: {
@@ -4378,6 +5029,28 @@ export interface operations {
         };
         content: {
           "*/*": components["schemas"]["PageResponseSalesOrderSummaryView"];
+        };
+      };
+    };
+  };
+  forOrder: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        orderId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperView"][];
         };
       };
     };
@@ -4424,6 +5097,28 @@ export interface operations {
       };
     };
   };
+  frameworks: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        customerId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "*/*": components["schemas"]["SalesPaperView"][];
+        };
+      };
+    };
+  };
   list_11: {
     parameters: {
       query?: {
@@ -4450,7 +5145,7 @@ export interface operations {
       };
     };
   };
-  get_10: {
+  get_11: {
     parameters: {
       query?: never;
       header?: never;
@@ -4497,7 +5192,7 @@ export interface operations {
       };
     };
   };
-  get_11: {
+  get_12: {
     parameters: {
       query?: never;
       header?: never;

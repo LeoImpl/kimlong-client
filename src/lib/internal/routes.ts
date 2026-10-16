@@ -16,6 +16,11 @@ export const internalRoutes = {
     `/noi-bo/gia-da-chao?ma=${encodeURIComponent(partNumber)}`,
   orders: "/noi-bo/don-hang",
   order: (id: string) => `/noi-bo/don-hang/${encodeURIComponent(id)}`,
+  paper: (id: string) => `/noi-bo/chung-tu/${encodeURIComponent(id)}`,
+  paperFile: (id: string, fileId: string) =>
+    `/noi-bo/chung-tu/${encodeURIComponent(id)}/file/${encodeURIComponent(fileId)}`,
+  paperTemplates: "/noi-bo/mau-chung-tu",
+  paperTemplate: (kind: string) => `/noi-bo/mau-chung-tu?loai=${encodeURIComponent(kind)}`,
   webRequests: "/noi-bo/yeu-cau-web",
   webRequest: (id: string) => `/noi-bo/yeu-cau-web/${encodeURIComponent(id)}`,
 } as const;

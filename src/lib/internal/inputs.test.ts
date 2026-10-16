@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { customerInput, quotationInput } from "./inputs";
+import { customerInput, paperInput, quotationInput } from "./inputs";
 
 describe("customerInput", () => {
   it("keeps known fields, trims them and drops empty contact rows", () => {
@@ -21,6 +21,11 @@ describe("customerInput", () => {
       taxCode: "0301234567",
       taxAddress: null,
       representative: null,
+      representativeTitle: null,
+      representativeSalutation: null,
+      shortCode: null,
+      phone: null,
+      bankAccount: null,
       industry: null,
       note: null,
       active: false,
@@ -81,5 +86,31 @@ describe("quotationInput", () => {
         note: null,
       },
     ]);
+  });
+});
+
+describe("paper input", () => {
+  it("keeps the line breaks of the text and only known fields", () => {
+    const input = paperInput({
+      version: 3,
+      number: " 01.2026/LOTTE-KL/HĐMB ",
+      buyer: { name: "Lotte", salutation: "Ông", injected: true },
+      seller: { name: "Kim Long" },
+      sections: [
+        { heading: " ĐIỀU 1 ", body: "Dòng 1\n- Gạch đầu dòng\n{{BANG_HANG_HOA}}" },
+        { heading: "", body: "   " },
+      ],
+      installments: [{ percent: "30", condition: "khi ký" }],
+      delivery: null,
+    });
+    expect(input?.number).toBe("01.2026/LOTTE-KL/HĐMB");
+    expect(input?.buyer).not.toHaveProperty("injected");
+    expect(input?.buyer?.salutation).toBe("Ông");
+    expect(input?.sections).toEqual([
+      { heading: "ĐIỀU 1", body: "Dòng 1\n- Gạch đầu dòng\n{{BANG_HANG_HOA}}" },
+    ]);
+    expect(input?.installments).toEqual([{ percent: 30, condition: "khi ký" }]);
+    expect(input?.delivery).toBeNull();
+    expect(paperInput({ number: "x" })).toBeNull();
   });
 });

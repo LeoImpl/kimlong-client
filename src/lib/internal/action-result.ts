@@ -40,6 +40,26 @@ const messages: Record<string, string> = {
     "Chưa có khách hàng nào của bạn trùng MST với yêu cầu này. Hãy tạo khách hàng trước.",
   "sales.quoted-prices.part-number-too-short": "Nhập ít nhất 2 ký tự của mã hàng.",
   "money.negative": "Số tiền không được âm.",
+  "sales.commission.invalid": "Hoa hồng khách hàng phải từ 0 đến 50% (tối đa 2 số lẻ).",
+  "sales.shipping.invalid": "Chi phí vận chuyển không được âm.",
+  "sales.customer.short-code-invalid":
+    "Mã viết tắt chỉ gồm chữ không dấu, số, & hoặc - (tối đa 15 ký tự), ví dụ LOTTE.",
+  "sales.paper.basis-exists":
+    "Đơn hàng này đã có hợp đồng mua bán hoặc phụ lục. Hãy mở chứng từ đó thay vì tạo thêm.",
+  "sales.paper.order-cancelled": "Không lập chứng từ cho đơn hàng đã hủy.",
+  "sales.paper.framework-required": "Hãy chọn hợp đồng nguyên tắc cho đơn hàng.",
+  "sales.paper.framework-invalid": "Hãy chọn một hợp đồng nguyên tắc của chính khách hàng này.",
+  "sales.paper.framework-in-use":
+    "Hợp đồng nguyên tắc này đã có phụ lục; hãy xóa các phụ lục trước.",
+  "sales.paper.number-taken": "Số chứng từ này đã được dùng cho chứng từ khác cùng loại.",
+  "sales.paper.number-invalid": "Số chứng từ là bắt buộc (tối đa 60 ký tự).",
+  "sales.paper.validity-invalid": "Ngày hết hiệu lực không được trước ngày ký.",
+  "sales.paper.amount-invalid": "Số tiền đề nghị thanh toán phải lớn hơn 0.",
+  "sales.installment.total-invalid": "Tổng các đợt thanh toán phải đúng 100%.",
+  "sales.installment.percent-invalid": "Mỗi đợt thanh toán từ 1% đến 100%.",
+  "sales.installment.condition-invalid": "Mỗi đợt thanh toán cần ghi thời hạn thanh toán.",
+  "sales.party.name-invalid": "Tên các bên là bắt buộc (tối đa 200 ký tự).",
+  "sales.signatory.name-invalid": "Tên người ký là bắt buộc.",
 };
 
 /**
@@ -51,6 +71,14 @@ export function failure(error: unknown): ActionResult<never> {
   const base = { code: error.code, correlationId: error.correlationId };
   const known = error.code ? messages[error.code] : undefined;
   if (known) return { ok: false, message: known, ...base };
+  if (error.code === "sales.paper.placeholder-unknown") {
+    const names = error.message.replace(/^Unknown placeholders:\s*/, "");
+    return {
+      ok: false,
+      message: `Nội dung có biến không tồn tại: ${names}. Xem danh sách biến hợp lệ.`,
+      ...base,
+    };
+  }
   if (error.status === 409) {
     return {
       ok: false,

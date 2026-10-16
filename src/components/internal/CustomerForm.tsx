@@ -7,7 +7,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { saveCustomerAction } from "@/app/(internal)/noi-bo/(app)/khach-hang/actions";
 import { FormMessage } from "@/components/internal/FormMessage";
 import { Button } from "@/components/ui/Button";
-import { Field, Input, Textarea } from "@/components/ui/Field";
+import { Field, Input, Select, Textarea } from "@/components/ui/Field";
 import type { ActionResult } from "@/lib/internal/action-result";
 import { internalRoutes } from "@/lib/internal/routes";
 import type { Contact, Customer } from "@/lib/internal/types";
@@ -59,6 +59,11 @@ export function CustomerForm({
     taxCode: customer?.taxCode ?? draft?.taxCode ?? "",
     taxAddress: customer?.taxAddress ?? draft?.taxAddress ?? "",
     representative: customer?.representative ?? "",
+    representativeTitle: customer?.representativeTitle ?? "",
+    representativeSalutation: customer?.representativeSalutation ?? "",
+    shortCode: customer?.shortCode ?? "",
+    phone: customer?.phone ?? "",
+    bankAccount: customer?.bankAccount ?? "",
     industry: customer?.industry ?? "",
     note: customer?.note ?? "",
     active: customer?.active ?? true,
@@ -155,7 +160,69 @@ export function CustomerForm({
             maxLength={100}
           />
         </Field>
+        <div className="grid grid-cols-[7rem_1fr] gap-3">
+          <Field id="representativeSalutation" label="Danh xưng">
+            <Select
+              id="representativeSalutation"
+              value={fields.representativeSalutation}
+              onChange={(event) => set("representativeSalutation", event.target.value)}
+            >
+              <option value="">—</option>
+              <option value="Ông">Ông</option>
+              <option value="Bà">Bà</option>
+            </Select>
+          </Field>
+          <Field id="representativeTitle" label="Chức vụ người đại diện">
+            <Input
+              id="representativeTitle"
+              value={fields.representativeTitle}
+              onChange={(event) => set("representativeTitle", event.target.value)}
+              placeholder="VD: Giám đốc"
+              maxLength={100}
+            />
+          </Field>
+        </div>
       </div>
+
+      <fieldset className="grid gap-4 md:grid-cols-2">
+        <legend className="mb-2 text-sm font-medium text-ink">Thông tin cho hợp đồng</legend>
+        <Field
+          id="shortCode"
+          label="Mã viết tắt"
+          hint="Dùng trong số hợp đồng, ví dụ LOTTE → 01.2026/LOTTE-KL/HĐMB."
+        >
+          <Input
+            id="shortCode"
+            value={fields.shortCode}
+            onChange={(event) => set("shortCode", event.target.value.toUpperCase())}
+            maxLength={15}
+            className="font-mono uppercase"
+          />
+        </Field>
+        <Field id="phone" label="Điện thoại công ty">
+          <Input
+            id="phone"
+            value={fields.phone}
+            onChange={(event) => set("phone", event.target.value)}
+            inputMode="tel"
+            maxLength={60}
+          />
+        </Field>
+        <Field
+          id="bankAccount"
+          label="Tài khoản ngân hàng"
+          hint="Số tài khoản và ngân hàng, như in trên hợp đồng."
+          className="md:col-span-2"
+        >
+          <Input
+            id="bankAccount"
+            value={fields.bankAccount}
+            onChange={(event) => set("bankAccount", event.target.value)}
+            placeholder="VD: 0071000123456 tại Vietcombank – CN Bình Dương"
+            maxLength={300}
+          />
+        </Field>
+      </fieldset>
 
       <fieldset>
         <legend className="text-sm font-medium text-ink">Người liên hệ</legend>

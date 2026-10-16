@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Plus } from "lucide-react";
 import { AssigneeControl } from "@/components/internal/AssigneeControl";
+import { CreateFrameworkButton } from "@/components/internal/CreateFrameworkButton";
 import { CustomerForm } from "@/components/internal/CustomerForm";
+import { PaperRow } from "@/components/internal/OrderPapers";
 import { PageHeader, Panel } from "@/components/internal/PageHeader";
 import { OrderTable } from "@/components/internal/OrderTable";
 import { QuotationTable } from "@/components/internal/QuotationTable";
@@ -15,6 +17,7 @@ import {
   getCustomer,
   getCustomerSummary,
   getMe,
+  listFrameworkContracts,
   listStaff,
   searchOrders,
   searchQuotations,
@@ -34,6 +37,7 @@ const tabs = [
   { key: "thong-tin", label: "Thông tin" },
   { key: "bao-gia", label: "Báo giá" },
   { key: "don-hang", label: "Đơn hàng" },
+  { key: "hop-dong", label: "Hợp đồng nguyên tắc" },
 ] as const;
 
 export default async function CustomerPage({
@@ -97,6 +101,7 @@ export default async function CustomerPage({
         <CustomerQuotations customerId={customer.id} active={customer.active} />
       )}
       {tab === "don-hang" && <CustomerOrders customerId={customer.id} />}
+      {tab === "hop-dong" && <CustomerFrameworks customerId={customer.id} />}
 
       <div className={cn("space-y-4", tab !== "thong-tin" && "hidden")}>
         {me.admin && (
@@ -196,5 +201,31 @@ async function CustomerFigures({ customerId }: { customerId: string }) {
         </div>
       ))}
     </dl>
+  );
+}
+
+async function CustomerFrameworks({ customerId }: { customerId: string }) {
+  const frameworks = await listFrameworkContracts(customerId);
+  return (
+    <Panel
+      title="Hợp đồng nguyên tắc"
+      actions={<CreateFrameworkButton customerId={customerId} />}
+      bodyClassName="space-y-2"
+    >
+      {frameworks.length === 0 ? (
+        <p className="text-sm text-muted">
+          Chưa có hợp đồng nguyên tắc. Khi có, mỗi đơn hàng thắng của khách có thể đưa vào hợp đồng
+          này dưới dạng một phụ lục (ở trang đơn hàng, mục Chứng từ).
+        </p>
+      ) : (
+        <ul className="space-y-2">
+          {frameworks.map((framework) => (
+            <li key={framework.id}>
+              <PaperRow paper={framework} frameworks={frameworks} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </Panel>
   );
 }

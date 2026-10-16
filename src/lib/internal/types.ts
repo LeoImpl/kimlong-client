@@ -99,3 +99,33 @@ export type WebRequestDetail = Omit<
   lines: WebRequestLine[];
 };
 export type WebRequestAccess = WebRequestRow["access"];
+
+export type PaperParty = Concrete<Schemas["SalesPaperPartyDto"]>;
+export type PaperSection = Concrete<Schemas["SalesPaperSectionDto"]>;
+export type PaperInstallment = Concrete<Schemas["SalesPaperInstallmentDto"]>;
+export type DeliveredLine = Concrete<Schemas["SalesPaperDeliveredLineDto"]>;
+export type PaperDelivery = Omit<Concrete<Schemas["SalesPaperDeliveryDto"]>, "lines"> & {
+  lines: DeliveredLine[];
+};
+export type Paper = Omit<
+  Concrete<Schemas["SalesPaperView"]>,
+  "buyer" | "seller" | "sections" | "installments" | "delivery" | "createdBy"
+> & {
+  buyer: PaperParty;
+  seller: PaperParty;
+  sections: PaperSection[];
+  installments: PaperInstallment[];
+  delivery: PaperDelivery | null;
+  createdBy: StaffRef;
+};
+export type PaperKind = Paper["kind"];
+export type PaperInput = Schemas["SalesPaperRequest"];
+export type PaperFile = Omit<Concrete<Schemas["SalesPaperFileView"]>, "createdBy"> & {
+  createdBy: StaffRef;
+};
+export type PaperFormat = PaperFile["format"];
+export type PaperTemplate = Omit<Concrete<Schemas["SalesPaperTemplateView"]>, "sections"> & {
+  sections: PaperSection[];
+};
+export type PaperPlaceholder = Concrete<Schemas["SalesPaperPlaceholderView"]>;
+export type PaperSettings = Concrete<Schemas["SalesPaperSettingsDto"]>;

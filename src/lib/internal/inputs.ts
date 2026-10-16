@@ -1,4 +1,13 @@
-import type { CustomerInput, QuotationInput, QuotationLineInput, VatRate } from "./types";
+import type {
+  CustomerInput,
+  PaperInput,
+  PaperParty,
+  PaperSection,
+  PaperSettings,
+  QuotationInput,
+  QuotationLineInput,
+  VatRate,
+} from "./types";
 
 /**
  * Shapes what a form sent into a request body. A server action is a public POST endpoint: its argument is whatever
@@ -41,6 +50,11 @@ export function customerInput(raw: unknown): CustomerInput {
     taxCode: text(source.taxCode, 20),
     taxAddress: text(source.taxAddress, 300),
     representative: text(source.representative, 100),
+    representativeTitle: text(source.representativeTitle, 100),
+    representativeSalutation: text(source.representativeSalutation, 10),
+    shortCode: text(source.shortCode, 15),
+    phone: text(source.phone, 60),
+    bankAccount: text(source.bankAccount, 300),
     industry: text(source.industry, 100),
     note: text(source.note),
     active: source.active !== false,
@@ -107,6 +121,91 @@ export function quotationInput(raw: unknown): QuotationInput {
     warrantyTerms: text(source.warrantyTerms, 1000),
     note: text(source.note),
     lines: quotationLinesInput(source.lines),
+  };
+}
+
+function party(raw: unknown): PaperParty {
+  const source = record(raw);
+  return {
+    name: text(source.name, 200) ?? "",
+    address: text(source.address, 300),
+    taxCode: text(source.taxCode, 20),
+    phone: text(source.phone, 60),
+    email: text(source.email, 254),
+    bankAccount: text(source.bankAccount, 300),
+    representative: text(source.representative, 100),
+    representativeTitle: text(source.representativeTitle, 100),
+    salutation: text(source.salutation, 10),
+  };
+}
+
+/** Section bodies keep their line breaks: each line is a paragraph of the printed document. */
+export function paperSectionsInput(raw: unknown): PaperSection[] {
+  return list(raw, 40)
+    .map(record)
+    .map((section) => ({
+      heading: text(section.heading, 200),
+      body: typeof section.body === "string" ? section.body.slice(0, 20000) : "",
+    }))
+    .filter((section) => section.heading || section.body.trim());
+}
+
+/** The edited document; `null` when the version or the number is missing. */
+export function paperInput(raw: unknown): PaperInput | null {
+  const source = record(raw);
+  const version = integer(source.version);
+  const number = text(source.number, 60);
+  if (version === null || !number) return null;
+  const delivery =
+    source.delivery === null || source.delivery === undefined ? null : record(source.delivery);
+  return {
+    version,
+    number,
+    issuedOn: isoDate(source.issuedOn),
+    buyer: party(source.buyer),
+    seller: party(source.seller),
+    validUntil: isoDate(source.validUntil),
+    creditLimit: integer(source.creditLimit),
+    paymentDays: integer(source.paymentDays),
+    amount: integer(source.amount),
+    purpose: text(source.purpose, 300),
+    sections: paperSectionsInput(source.sections),
+    installments: list(source.installments, 10)
+      .map(record)
+      .map((installment) => ({
+        percent: integer(installment.percent) ?? 0,
+        condition: text(installment.condition, 500) ?? "",
+      })),
+    delivery: delivery && {
+      deliveredBy: text(delivery.deliveredBy, 200),
+      receiverName: text(delivery.receiverName, 200),
+      receiverTitle: text(delivery.receiverTitle, 200),
+      contact: text(delivery.contact, 200),
+      address: text(delivery.address, 300),
+      lines: list(delivery.lines, 200)
+        .map(record)
+        .map((line) => ({
+          partNumber: text(line.partNumber, 64),
+          name: text(line.name, 500),
+          unit: text(line.unit, 20),
+          ordered: integer(line.ordered) ?? 0,
+          delivered: integer(line.delivered) ?? 0,
+          note: text(line.note, 500),
+        })),
+    },
+  };
+}
+
+export function paperSettingsInput(raw: unknown): PaperSettings | null {
+  const source = record(raw);
+  const version = integer(source.version);
+  if (version === null) return null;
+  return {
+    version,
+    signatoryName: text(source.signatoryName, 100) ?? "",
+    signatoryTitle: text(source.signatoryTitle, 100) ?? "",
+    signatorySalutation: text(source.signatorySalutation, 10),
+    city: text(source.city, 100) ?? "",
   };
 }
 

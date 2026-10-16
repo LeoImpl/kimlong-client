@@ -10,6 +10,15 @@ import type {
   DocumentFormat,
   Overview,
   Page,
+  Paper,
+  PaperFile,
+  PaperFormat,
+  PaperInput,
+  PaperKind,
+  PaperPlaceholder,
+  PaperSection,
+  PaperSettings,
+  PaperTemplate,
   PaymentMethod,
   PaymentStatus,
   ProductMatch,
@@ -326,5 +335,98 @@ export function claimWebRequest(id: string): Promise<WebRequestDetail> {
 export function createQuotationFromWebRequest(id: string, customerId?: string): Promise<Quotation> {
   return staffFetch<Quotation>(`${SALES_API}/web-requests/${encodeURIComponent(id)}/quotation`, {
     body: { customerId: customerId ?? null },
+  });
+}
+
+// --- Contracts and papers --------------------------------------------------------------------------------------
+
+export const listOrderPapers = cache((orderId: string): Promise<Paper[]> =>
+  staffFetch<Paper[]>(`${SALES_API}/orders/${encodeURIComponent(orderId)}/papers`),
+);
+
+export const listFrameworkContracts = cache((customerId: string): Promise<Paper[]> =>
+  staffFetch<Paper[]>(
+    `${SALES_API}/customers/${encodeURIComponent(customerId)}/framework-contracts`,
+  ),
+);
+
+export const getPaper = cache((id: string): Promise<Paper | null> =>
+  staffFetchOrNull<Paper>(`${SALES_API}/papers/${encodeURIComponent(id)}`),
+);
+
+export function createPaper(input: {
+  kind: PaperKind;
+  orderId?: string;
+  customerId?: string;
+  frameworkId?: string;
+}): Promise<Paper> {
+  return staffFetch<Paper>(`${SALES_API}/papers`, {
+    body: {
+      kind: input.kind,
+      orderId: input.orderId ?? null,
+      customerId: input.customerId ?? null,
+      frameworkId: input.frameworkId ?? null,
+    },
+  });
+}
+
+export function updatePaper(id: string, input: PaperInput): Promise<Paper> {
+  return staffFetch<Paper>(`${SALES_API}/papers/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    body: input,
+  });
+}
+
+export function deletePaper(id: string, version: number): Promise<void> {
+  return staffFetch<void>(`${SALES_API}/papers/${encodeURIComponent(id)}`, {
+    method: "DELETE",
+    query: { version },
+  });
+}
+
+export function listPaperFiles(id: string): Promise<PaperFile[]> {
+  return staffFetch<PaperFile[]>(`${SALES_API}/papers/${encodeURIComponent(id)}/files`);
+}
+
+export function exportPaper(id: string, format: PaperFormat): Promise<PaperFile> {
+  return staffFetch<PaperFile>(`${SALES_API}/papers/${encodeURIComponent(id)}/files`, {
+    method: "POST",
+    query: { format },
+  });
+}
+
+export const listPaperTemplates = cache((): Promise<PaperTemplate[]> =>
+  staffFetch<PaperTemplate[]>(`${SALES_API}/paper-templates`),
+);
+
+export function savePaperTemplate(
+  kind: PaperKind,
+  version: number,
+  sections: PaperSection[],
+): Promise<PaperTemplate> {
+  return staffFetch<PaperTemplate>(`${SALES_API}/paper-templates/${encodeURIComponent(kind)}`, {
+    method: "PUT",
+    body: { version, sections },
+  });
+}
+
+export function resetPaperTemplate(kind: PaperKind): Promise<PaperTemplate> {
+  return staffFetch<PaperTemplate>(`${SALES_API}/paper-templates/${encodeURIComponent(kind)}`, {
+    method: "DELETE",
+  });
+}
+
+export const listPaperPlaceholders = cache((): Promise<PaperPlaceholder[]> =>
+  staffFetch<PaperPlaceholder[]>(`${SALES_API}/paper-placeholders`),
+);
+
+export const getPaperSettings = cache((): Promise<PaperSettings> =>
+  staffFetch<PaperSettings>(`${SALES_API}/paper-settings`),
+);
+
+export function savePaperSettings(settings: PaperSettings): Promise<PaperSettings> {
+  return staffFetch<PaperSettings>(`${SALES_API}/paper-settings`, {
+    method: "PUT",
+    body: settings,
   });
 }

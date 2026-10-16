@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Building2,
+  FileSignature,
   FileText,
   Inbox,
   LayoutDashboard,
@@ -29,6 +30,7 @@ const items: NavItem[] = [
   { href: internalRoutes.quotedPrices, label: "Giá đã chào", icon: Tags },
   { href: internalRoutes.orders, label: "Đơn hàng", icon: PackageCheck },
   { href: internalRoutes.webRequests, label: "Yêu cầu từ web", icon: Inbox },
+  { href: internalRoutes.paperTemplates, label: "Mẫu chứng từ", icon: FileSignature },
 ];
 
 export function InternalNav({ badges = {} }: { badges?: Record<string, number> }) {

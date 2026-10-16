@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { OrderPapers } from "@/components/internal/OrderPapers";
 import { OrderWorkspace } from "@/components/internal/OrderWorkspace";
 import { PageHeader } from "@/components/internal/PageHeader";
 import { DeliveryStatusBadge, PaymentStatusBadge } from "@/components/internal/StatusBadge";
 import { Badge } from "@/components/ui/Badge";
 import { Alert } from "@/components/ui/Feedback";
-import { getOrder, getSettings } from "@/lib/internal/api";
+import { getOrder, getSettings, listFrameworkContracts, listOrderPapers } from "@/lib/internal/api";
 import { formatDay, formatInstant, todayIso } from "@/lib/internal/format";
 import { internalRoutes } from "@/lib/internal/routes";
 
@@ -23,7 +24,11 @@ export default async function OrderPage({ params }: PageProps<"/noi-bo/don-hang/
   const order = await getOrder(id);
   // Also the answer for an order of another salesperson's customer.
   if (!order) notFound();
-  const settings = await getSettings();
+  const [settings, papers, frameworks] = await Promise.all([
+    getSettings(),
+    listOrderPapers(order.id),
+    listFrameworkContracts(order.customerId),
+  ]);
 
   return (
     <>
@@ -71,6 +76,9 @@ export default async function OrderPage({ params }: PageProps<"/noi-bo/don-hang/
       )}
       {/* Remounted for another order, so nothing typed into one leaks into the next. */}
       <OrderWorkspace key={order.id} order={order} settings={settings} today={todayIso()} />
+      <div className="mt-4">
+        <OrderPapers order={order} papers={papers} frameworks={frameworks} />
+      </div>
     </>
   );
 }

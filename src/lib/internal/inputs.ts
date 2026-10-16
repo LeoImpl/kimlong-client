@@ -18,6 +18,13 @@ function integer(value: unknown): number | null {
   return Number.isSafeInteger(parsed) ? parsed : null;
 }
 
+/** A percentage with up to two decimals; the API rejects what is out of range. */
+function percent(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 100
+    ? Math.round(value * 100) / 100
+    : null;
+}
+
 function record(value: unknown): Record<string, unknown> {
   return value !== null && typeof value === "object" ? (value as Record<string, unknown>) : {};
 }
@@ -93,6 +100,8 @@ export function quotationInput(raw: unknown): QuotationInput {
     quoteDate: isoDate(source.quoteDate),
     validUntil: isoDate(source.validUntil),
     vatRate,
+    commissionPercent: percent(source.commissionPercent),
+    shippingCost: integer(source.shippingCost),
     paymentTerms: text(source.paymentTerms, 1000),
     deliveryTerms: text(source.deliveryTerms, 1000),
     warrantyTerms: text(source.warrantyTerms, 1000),
@@ -101,4 +110,9 @@ export function quotationInput(raw: unknown): QuotationInput {
   };
 }
 
-export { integer as integerInput, isoDate as isoDateInput, text as textInput };
+export {
+  integer as integerInput,
+  isoDate as isoDateInput,
+  percent as percentInput,
+  text as textInput,
+};

@@ -10,6 +10,7 @@ import {
   reviseOrderAction,
 } from "@/app/(internal)/noi-bo/(app)/don-hang/actions";
 import { FormMessage } from "@/components/internal/FormMessage";
+import { InternalCostFields } from "@/components/internal/InternalCostFields";
 import {
   emptyLine,
   isBlank,
@@ -32,7 +33,15 @@ import {
   paymentMethods,
   vatRates,
 } from "@/lib/internal/format";
-import { parseAmount, percentOf, subtotal, totalProfit, vatAmount } from "@/lib/internal/pricing";
+import {
+  analyse,
+  basisPointsToPercent,
+  parseAmount,
+  percentOf,
+  subtotal,
+  typedSellingCosts,
+  vatAmount,
+} from "@/lib/internal/pricing";
 import type { PaymentMethod, SalesOrder, SalesSettings } from "@/lib/internal/types";
 
 /**
@@ -55,6 +64,12 @@ export function OrderWorkspace({
   const [lines, setLines] = useState<GridLine[]>(() => order.lines.map(toGridLine));
   const [orderDate, setOrderDate] = useState(order.orderDate);
   const [note, setNote] = useState(order.note ?? "");
+  const [costsForm, setCostsForm] = useState({
+    commissionPercent: order.commissionPercent
+      ? String(order.commissionPercent).replace(".", ",")
+      : "",
+    shippingCost: order.shippingCost ? formatNumber(order.shippingCost) : "",
+  });
   const [dirty, setDirty] = useState(false);
   const [deliveredOn, setDeliveredOn] = useState(order.deliveredOn ?? today);
   const [payment, setPayment] = useState({
@@ -76,12 +91,20 @@ export function OrderWorkspace({
     });
   }
 
+  const { costs: sellingCosts, commissionInvalid } = typedSellingCosts(costsForm);
   const filled = useMemo(() => lines.filter((line) => !isBlank(line)).map(priced), [lines]);
   const percent = vatRates[order.vatRate].percent;
+  const analysis = analyse(
+    filled,
+    sellingCosts,
+    settings.targetMarginPercent,
+    settings.priceRounding,
+  );
   // While editing, the totals follow the grid; otherwise they are the stored ones.
   const net = dirty ? subtotal(filled) : order.subtotal;
   const vat = dirty ? vatAmount(net, percent) : order.vatAmount;
-  const profit = dirty ? totalProfit(filled) : order.profit;
+  const commission = dirty ? analysis.commission : order.commission;
+  const profit = dirty ? analysis.grossProfit : order.profit;
   const margin = percentOf(profit, net);
   const canCancel =
     !order.cancelled && order.deliveryStatus === "NOT_DELIVERED" && order.payments.length === 0;
@@ -284,6 +307,7 @@ export function OrderWorkspace({
             }}
             targetMarginPercent={settings.targetMarginPercent}
             priceRounding={settings.priceRounding}
+            sellingCosts={sellingCosts}
             disabled={!order.editable}
             showLeadTime={false}
           />
@@ -327,7 +351,7 @@ export function OrderWorkspace({
             <div className="flex flex-wrap items-center gap-3">
               <Button
                 size="sm"
-                disabled={pending || !dirty}
+                disabled={pending || !dirty || commissionInvalid}
                 onClick={() =>
                   run(
                     () =>
@@ -335,6 +359,8 @@ export function OrderWorkspace({
                         lines: lines.filter((line) => !isBlank(line)).map(toLineInput),
                         orderDate,
                         note,
+                        commissionPercent: basisPointsToPercent(sellingCosts.commissionBasisPoints),
+                        shippingCost: sellingCosts.shippingCost,
                       }),
                     () => setDirty(false),
                   )
@@ -421,9 +447,31 @@ export function OrderWorkspace({
               </dd>
             </div>
           </dl>
+          <InternalCostFields
+            commissionPercent={costsForm.commissionPercent}
+            shippingCost={costsForm.shippingCost}
+            commissionInvalid={commissionInvalid}
+            disabled={!order.editable || pending}
+            onCommissionChange={(value) => {
+              setCostsForm((current) => ({ ...current, commissionPercent: value }));
+              setDirty(true);
+            }}
+            onShippingChange={(value) => {
+              setCostsForm((current) => ({ ...current, shippingCost: value }));
+              setDirty(true);
+            }}
+          />
           <dl className="space-y-1.5 rounded-md bg-brand-50 px-3 py-2 text-sm">
             <div className="flex items-center justify-between gap-3">
-              <dt className="text-brand-800">Lãi gộp (nội bộ)</dt>
+              <dt className="text-brand-800">Hoa hồng khách hàng</dt>
+              <dd className="font-mono text-ink">{formatVnd(commission)}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <dt className="text-brand-800">Chi phí vận chuyển</dt>
+              <dd className="font-mono text-ink">{formatVnd(sellingCosts.shippingCost)}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-3 border-t border-brand-100 pt-1.5">
+              <dt className="text-brand-800">Lợi nhuận gộp (nội bộ)</dt>
               <dd className="font-mono text-ink">{profit === null ? "—" : formatVnd(profit)}</dd>
             </div>
             <div className="flex items-center justify-between gap-3">

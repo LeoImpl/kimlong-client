@@ -8,7 +8,13 @@ import {
   reviseOrder,
   winQuotation,
 } from "@/lib/internal/api";
-import { integerInput, isoDateInput, quotationLinesInput, textInput } from "@/lib/internal/inputs";
+import {
+  integerInput,
+  isoDateInput,
+  percentInput,
+  quotationLinesInput,
+  textInput,
+} from "@/lib/internal/inputs";
 import type { DeliveryStatus, PaymentMethod } from "@/lib/internal/types";
 
 const DELIVERY: readonly DeliveryStatus[] = ["NOT_DELIVERED", "DELIVERING", "DELIVERED"];
@@ -42,7 +48,13 @@ export async function winQuotationAction(
 export async function reviseOrderAction(
   orderId: unknown,
   version: unknown,
-  raw: { lines?: unknown; orderDate?: unknown; note?: unknown },
+  raw: {
+    lines?: unknown;
+    orderDate?: unknown;
+    note?: unknown;
+    commissionPercent?: unknown;
+    shippingCost?: unknown;
+  },
 ): Promise<ActionResult> {
   try {
     const id = textInput(orderId, 36);
@@ -54,6 +66,8 @@ export async function reviseOrderAction(
       quotationLinesInput(raw?.lines),
       isoDateInput(raw?.orderDate) ?? undefined,
       textInput(raw?.note) ?? undefined,
+      percentInput(raw?.commissionPercent),
+      integerInput(raw?.shippingCost),
     );
     return success();
   } catch (error) {

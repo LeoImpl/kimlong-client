@@ -6,12 +6,12 @@ import { cn } from "@/lib/cn";
 import { formatNumber, formatPercent } from "@/lib/internal/format";
 import { isSpreadsheetPaste, parsePastedLines } from "@/lib/internal/paste";
 import {
-  belowTarget,
+  analyse,
   lineTotal,
-  marginPercent,
   parseAmount,
-  suggestPrice,
+  percentOf,
   type PricedLine,
+  type SellingCosts,
 } from "@/lib/internal/pricing";
 import type { QuotationLine, QuotationLineInput } from "@/lib/internal/types";
 
@@ -107,14 +107,16 @@ const cell =
  * of the next row (adding one at the end), and a block of cells pasted from Excel into a part number fills as many
  * rows as it has lines.
  *
- * The tinted columns — purchase cost, fixed cost, suggested price and margin — are internal. They are never printed
- * on what the customer receives; the tint keeps that visible while pricing.
+ * The tinted columns — purchase cost, fixed cost, suggested price, margin and the customer's commission — are
+ * internal. They are never printed on what the customer receives; the tint keeps that visible while pricing. The
+ * suggested price and the margin take the quotation's commission and shipping cost into account.
  */
 export function LineGrid({
   lines,
   onChange,
   targetMarginPercent,
   priceRounding,
+  sellingCosts,
   disabled = false,
   showLeadTime = true,
   onPartNumbers,
@@ -123,12 +125,14 @@ export function LineGrid({
   onChange: (lines: GridLine[]) => void;
   targetMarginPercent: number;
   priceRounding: number;
+  sellingCosts: SellingCosts;
   disabled?: boolean;
   showLeadTime?: boolean;
   /** Called with part numbers that were typed or pasted and still have no name, to look them up. */
   onPartNumbers?: (partNumbers: string[]) => void;
 }) {
   const body = useRef<HTMLTableSectionElement>(null);
+  const analysis = analyse(lines.map(priced), sellingCosts, targetMarginPercent, priceRounding);
 
   function update(index: number, changes: Partial<GridLine>) {
     onChange(lines.map((line, position) => (position === index ? { ...line, ...changes } : line)));
@@ -196,7 +200,7 @@ export function LineGrid({
 
   return (
     <div className="overflow-x-auto rounded-lg border border-line bg-page">
-      <table className="w-full min-w-[1340px] border-collapse text-sm">
+      <table className="w-full min-w-[1460px] border-collapse text-sm">
         <thead>
           <tr className="border-b border-line bg-surface text-left text-xs font-medium whitespace-nowrap text-muted">
             <th className="w-9 px-2 py-2 text-center">#</th>
@@ -209,6 +213,7 @@ export function LineGrid({
             <th className="w-32 bg-brand-50 px-2 py-2 text-right">Giá gợi ý</th>
             <th className="w-32 px-2 py-2 text-right">Đơn giá</th>
             <th className="w-20 bg-brand-50 px-2 py-2 text-right">Biên LN</th>
+            <th className="w-28 bg-brand-50 px-2 py-2 text-right">Hoa hồng KH</th>
             {showLeadTime && <th className="w-28 px-2 py-2">TG giao</th>}
             <th className="w-32 px-2 py-2 text-right whitespace-nowrap">Thành tiền</th>
             <th className="w-9 px-1 py-2" />
@@ -217,17 +222,10 @@ export function LineGrid({
         <tbody ref={body}>
           {lines.map((line, row) => {
             const numbers = priced(line);
-            const suggestion =
-              numbers.unitCost === null
-                ? null
-                : suggestPrice(
-                    numbers.unitCost,
-                    numbers.fixedCost,
-                    targetMarginPercent,
-                    priceRounding,
-                  );
-            const margin = marginPercent(numbers);
-            const low = belowTarget(numbers, targetMarginPercent);
+            const figures = analysis.lines[row];
+            const suggestion = figures.suggestedUnitPrice;
+            const margin = percentOf(figures.profit, lineTotal(numbers));
+            const low = figures.belowTarget;
             const blank = isBlank(line);
             return (
               <tr
@@ -299,7 +297,7 @@ export function LineGrid({
                       // Out of the Tab order: Tab goes from the costs straight to the price.
                       tabIndex={-1}
                       onClick={() => update(row, { unitPrice: formatNumber(suggestion) })}
-                      title={`Áp dụng giá gợi ý (biên lợi nhuận ${targetMarginPercent}% trên giá bán)`}
+                      title={`Áp dụng giá gợi ý (lợi nhuận ${targetMarginPercent}% trên giá bán sau hoa hồng và vận chuyển)`}
                       className="inline-flex h-8 items-center gap-1 rounded px-1.5 font-mono text-brand-800 hover:bg-brand-100 disabled:hover:bg-transparent"
                     >
                       {!disabled && <Wand2 className="size-3.5" strokeWidth={1.75} aria-hidden />}
@@ -338,6 +336,13 @@ export function LineGrid({
                       )}
                       {formatPercent(margin)}
                     </span>
+                  )}
+                </td>
+                <td className="bg-brand-50/60 px-2 text-right font-mono whitespace-nowrap text-body">
+                  {blank || figures.commission === 0 ? (
+                    <span className="text-muted">—</span>
+                  ) : (
+                    formatNumber(figures.commission)
                   )}
                 </td>
                 {showLeadTime && (

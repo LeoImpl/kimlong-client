@@ -9,6 +9,7 @@ import {
 } from "@/app/(internal)/noi-bo/(app)/bao-gia/actions";
 import { CustomerPicker } from "@/components/internal/CustomerPicker";
 import { FormMessage } from "@/components/internal/FormMessage";
+import { InternalCostFields } from "@/components/internal/InternalCostFields";
 import {
   emptyLine,
   isBlank,
@@ -30,7 +31,14 @@ import {
   formatVnd,
   vatRates,
 } from "@/lib/internal/format";
-import { percentOf, subtotal, totalProfit, vatAmount } from "@/lib/internal/pricing";
+import {
+  analyse,
+  basisPointsToPercent,
+  percentOf,
+  subtotal,
+  typedSellingCosts,
+  vatAmount,
+} from "@/lib/internal/pricing";
 import { internalRoutes } from "@/lib/internal/routes";
 import type { Customer, Quotation, SalesSettings, VatRate } from "@/lib/internal/types";
 
@@ -45,6 +53,10 @@ interface FormState {
   deliveryTerms: string;
   warrantyTerms: string;
   note: string;
+  /** The customer's commission in percent as typed ("2,5"); internal. */
+  commissionPercent: string;
+  /** Shipping cost of the whole quotation as typed; internal. */
+  shippingCost: string;
 }
 
 /** What is kept in the browser while a quotation is being written, so a closed tab loses nothing. */
@@ -130,6 +142,10 @@ function initialForm(
     deliveryTerms: quotation?.deliveryTerms ?? "",
     warrantyTerms: quotation?.warrantyTerms ?? "",
     note: quotation?.note ?? "",
+    commissionPercent: quotation?.commissionPercent
+      ? String(quotation.commissionPercent).replace(".", ",")
+      : "",
+    shippingCost: quotation?.shippingCost ? formatNumber(quotation.shippingCost) : "",
   };
 }
 
@@ -235,7 +251,12 @@ export function QuotationComposer({
 
   function restoreDraft(draft: LocalDraft) {
     setCustomer(draft.customer);
-    setForm(draft.form);
+    // Drafts kept before commission and shipping existed have neither.
+    const missing: Pick<FormState, "commissionPercent" | "shippingCost"> = {
+      commissionPercent: "",
+      shippingCost: "",
+    };
+    setForm({ ...missing, ...draft.form });
     setLines(padded(draft.lines.map((line) => ({ ...emptyLine(), ...line }))));
     setDraftHandled(true);
     setDirty(true);
@@ -281,9 +302,18 @@ export function QuotationComposer({
       setResult({ ok: false, message: "Hãy chọn khách hàng cho báo giá." });
       return;
     }
+    if (commissionInvalid) {
+      setResult({
+        ok: false,
+        message: "Hoa hồng khách hàng phải là số từ 0 đến 50 (tối đa 2 số lẻ).",
+      });
+      return;
+    }
     startTransition(async () => {
       const response = await saveQuotationAction(quotation?.id ?? null, {
         ...form,
+        commissionPercent: basisPointsToPercent(sellingCosts.commissionBasisPoints),
+        shippingCost: sellingCosts.shippingCost,
         version: quotation?.version,
         customerId: customer.id,
         lines: lines.filter((line) => !isBlank(line)).map(toLineInput),
@@ -303,11 +333,18 @@ export function QuotationComposer({
     });
   }
 
+  const { costs: sellingCosts, commissionInvalid } = typedSellingCosts(form);
   const filled = useMemo(() => lines.filter((line) => !isBlank(line)).map(priced), [lines]);
   const net = subtotal(filled);
   const percent = vatRates[form.vatRate].percent;
   const vat = vatAmount(net, percent);
-  const profit = totalProfit(filled);
+  const analysis = analyse(
+    filled,
+    sellingCosts,
+    settings.targetMarginPercent,
+    settings.priceRounding,
+  );
+  const profit = analysis.grossProfit;
   const margin = percentOf(profit, net);
   const lowMargin = margin !== null && margin < settings.targetMarginPercent;
   // Worth offering only if it holds something and was typed over the version now on screen (or a newer one would
@@ -378,9 +415,9 @@ export function QuotationComposer({
           <div className="mb-2 flex flex-wrap items-end justify-between gap-2">
             <h2 className="text-lg">Hàng hóa</h2>
             <p className="text-xs text-muted">
-              Giá gợi ý = (giá vốn + chi phí cố định) ÷{" "}
-              {formatPercent(100 - settings.targetMarginPercent)}, làm tròn lên{" "}
-              {formatNumber(settings.priceRounding)} ₫ — lợi nhuận mục tiêu{" "}
+              Giá gợi ý = (giá vốn + CP cố định + phần CP vận chuyển) ÷ (100% −{" "}
+              {settings.targetMarginPercent}% − % hoa hồng KH), làm tròn lên{" "}
+              {formatNumber(settings.priceRounding)} ₫ — sau khi trừ hoa hồng vẫn còn lợi nhuận{" "}
               {settings.targetMarginPercent}% trên giá bán
             </p>
           </div>
@@ -389,6 +426,7 @@ export function QuotationComposer({
             onChange={changeLines}
             targetMarginPercent={settings.targetMarginPercent}
             priceRounding={settings.priceRounding}
+            sellingCosts={sellingCosts}
             disabled={!editable}
             onPartNumbers={lookUp}
           />
@@ -481,9 +519,24 @@ export function QuotationComposer({
                 <dd className="font-mono text-lg font-semibold text-ink">{formatVnd(net + vat)}</dd>
               </div>
             </dl>
+            <InternalCostFields
+              commissionPercent={form.commissionPercent}
+              shippingCost={form.shippingCost}
+              commissionInvalid={commissionInvalid}
+              onCommissionChange={(value) => change("commissionPercent", value)}
+              onShippingChange={(value) => change("shippingCost", value)}
+            />
             <dl className="space-y-1.5 rounded-md bg-brand-50 px-3 py-2 text-sm">
               <div className="flex items-center justify-between gap-3">
-                <dt className="text-brand-800">Lãi gộp (nội bộ)</dt>
+                <dt className="text-brand-800">Hoa hồng khách hàng</dt>
+                <dd className="font-mono text-ink">{formatVnd(analysis.commission)}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-brand-800">Chi phí vận chuyển</dt>
+                <dd className="font-mono text-ink">{formatVnd(sellingCosts.shippingCost)}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3 border-t border-brand-100 pt-1.5">
+                <dt className="text-brand-800">Lợi nhuận gộp (nội bộ)</dt>
                 <dd className="font-mono text-ink">{profit === null ? "—" : formatVnd(profit)}</dd>
               </div>
               <div className="flex items-center justify-between gap-3">

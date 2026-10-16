@@ -220,10 +220,19 @@ export function reviseOrder(
   lines: QuotationLineInput[],
   orderDate?: string,
   note?: string,
+  commissionPercent?: number | null,
+  shippingCost?: number | null,
 ): Promise<SalesOrder> {
   return staffFetch<SalesOrder>(`${SALES_API}/orders/${encodeURIComponent(id)}`, {
     method: "PUT",
-    body: { version, lines, orderDate: orderDate || null, note: note || null },
+    body: {
+      version,
+      lines,
+      orderDate: orderDate || null,
+      note: note || null,
+      commissionPercent: commissionPercent ?? null,
+      shippingCost: shippingCost ?? null,
+    },
   });
 }
 

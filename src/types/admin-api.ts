@@ -1161,6 +1161,9 @@ export interface components {
       validUntil?: string | null;
       /** @enum {string} */
       vatRate?: "NOT_SUBJECT" | "VAT_0" | "VAT_5" | "VAT_8" | "VAT_10";
+      commissionPercent?: number | null;
+      /** Format: int64 */
+      shippingCost?: number | null;
       paymentTerms?: string | null;
       deliveryTerms?: string | null;
       warrantyTerms?: string | null;
@@ -1194,9 +1197,13 @@ export interface components {
       /** Format: int64 */
       total?: number;
       /** Format: int64 */
+      shippingShare?: number;
+      /** Format: int64 */
+      commission?: number;
+      /** Format: int64 */
       suggestedPrice?: number | null;
       /** Format: int64 */
-      unitProfit?: number | null;
+      profit?: number | null;
       /** Format: double */
       marginPercent?: number | null;
       belowTarget?: boolean;
@@ -1220,6 +1227,9 @@ export interface components {
       vatRate?: "NOT_SUBJECT" | "VAT_0" | "VAT_5" | "VAT_8" | "VAT_10";
       /** Format: int32 */
       vatPercent?: number | null;
+      commissionPercent?: number;
+      /** Format: int64 */
+      shippingCost?: number;
       paymentTerms?: string | null;
       deliveryTerms?: string | null;
       warrantyTerms?: string | null;
@@ -1237,6 +1247,8 @@ export interface components {
       vatAmount?: number;
       /** Format: int64 */
       total?: number;
+      /** Format: int64 */
+      commission?: number;
       /** Format: int64 */
       profit?: number | null;
       /** Format: double */
@@ -1258,6 +1270,9 @@ export interface components {
       /** Format: date */
       orderDate?: string | null;
       lines?: components["schemas"]["SalesQuotationLineRequest"][];
+      commissionPercent?: number | null;
+      /** Format: int64 */
+      shippingCost?: number | null;
       note?: string | null;
     };
     OrderPaymentView: {
@@ -1291,6 +1306,9 @@ export interface components {
       vatRate?: "NOT_SUBJECT" | "VAT_0" | "VAT_5" | "VAT_8" | "VAT_10";
       /** Format: int32 */
       vatPercent?: number | null;
+      commissionPercent?: number;
+      /** Format: int64 */
+      shippingCost?: number;
       /** @enum {string} */
       deliveryStatus?: "NOT_DELIVERED" | "DELIVERING" | "DELIVERED";
       /** Format: date */
@@ -1309,6 +1327,8 @@ export interface components {
       /** @enum {string} */
       paymentStatus?: "UNPAID" | "PARTIALLY_PAID" | "PAID";
       payments?: components["schemas"]["OrderPaymentView"][];
+      /** Format: int64 */
+      commission?: number;
       /** Format: int64 */
       profit?: number | null;
       /** Format: double */

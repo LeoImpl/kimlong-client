@@ -18,6 +18,18 @@
     "gen:api:admin": "openapi-typescript ${API_BASE_URL:-http://localhost:8080}/v3/api-docs/admin -o src/types/admin-api.ts"
   },
   "dependencies": {
+    "@tiptap/core": "3.31.4",
+    "@tiptap/extension-bold": "3.31.4",
+    "@tiptap/extension-document": "3.31.4",
+    "@tiptap/extension-heading": "3.31.4",
+    "@tiptap/extension-italic": "3.31.4",
+    "@tiptap/extension-list": "3.31.4",
+    "@tiptap/extension-paragraph": "3.31.4",
+    "@tiptap/extension-text": "3.31.4",
+    "@tiptap/extensions": "3.31.4",
+    "@tiptap/pm": "3.31.4",
+    "@tiptap/react": "3.31.4",
+    "@tiptap/suggestion": "3.31.4",
     "clsx": "^2.1.1",
     "iron-session": "^8.0.4",
     "lucide-react": "^1.47.0",

@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/Button";
 import { Field, Input, Select } from "@/components/ui/Field";
 import type { ActionResult } from "@/lib/internal/action-result";
 import { formatInstant } from "@/lib/internal/format";
-import type { PaperSettings, PaperTemplate } from "@/lib/internal/types";
+import type { PaperPlaceholder, PaperSettings, PaperTemplate } from "@/lib/internal/types";
 
 /**
  * The standard text of one kind of document. New documents start as a copy of it; documents already made keep
@@ -23,9 +23,11 @@ import type { PaperSettings, PaperTemplate } from "@/lib/internal/types";
  */
 export function PaperTemplateEditor({
   template,
+  placeholders,
   admin,
 }: {
   template: PaperTemplate;
+  placeholders: PaperPlaceholder[];
   admin: boolean;
 }) {
   const router = useRouter();
@@ -58,6 +60,8 @@ export function PaperTemplateEditor({
     >
       <PaperSectionsEditor
         sections={sections}
+        placeholders={placeholders}
+        bilingual={template.kind === "SALE_CONTRACT_BILINGUAL"}
         disabled={!admin || pending}
         onChange={(next) => {
           setSections(next);
@@ -164,6 +168,41 @@ export function PaperSettingsForm({
               value={form.city}
               maxLength={100}
               onChange={(event) => set("city", event.target.value)}
+            />
+          </Field>
+          <p className="pt-2 text-xs font-semibold tracking-wide text-muted uppercase md:col-span-2">
+            Tiếng Anh (hợp đồng song ngữ)
+          </p>
+          <Field id="companyNameEn" label="Tên Kim Long (tiếng Anh)" className="md:col-span-2">
+            <Input
+              id="companyNameEn"
+              value={form.companyNameEn ?? ""}
+              maxLength={200}
+              onChange={(event) => set("companyNameEn", event.target.value || null)}
+            />
+          </Field>
+          <Field id="companyAddressEn" label="Địa chỉ (tiếng Anh)" className="md:col-span-2">
+            <Input
+              id="companyAddressEn"
+              value={form.companyAddressEn ?? ""}
+              maxLength={300}
+              onChange={(event) => set("companyAddressEn", event.target.value || null)}
+            />
+          </Field>
+          <Field id="signatoryTitleEn" label="Chức vụ người ký (tiếng Anh)">
+            <Input
+              id="signatoryTitleEn"
+              value={form.signatoryTitleEn ?? ""}
+              maxLength={100}
+              onChange={(event) => set("signatoryTitleEn", event.target.value || null)}
+            />
+          </Field>
+          <Field id="cityEn" label="Thành phố (tiếng Anh)">
+            <Input
+              id="cityEn"
+              value={form.cityEn ?? ""}
+              maxLength={100}
+              onChange={(event) => set("cityEn", event.target.value || null)}
             />
           </Field>
         </fieldset>

@@ -21,10 +21,12 @@ import type { PaperFile, PaperKind } from "@/lib/internal/types";
 
 const KINDS: readonly PaperKind[] = [
   "SALE_CONTRACT",
+  "SALE_CONTRACT_BILINGUAL",
   "FRAMEWORK_CONTRACT",
   "ANNEX",
   "PAYMENT_REQUEST",
   "DELIVERY_NOTE",
+  "DEBT_RECONCILIATION",
 ];
 const INVALID = { ok: false, message: "Yêu cầu không hợp lệ." } as const;
 

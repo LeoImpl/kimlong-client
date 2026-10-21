@@ -109,7 +109,7 @@ describe("paper input", () => {
     expect(input?.sections).toEqual([
       { heading: "ĐIỀU 1", body: "Dòng 1\n- Gạch đầu dòng\n{{BANG_HANG_HOA}}" },
     ]);
-    expect(input?.installments).toEqual([{ percent: 30, condition: "khi ký" }]);
+    expect(input?.installments).toEqual([{ percent: 30, condition: "khi ký", conditionEn: null }]);
     expect(input?.delivery).toBeNull();
     expect(paperInput({ number: "x" })).toBeNull();
   });

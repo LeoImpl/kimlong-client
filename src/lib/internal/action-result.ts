@@ -45,8 +45,10 @@ const messages: Record<string, string> = {
   "sales.customer.short-code-invalid":
     "Mã viết tắt chỉ gồm chữ không dấu, số, & hoặc - (tối đa 15 ký tự), ví dụ LOTTE.",
   "sales.paper.basis-exists":
-    "Đơn hàng này đã có hợp đồng mua bán hoặc phụ lục. Hãy mở chứng từ đó thay vì tạo thêm.",
+    "Đơn hàng này đã có chứng từ loại này (mỗi đơn một hợp đồng mua bán và một phụ lục). Hãy mở chứng từ đó thay vì tạo thêm.",
   "sales.paper.order-cancelled": "Không lập chứng từ cho đơn hàng đã hủy.",
+  "sales.paper.not-for-delivery-state":
+    "Đơn hàng chưa giao lập hợp đồng/phụ lục, đề nghị thanh toán, biên bản giao hàng; đơn đã giao chỉ lập đề nghị thanh toán và biên bản đối chiếu công nợ.",
   "sales.paper.framework-required": "Hãy chọn hợp đồng nguyên tắc cho đơn hàng.",
   "sales.paper.framework-invalid": "Hãy chọn một hợp đồng nguyên tắc của chính khách hàng này.",
   "sales.paper.framework-in-use":

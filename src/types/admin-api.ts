@@ -1459,6 +1459,7 @@ export interface components {
       /** Format: int32 */
       percent?: number;
       condition?: string;
+      conditionEn?: string | null;
     };
     SalesPaperPartyDto: {
       name?: string;
@@ -1470,6 +1471,9 @@ export interface components {
       representative?: string | null;
       representativeTitle?: string | null;
       salutation?: string | null;
+      nameEn?: string | null;
+      addressEn?: string | null;
+      representativeTitleEn?: string | null;
     };
     SalesPaperRequest: {
       /** Format: int64 */
@@ -1502,7 +1506,14 @@ export interface components {
       /** Format: int64 */
       version?: number;
       /** @enum {string} */
-      kind?: "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      kind?:
+        | "SALE_CONTRACT"
+        | "SALE_CONTRACT_BILINGUAL"
+        | "FRAMEWORK_CONTRACT"
+        | "ANNEX"
+        | "PAYMENT_REQUEST"
+        | "DELIVERY_NOTE"
+        | "DEBT_RECONCILIATION";
       label?: string;
       number?: string;
       /** Format: date */
@@ -1538,7 +1549,14 @@ export interface components {
     };
     SalesPaperTemplateView: {
       /** @enum {string} */
-      kind?: "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      kind?:
+        | "SALE_CONTRACT"
+        | "SALE_CONTRACT_BILINGUAL"
+        | "FRAMEWORK_CONTRACT"
+        | "ANNEX"
+        | "PAYMENT_REQUEST"
+        | "DELIVERY_NOTE"
+        | "DEBT_RECONCILIATION";
       label?: string;
       sections?: components["schemas"]["SalesPaperSectionDto"][];
       customized?: boolean;
@@ -1555,6 +1573,10 @@ export interface components {
       signatoryTitle?: string;
       signatorySalutation?: string | null;
       city?: string;
+      companyNameEn?: string | null;
+      companyAddressEn?: string | null;
+      signatoryTitleEn?: string | null;
+      cityEn?: string | null;
     };
     ReviseOrderRequest: {
       /** Format: int64 */
@@ -2111,7 +2133,14 @@ export interface components {
     };
     SalesPaperCreateRequest: {
       /** @enum {string} */
-      kind?: "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+      kind?:
+        | "SALE_CONTRACT"
+        | "SALE_CONTRACT_BILINGUAL"
+        | "FRAMEWORK_CONTRACT"
+        | "ANNEX"
+        | "PAYMENT_REQUEST"
+        | "DELIVERY_NOTE"
+        | "DEBT_RECONCILIATION";
       /** Format: uuid */
       orderId?: string | null;
       /** Format: uuid */
@@ -2763,7 +2792,13 @@ export interface operations {
       header?: never;
       path: {
         kind:
-          "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+          | "SALE_CONTRACT"
+          | "SALE_CONTRACT_BILINGUAL"
+          | "FRAMEWORK_CONTRACT"
+          | "ANNEX"
+          | "PAYMENT_REQUEST"
+          | "DELIVERY_NOTE"
+          | "DEBT_RECONCILIATION";
       };
       cookie?: never;
     };
@@ -2786,7 +2821,13 @@ export interface operations {
       header?: never;
       path: {
         kind:
-          "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+          | "SALE_CONTRACT"
+          | "SALE_CONTRACT_BILINGUAL"
+          | "FRAMEWORK_CONTRACT"
+          | "ANNEX"
+          | "PAYMENT_REQUEST"
+          | "DELIVERY_NOTE"
+          | "DEBT_RECONCILIATION";
       };
       cookie?: never;
     };
@@ -2813,7 +2854,13 @@ export interface operations {
       header?: never;
       path: {
         kind:
-          "SALE_CONTRACT" | "FRAMEWORK_CONTRACT" | "ANNEX" | "PAYMENT_REQUEST" | "DELIVERY_NOTE";
+          | "SALE_CONTRACT"
+          | "SALE_CONTRACT_BILINGUAL"
+          | "FRAMEWORK_CONTRACT"
+          | "ANNEX"
+          | "PAYMENT_REQUEST"
+          | "DELIVERY_NOTE"
+          | "DEBT_RECONCILIATION";
       };
       cookie?: never;
     };

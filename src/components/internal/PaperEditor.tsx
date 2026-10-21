@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/Button";
 import { Field, Input, Select } from "@/components/ui/Field";
 import type { ActionResult } from "@/lib/internal/action-result";
 import { formatFileSize, formatInstant, formatNumber } from "@/lib/internal/format";
+import { isSaleContract } from "@/lib/internal/paper-rules";
 import { parseAmount } from "@/lib/internal/pricing";
 import { internalRoutes } from "@/lib/internal/routes";
 import type {
@@ -144,6 +145,7 @@ export function PaperEditor({
     });
   }
 
+  const bilingual = paper.kind === "SALE_CONTRACT_BILINGUAL";
   const installmentTotal = form.installments.reduce((sum, item) => sum + (item.percent || 0), 0);
 
   return (
@@ -166,7 +168,9 @@ export function PaperEditor({
                 label={
                   paper.kind === "PAYMENT_REQUEST" || paper.kind === "DELIVERY_NOTE"
                     ? "Ngày lập"
-                    : "Ngày ký"
+                    : paper.kind === "DEBT_RECONCILIATION"
+                      ? "Ngày đối chiếu (công nợ tính đến ngày này)"
+                      : "Ngày ký"
                 }
                 hint="Để trống: in “ngày … tháng … năm” để ghi tay."
               >
@@ -236,7 +240,7 @@ export function PaperEditor({
             </fieldset>
           </Panel>
 
-          {paper.kind === "SALE_CONTRACT" && (
+          {isSaleContract(paper.kind) && (
             <Panel
               title="Các đợt thanh toán"
               actions={
@@ -250,6 +254,7 @@ export function PaperEditor({
               <fieldset disabled={pending} className="space-y-2">
                 {form.installments.map((installment, index) => (
                   <div key={index} className="flex flex-wrap items-center gap-2">
+                    {/* The English wording of a bilingual contract sits under the Vietnamese one. */}
                     <span className="w-14 text-sm text-muted">Đợt {index + 1}</span>
                     <label className="sr-only" htmlFor={`installment-percent-${index}`}>
                       Phần trăm đợt {index + 1}
@@ -306,6 +311,30 @@ export function PaperEditor({
                     >
                       <Trash2 className="size-4" strokeWidth={1.75} aria-hidden />
                     </button>
+                    {bilingual && (
+                      <>
+                        <label className="sr-only" htmlFor={`installment-condition-en-${index}`}>
+                          Thời hạn đợt {index + 1} bằng tiếng Anh
+                        </label>
+                        <Input
+                          id={`installment-condition-en-${index}`}
+                          value={installment.conditionEn ?? ""}
+                          maxLength={500}
+                          onChange={(event) =>
+                            change(
+                              "installments",
+                              form.installments.map((item, position) =>
+                                position === index
+                                  ? { ...item, conditionEn: event.target.value || null }
+                                  : item,
+                              ),
+                            )
+                          }
+                          placeholder="EN: within 03 working days from the date both Parties sign the Contract"
+                          className="ml-[8.5rem] h-10 min-w-64 flex-1 text-sm italic"
+                        />
+                      </>
+                    )}
                   </div>
                 ))}
                 <button
@@ -313,7 +342,11 @@ export function PaperEditor({
                   onClick={() =>
                     change("installments", [
                       ...form.installments,
-                      { percent: Math.max(0, 100 - installmentTotal), condition: "" },
+                      {
+                        percent: Math.max(0, 100 - installmentTotal),
+                        condition: "",
+                        conditionEn: null,
+                      },
                     ])
                   }
                   className="inline-flex items-center gap-1.5 text-sm font-medium text-action-600 hover:text-action-700"
@@ -342,6 +375,7 @@ export function PaperEditor({
               title="Bên mua (khách hàng)"
               prefix="buyer"
               party={form.buyer}
+              bilingual={bilingual}
               disabled={pending}
               onChange={(party) => change("buyer", party)}
             />
@@ -349,6 +383,7 @@ export function PaperEditor({
               title="Bên bán (Kim Long)"
               prefix="seller"
               party={form.seller}
+              bilingual={bilingual}
               disabled={pending}
               onChange={(party) => change("seller", party)}
             />
@@ -357,6 +392,8 @@ export function PaperEditor({
           <Panel title="Nội dung">
             <PaperSectionsEditor
               sections={form.sections}
+              placeholders={placeholders}
+              bilingual={bilingual}
               disabled={pending}
               onChange={(sections) => change("sections", sections)}
             />
@@ -412,7 +449,7 @@ export function PaperEditor({
               </ul>
             )}
           </Panel>
-          <Panel title="Biến dùng trong nội dung">
+          <Panel title="Cách soạn">
             <PlaceholderHelp placeholders={placeholders} />
           </Panel>
         </aside>
@@ -463,12 +500,14 @@ function PartyFields({
   party,
   disabled,
   onChange,
+  bilingual = false,
 }: {
   title: string;
   prefix: string;
   party: PaperParty;
   disabled: boolean;
   onChange: (party: PaperParty) => void;
+  bilingual?: boolean;
 }) {
   const text = (key: keyof PaperParty, label: string, max: number, className?: string) => (
     <Field id={`${prefix}-${key}`} label={label} className={className}>
@@ -507,6 +546,16 @@ function PartyFields({
         </Field>
         {text("representativeTitle", "Chức vụ", 100)}
         {text("email", "Email", 254)}
+        {bilingual && (
+          <>
+            <p className="pt-2 text-xs font-semibold tracking-wide text-muted uppercase md:col-span-2">
+              Tiếng Anh (in dưới phần tiếng Việt)
+            </p>
+            {text("nameEn", "Tên công ty (tiếng Anh)", 200, "md:col-span-2")}
+            {text("addressEn", "Địa chỉ (tiếng Anh)", 300, "md:col-span-2")}
+            {text("representativeTitleEn", "Chức vụ (tiếng Anh)", 100)}
+          </>
+        )}
       </fieldset>
     </Panel>
   );

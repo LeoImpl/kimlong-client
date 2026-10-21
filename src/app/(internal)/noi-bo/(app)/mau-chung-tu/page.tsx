@@ -58,12 +58,13 @@ export default async function PaperTemplatesPage({
           <PaperTemplateEditor
             key={`${template.kind}-${template.version}`}
             template={template}
+            placeholders={placeholders}
             admin={me.admin}
           />
           <PaperSettingsForm key={settings.version} settings={settings} admin={me.admin} />
         </div>
         <aside>
-          <Panel title="Biến dùng trong nội dung">
+          <Panel title="Cách soạn">
             <PlaceholderHelp placeholders={placeholders} />
           </Panel>
         </aside>

@@ -136,6 +136,9 @@ function party(raw: unknown): PaperParty {
     representative: text(source.representative, 100),
     representativeTitle: text(source.representativeTitle, 100),
     salutation: text(source.salutation, 10),
+    nameEn: text(source.nameEn, 200),
+    addressEn: text(source.addressEn, 300),
+    representativeTitleEn: text(source.representativeTitleEn, 100),
   };
 }
 
@@ -175,6 +178,7 @@ export function paperInput(raw: unknown): PaperInput | null {
       .map((installment) => ({
         percent: integer(installment.percent) ?? 0,
         condition: text(installment.condition, 500) ?? "",
+        conditionEn: text(installment.conditionEn, 500),
       })),
     delivery: delivery && {
       deliveredBy: text(delivery.deliveredBy, 200),
@@ -206,6 +210,10 @@ export function paperSettingsInput(raw: unknown): PaperSettings | null {
     signatoryTitle: text(source.signatoryTitle, 100) ?? "",
     signatorySalutation: text(source.signatorySalutation, 10),
     city: text(source.city, 100) ?? "",
+    companyNameEn: text(source.companyNameEn, 200),
+    companyAddressEn: text(source.companyAddressEn, 300),
+    signatoryTitleEn: text(source.signatoryTitleEn, 100),
+    cityEn: text(source.cityEn, 100),
   };
 }
 

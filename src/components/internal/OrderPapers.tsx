@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { FilePlus2, FileSignature, ReceiptText, Truck } from "lucide-react";
+import { FilePlus2, FileSignature, Languages, ReceiptText, Scale, Truck } from "lucide-react";
 import {
   createFrameworkWithAnnexAction,
   createPaperAction,
@@ -14,13 +14,15 @@ import { Button } from "@/components/ui/Button";
 import { Select } from "@/components/ui/Field";
 import type { ActionResult } from "@/lib/internal/action-result";
 import { formatDay, formatVnd } from "@/lib/internal/format";
+import { canMakePaper, isSaleContract } from "@/lib/internal/paper-rules";
 import { internalRoutes } from "@/lib/internal/routes";
 import type { Paper, PaperKind, SalesOrder } from "@/lib/internal/types";
 
 /**
- * The paperwork of a won order, in the order it is usually done: the legal basis (a sales contract, or an annex of
- * the customer's framework contract), then payment requests and delivery notes. Each one opens in its own page to
- * be checked, edited and exported to Word or PDF.
+ * The paperwork of a won order, in the order it is usually done: the legal basis (a sales contract and/or an annex
+ * of the customer's framework contract, independent of each other), then payment requests and delivery notes. Once the goods are delivered only
+ * payment requests and the debt reconciliation can be added (`canMakePaper`); what was made before stays listed.
+ * Each one opens in its own page to be checked, edited and exported to Word or PDF.
  */
 export function OrderPapers({
   order,
@@ -35,10 +37,15 @@ export function OrderPapers({
   const [pending, startTransition] = useTransition();
   const [result, setResult] = useState<ActionResult<unknown> | null>(null);
   const [frameworkId, setFrameworkId] = useState(frameworks[0]?.id ?? "");
-  const basis = papers.find((paper) => paper.kind === "SALE_CONTRACT" || paper.kind === "ANNEX");
+  const contract = papers.find((paper) => isSaleContract(paper.kind));
+  const annex = papers.find((paper) => paper.kind === "ANNEX");
   const requests = papers.filter((paper) => paper.kind === "PAYMENT_REQUEST");
   const notes = papers.filter((paper) => paper.kind === "DELIVERY_NOTE");
+  const reconciliations = papers.filter((paper) => paper.kind === "DEBT_RECONCILIATION");
   const closed = order.cancelled;
+  const delivered = order.deliveryStatus === "DELIVERED";
+  const can = (kind: PaperKind) => !closed && canMakePaper(kind, order.deliveryStatus);
+  const unavailable = closed ? "Chưa lập; đơn đã hủy." : "Chưa lập; đơn đã giao nên không lập mới.";
 
   function open(response: ActionResult<{ id: string }>) {
     setResult(response);
@@ -61,34 +68,59 @@ export function OrderPapers({
     <Panel title="Chứng từ" bodyClassName="space-y-5">
       <FormMessage result={result} />
       {closed && <p className="text-sm text-muted">Đơn hàng đã hủy: không lập thêm chứng từ.</p>}
+      {delivered && !closed && (
+        <p className="rounded-md bg-surface px-3 py-2 text-sm text-body">
+          Đơn hàng đã giao: lập <b>đề nghị thanh toán</b> và <b>biên bản đối chiếu công nợ</b>. Hợp
+          đồng, phụ lục và biên bản giao hàng đã lập vẫn mở và xuất file được.
+        </p>
+      )}
 
       <section aria-labelledby="paper-basis" className="space-y-2">
         <h3 id="paper-basis" className="flex items-center gap-2 text-sm font-semibold text-ink">
           <FileSignature className="size-4 text-brand-700" strokeWidth={1.75} aria-hidden />
           Hợp đồng
         </h3>
-        {basis ? (
-          <PaperRow paper={basis} frameworks={frameworks} />
-        ) : (
-          !closed && (
-            <div className="grid gap-3 md:grid-cols-2">
-              <div className="rounded-md border border-line p-3">
-                <p className="text-sm font-medium text-ink">Hợp đồng mua bán</p>
+        {/* Independent of each other: an order can have a sales contract and an annex, one of each. */}
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="rounded-md border border-line p-3">
+            <p className="text-sm font-medium text-ink">Hợp đồng mua bán</p>
+            {contract ? (
+              <div className="mt-2">
+                <PaperRow paper={contract} frameworks={frameworks} />
+              </div>
+            ) : can("SALE_CONTRACT") ? (
+              <>
                 <p className="mt-1 text-xs text-muted">
                   Hàng hóa và đơn giá của đơn hàng nằm trong hợp đồng; thanh toán theo đợt.
                 </p>
-                <Button
-                  size="sm"
-                  className="mt-3"
-                  disabled={pending}
-                  onClick={() => create("SALE_CONTRACT")}
-                >
-                  <FilePlus2 className="size-4" strokeWidth={1.75} aria-hidden />
-                  Tạo hợp đồng mua bán
-                </Button>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button size="sm" disabled={pending} onClick={() => create("SALE_CONTRACT")}>
+                    <FilePlus2 className="size-4" strokeWidth={1.75} aria-hidden />
+                    Tạo hợp đồng mua bán
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={pending}
+                    onClick={() => create("SALE_CONTRACT_BILINGUAL")}
+                  >
+                    <Languages className="size-4" strokeWidth={1.75} aria-hidden />
+                    Song ngữ Anh–Việt
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <p className="mt-1 text-xs text-muted">{unavailable}</p>
+            )}
+          </div>
+          <div className="rounded-md border border-line p-3">
+            <p className="text-sm font-medium text-ink">Phụ lục hợp đồng nguyên tắc</p>
+            {annex ? (
+              <div className="mt-2">
+                <PaperRow paper={annex} frameworks={frameworks} />
               </div>
-              <div className="rounded-md border border-line p-3">
-                <p className="text-sm font-medium text-ink">Theo hợp đồng nguyên tắc</p>
+            ) : can("ANNEX") ? (
+              <>
                 <p className="mt-1 text-xs text-muted">
                   Đơn hàng thành một phụ lục của hợp đồng nguyên tắc với khách hàng.
                 </p>
@@ -130,10 +162,12 @@ export function OrderPapers({
                     Tạo HĐ nguyên tắc và phụ lục
                   </Button>
                 )}
-              </div>
-            </div>
-          )
-        )}
+              </>
+            ) : (
+              <p className="mt-1 text-xs text-muted">{unavailable}</p>
+            )}
+          </div>
+        </div>
       </section>
 
       <PaperGroup
@@ -157,34 +191,61 @@ export function OrderPapers({
           )
         }
         hint={
-          basis?.kind === "SALE_CONTRACT"
+          contract
             ? "Số tiền điền sẵn theo đợt thanh toán tiếp theo của hợp đồng."
             : "Số tiền điền sẵn là số khách còn phải trả."
         }
       />
 
-      <PaperGroup
-        id="paper-deliveries"
-        title="Biên bản giao hàng"
-        icon={<Truck className="size-4 text-brand-700" strokeWidth={1.75} aria-hidden />}
-        papers={notes}
-        frameworks={frameworks}
-        emptyText="Chưa có biên bản giao hàng."
-        action={
-          !closed && (
-            <Button
-              size="sm"
-              variant="secondary"
-              disabled={pending}
-              onClick={() => create("DELIVERY_NOTE")}
-            >
-              <FilePlus2 className="size-4" strokeWidth={1.75} aria-hidden />
-              Lập biên bản giao hàng
-            </Button>
-          )
-        }
-        hint="Giao từng phần: biên bản sau điền sẵn số lượng còn lại."
-      />
+      {(can("DELIVERY_NOTE") || notes.length > 0) && (
+        <PaperGroup
+          id="paper-deliveries"
+          title="Biên bản giao hàng"
+          icon={<Truck className="size-4 text-brand-700" strokeWidth={1.75} aria-hidden />}
+          papers={notes}
+          frameworks={frameworks}
+          emptyText="Chưa có biên bản giao hàng."
+          action={
+            can("DELIVERY_NOTE") && (
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={pending}
+                onClick={() => create("DELIVERY_NOTE")}
+              >
+                <FilePlus2 className="size-4" strokeWidth={1.75} aria-hidden />
+                Lập biên bản giao hàng
+              </Button>
+            )
+          }
+          hint="Giao từng phần: biên bản sau điền sẵn số lượng còn lại."
+        />
+      )}
+
+      {(can("DEBT_RECONCILIATION") || reconciliations.length > 0) && (
+        <PaperGroup
+          id="paper-reconciliations"
+          title="Biên bản đối chiếu công nợ"
+          icon={<Scale className="size-4 text-brand-700" strokeWidth={1.75} aria-hidden />}
+          papers={reconciliations}
+          frameworks={frameworks}
+          emptyText="Chưa có biên bản đối chiếu công nợ."
+          action={
+            can("DEBT_RECONCILIATION") && (
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={pending}
+                onClick={() => create("DEBT_RECONCILIATION")}
+              >
+                <FilePlus2 className="size-4" strokeWidth={1.75} aria-hidden />
+                Lập biên bản đối chiếu
+              </Button>
+            )
+          }
+          hint="Giá trị hàng đã giao, các lần khách đã thanh toán và số còn nợ tính đến ngày lập biên bản."
+        />
+      )}
     </Panel>
   );
 }

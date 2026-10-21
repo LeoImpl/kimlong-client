@@ -483,3 +483,154 @@ html {
   /* In-page links (#dat-hang, article headings) land below the sticky header, not under it. */
   scroll-padding-top: calc(var(--header-h) + 1rem);
 }
+
+/**
+ * The paperwork editor (PaperSectionsEditor): the page looks like the printed contract — Times-like serif, justified
+ * paragraphs (left-aligned here: chips would stretch justified lines), bold article headings, "–" bullets — so what is typed is what is exported. Placeholders are blue chips
+ * (what gets filled in), blocks are dashed cards (what gets drawn).
+ */
+@layer components {
+  .paper-doc {
+    font-family: "Times New Roman", Tinos, "Liberation Serif", serif;
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    font-weight: 400;
+    color: var(--color-ink);
+    min-height: 16rem;
+    outline: none;
+  }
+  .paper-doc > * + * {
+    margin-top: 0.35em;
+  }
+  .paper-doc h2 {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 700;
+    margin-top: 1.1em;
+    padding-top: 0.6em;
+    border-top: 1px dashed var(--color-line);
+  }
+  .paper-doc h2:first-child {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .paper-doc ul {
+    padding-left: 1.4em;
+  }
+  .paper-doc ul > li {
+    position: relative;
+  }
+  .paper-doc ul > li::before {
+    content: "–";
+    position: absolute;
+    left: -1.1em;
+  }
+  .paper-doc ul > li + li {
+    margin-top: 0.2em;
+  }
+  .paper-doc strong {
+    font-weight: 700;
+  }
+  .paper-doc p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    color: var(--color-muted);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  /* The "/" being typed, while the menu is open. */
+  .paper-doc .suggestion {
+    border-radius: 2px;
+    background: var(--color-action-50);
+  }
+
+  /* The English line of a bilingual document: italic and quieter, tagged "EN" in the margin. */
+  .paper-doc [data-lang="en"] {
+    position: relative;
+    font-style: italic;
+    color: var(--color-muted);
+  }
+  .paper-doc [data-lang="en"]::after {
+    content: "EN";
+    position: absolute;
+    top: 0.3em;
+    left: -2.4rem;
+    padding: 0 4px;
+    border-radius: 2px;
+    background: var(--color-action-50);
+    color: var(--color-action-700);
+    font-family: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.65rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .paper-doc li [data-lang="en"]::after {
+    left: -3.5rem;
+  }
+  .paper-doc h2[data-lang="en"] {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .paper-variable {
+    display: inline-block;
+    margin: 0 1px;
+    padding: 0 6px;
+    border-radius: 3px;
+    border: 1px solid var(--color-action-200);
+    background: var(--color-action-50);
+    color: var(--color-action-800);
+    font-family: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.85em;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+    vertical-align: baseline;
+    cursor: default;
+  }
+  .paper-variable.is-unknown {
+    border-color: var(--color-danger);
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+  }
+  strong .paper-variable {
+    font-weight: 800;
+  }
+  em .paper-variable {
+    font-style: italic;
+  }
+
+  .paper-variable-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+    margin: 0.6em 0;
+    padding: 0.75rem 1rem;
+    border: 1px dashed var(--color-brand-400);
+    border-radius: 4px;
+    background: var(--color-brand-50);
+    font-family: var(--font-barlow), ui-sans-serif, system-ui, sans-serif;
+    cursor: grab;
+  }
+  .paper-variable-block-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-brand-800);
+  }
+  .paper-variable-block-hint {
+    font-size: 0.8rem;
+    color: var(--color-muted);
+  }
+
+  .paper-doc .ProseMirror-selectednode.paper-variable,
+  .paper-doc .ProseMirror-selectednode.paper-variable-block {
+    outline: 2px solid var(--color-action-500);
+    outline-offset: 1px;
+  }
+}

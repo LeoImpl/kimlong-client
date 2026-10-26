@@ -19,18 +19,31 @@ interface NavItem {
   href: string;
   label: string;
   icon: LucideIcon;
+  /** The area's own colour: its icon chip, and the glow of the item while it is the current page. */
+  hue: string;
   /** The dashboard is the root of every other path, so it only matches exactly. */
   exact?: boolean;
 }
 
 const items: NavItem[] = [
-  { href: internalRoutes.dashboard, label: "Tổng quan", icon: LayoutDashboard, exact: true },
-  { href: internalRoutes.customers, label: "Khách hàng", icon: Building2 },
-  { href: internalRoutes.quotations, label: "Báo giá", icon: FileText },
-  { href: internalRoutes.quotedPrices, label: "Giá đã chào", icon: Tags },
-  { href: internalRoutes.orders, label: "Đơn hàng", icon: PackageCheck },
-  { href: internalRoutes.webRequests, label: "Yêu cầu từ web", icon: Inbox },
-  { href: internalRoutes.paperTemplates, label: "Mẫu chứng từ", icon: FileSignature },
+  {
+    href: internalRoutes.dashboard,
+    label: "Tổng quan",
+    icon: LayoutDashboard,
+    hue: "#3b82f6",
+    exact: true,
+  },
+  { href: internalRoutes.customers, label: "Khách hàng", icon: Building2, hue: "#06b6d4" },
+  { href: internalRoutes.quotations, label: "Báo giá", icon: FileText, hue: "#8b5cf6" },
+  { href: internalRoutes.quotedPrices, label: "Giá đã chào", icon: Tags, hue: "#f59e0b" },
+  { href: internalRoutes.orders, label: "Đơn hàng", icon: PackageCheck, hue: "#10b981" },
+  { href: internalRoutes.webRequests, label: "Yêu cầu từ web", icon: Inbox, hue: "#ec4899" },
+  {
+    href: internalRoutes.paperTemplates,
+    label: "Mẫu chứng từ",
+    icon: FileSignature,
+    hue: "#f97316",
+  },
 ];
 
 export function InternalNav({ badges = {} }: { badges?: Record<string, number> }) {
@@ -52,7 +65,7 @@ function NavList({
 }) {
   return (
     <nav aria-label="Khu vực nội bộ">
-      <ul className="flex gap-1 overflow-x-auto px-2 pb-2 lg:block lg:space-y-0.5 lg:overflow-visible lg:px-3 lg:pb-0">
+      <ul className="flex gap-1 overflow-x-auto px-2 pb-2 lg:block lg:space-y-1 lg:overflow-visible lg:px-3 lg:pb-0">
         {items.map((item) => {
           const active =
             pathname !== null &&
@@ -65,17 +78,28 @@ function NavList({
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
+                style={{ "--hue": item.hue } as React.CSSProperties}
                 className={cn(
-                  "flex h-10 items-center gap-2.5 rounded-md px-3 text-sm font-medium whitespace-nowrap transition-colors",
+                  "group flex h-11 items-center gap-3 rounded-xl px-2 text-sm font-medium whitespace-nowrap transition-all duration-200",
                   active
-                    ? "bg-white/12 text-white shadow-[inset_3px_0_0_var(--color-brand-400)]"
-                    : "text-white/70 hover:bg-white/6 hover:text-white",
+                    ? "bg-white/14 text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.14),0_8px_24px_-12px_var(--hue)]"
+                    : "text-white/75 hover:bg-white/8 hover:text-white",
                 )}
               >
-                <item.icon className="size-4.5 shrink-0" strokeWidth={1.75} aria-hidden />
-                <span className="flex-1">{item.label}</span>
+                <span
+                  className={cn(
+                    "flex size-7 shrink-0 items-center justify-center rounded-lg transition-transform duration-200 group-hover:scale-110",
+                    active
+                      ? "bg-(--hue) text-white shadow-[0_4px_12px_-2px_var(--hue)]"
+                      : "bg-[color-mix(in_srgb,var(--hue)_24%,transparent)] text-(--hue)",
+                  )}
+                  aria-hidden
+                >
+                  <item.icon className="size-4" strokeWidth={2} />
+                </span>
+                <span className="flex-1 pr-1">{item.label}</span>
                 {badge ? (
-                  <span className="rounded-full bg-brand-400 px-1.5 text-xs leading-5 font-semibold text-ink">
+                  <span className="mr-1 rounded-full bg-linear-to-r from-[#ec4899] to-[#f97316] px-2 text-xs leading-5 font-bold text-white shadow-[0_2px_10px_-2px_rgb(236_72_153/0.8)]">
                     {badge}
                   </span>
                 ) : null}

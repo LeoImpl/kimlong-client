@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import {
+  Building2,
+  HandCoins,
+  ReceiptText,
+  Send,
+  Trophy,
+  TrendingUp,
+  type LucideIcon,
+} from "lucide-react";
 import { FilterBar, FilterField, FilterSelect } from "@/components/internal/Filters";
 import { PageHeader, Panel } from "@/components/internal/PageHeader";
 import { RevenueChart } from "@/components/internal/RevenueChart";
@@ -17,6 +26,26 @@ export const metadata: Metadata = { title: "Tổng quan" };
  * `loading.tsx`); they are deliberately not validated as "instant".
  */
 export const instant = false;
+
+interface Tile {
+  label: string;
+  value: string;
+  detail: string;
+  icon: LucideIcon;
+  /** Two ends of the tile's gradient; the `to` end is dark enough for the gradient value to stay readable. */
+  from: string;
+  to: string;
+}
+
+/** One colour family per figure, so the eye finds "doanh thu" or "khách hàng" by colour on the second visit. */
+const hues = {
+  cyan: { icon: Building2, from: "#06b6d4", to: "#0e7490" },
+  blue: { icon: Send, from: "#3b82f6", to: "#4338ca" },
+  violet: { icon: ReceiptText, from: "#a855f7", to: "#6d28d9" },
+  pink: { icon: TrendingUp, from: "#ec4899", to: "#be185d" },
+  orange: { icon: HandCoins, from: "#f59e0b", to: "#c2410c" },
+  green: { icon: Trophy, from: "#10b981", to: "#047857" },
+} satisfies Record<string, Pick<Tile, "icon" | "from" | "to">>;
 
 const granularities = { month: "Tháng", quarter: "Quý", year: "Năm" } as const;
 type Granularity = keyof typeof granularities;
@@ -55,29 +84,43 @@ export default async function DashboardPage({ searchParams }: PageProps<"/noi-bo
       : "Khách hàng bạn phụ trách";
   const measure = gross ? "revenueGross" : "revenueNet";
 
-  const tiles = [
-    { label: "Khách hàng", value: formatNumber(overview.customers), detail: "Đang giao dịch" },
+  const tiles: Tile[] = [
+    {
+      label: "Khách hàng",
+      value: formatNumber(overview.customers),
+      detail: "Đang giao dịch",
+      ...hues.cyan,
+    },
     {
       label: "Báo giá đã gửi",
       value: formatNumber(overview.quotationsSent),
       detail: `Năm ${year}`,
+      ...hues.blue,
     },
     {
       label: "Giá trị báo giá",
       value: formatVnd(overview.quotationValueNet),
       detail: `Sau VAT ${formatVnd(overview.quotationValueGross)}`,
+      ...hues.violet,
     },
     {
       label: "Doanh thu trước VAT",
       value: formatVnd(overview.revenueNet),
       detail: "Đơn không hủy, theo ngày đặt",
+      ...hues.pink,
     },
     {
       label: "Doanh thu sau VAT",
       value: formatVnd(overview.revenueGross),
       detail: `Còn phải thu ${formatVnd(overview.outstanding)}`,
+      ...hues.orange,
     },
-    { label: "Đơn hàng đã chốt", value: formatNumber(overview.ordersWon), detail: `Năm ${year}` },
+    {
+      label: "Đơn hàng đã chốt",
+      value: formatNumber(overview.ordersWon),
+      detail: `Năm ${year}`,
+      ...hues.green,
+    },
   ];
 
   return (
@@ -110,12 +153,45 @@ export default async function DashboardPage({ searchParams }: PageProps<"/noi-bo
         {gross && <input type="hidden" name="vat" value="sau" />}
       </FilterBar>
 
-      <dl className="mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {tiles.map((tile) => (
-          <div key={tile.label} className="rounded-lg border border-line bg-page px-4 py-3">
-            <dt className="text-xs font-medium text-muted">{tile.label}</dt>
-            <dd className="mt-1 font-mono text-2xl font-semibold text-ink">{tile.value}</dd>
-            <dd className="mt-0.5 text-xs text-muted">{tile.detail}</dd>
+      <dl className="stagger mb-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+        {tiles.map((tile, index) => (
+          <div
+            key={tile.label}
+            style={
+              {
+                "--i": index,
+                "--hue-from": tile.from,
+                "--hue-to": tile.to,
+              } as React.CSSProperties
+            }
+            className="hover-lift relative overflow-hidden rounded-lg border border-line bg-page px-4 py-3.5"
+          >
+            {/* A wash of the tile's colour in the corner, and a bar of it along the top. */}
+            <span
+              className="pointer-events-none absolute -top-10 -right-10 size-32 rounded-full bg-linear-to-br from-(--hue-from) to-(--hue-to) opacity-15 blur-xl"
+              aria-hidden
+            />
+            <span
+              className="absolute inset-x-0 top-0 h-1 bg-linear-to-r from-(--hue-from) to-(--hue-to)"
+              aria-hidden
+            />
+            <div className="relative flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <dt className="text-xs font-semibold tracking-wide text-muted uppercase">
+                  {tile.label}
+                </dt>
+                <dd className="text-gradient mt-1 font-mono text-2xl font-semibold">
+                  {tile.value}
+                </dd>
+                <dd className="mt-0.5 text-xs text-muted">{tile.detail}</dd>
+              </div>
+              <span
+                className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-(--hue-from) to-(--hue-to) text-white shadow-[0_8px_18px_-8px_var(--hue-to)]"
+                aria-hidden
+              >
+                <tile.icon className="size-5" strokeWidth={2} />
+              </span>
+            </div>
           </div>
         ))}
       </dl>
@@ -245,7 +321,7 @@ function Toggle({
     <div
       role="group"
       aria-label={label}
-      className="inline-flex rounded-md border border-line-strong p-0.5"
+      className="inline-flex rounded-full border border-line bg-surface p-0.5"
     >
       {options.map((option) => (
         <Link
@@ -253,8 +329,10 @@ function Toggle({
           href={option.href}
           aria-current={option.active ? "true" : undefined}
           className={cn(
-            "rounded px-3 py-1 text-sm font-medium",
-            option.active ? "bg-navy text-white" : "text-body hover:bg-surface",
+            "rounded-full px-3.5 py-1 text-sm font-medium transition-colors",
+            option.active
+              ? "bg-linear-to-r from-action-500 to-[#06b6d4] text-white shadow-[0_4px_12px_-4px_rgb(37_99_235/0.75)]"
+              : "text-body hover:bg-page hover:text-action-700",
           )}
         >
           {option.label}

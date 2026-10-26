@@ -45,7 +45,8 @@ export function PageHeader({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h1 className="text-[1.75rem] leading-tight">{title}</h1>
-          {description && <p className="mt-1 text-sm text-muted">{description}</p>}
+          <span className="internal-title-rule mt-1.5 block h-1 w-14 rounded-full" aria-hidden />
+          {description && <p className="mt-2 text-sm text-muted">{description}</p>}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
       </div>
@@ -53,7 +54,7 @@ export function PageHeader({
   );
 }
 
-/** A white panel: the internal area's unit of content. */
+/** A white panel: the internal area's unit of content, lifted off the coloured canvas by a soft shadow. */
 export function Panel({
   title,
   actions,
@@ -68,10 +69,18 @@ export function Panel({
   bodyClassName?: string;
 }) {
   return (
-    <section className={cn("rounded-lg border border-line bg-page", className)}>
+    <section className={cn("internal-panel rounded-lg border border-line bg-page", className)}>
       {(title || actions) && (
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
-          {title && <h2 className="text-lg">{title}</h2>}
+          {title && (
+            <h2 className="flex items-center gap-2 text-lg">
+              <span
+                className="h-4 w-1 rounded-full bg-linear-to-b from-action-500 to-[#06b6d4]"
+                aria-hidden
+              />
+              {title}
+            </h2>
+          )}
           {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
         </div>
       )}

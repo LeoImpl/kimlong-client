@@ -17,7 +17,8 @@ function niceMax(value: number): number {
 }
 
 /**
- * Revenue per period as bars: one measure, one axis, one colour. The number of orders is not a second axis — it is
+ * Revenue per period as bars: one measure, one axis, one colour ramp (deep blue rising into sky, the staff area's
+ * gradient; the bar under the pointer lights up warm). The number of orders is not a second axis — it is
  * in the tooltip and in the table under the chart, which also is the chart's accessible form.
  */
 export function RevenueChart({
@@ -52,6 +53,16 @@ export function RevenueChart({
         className="h-auto w-full"
         onMouseLeave={() => setActive(null)}
       >
+        <defs>
+          <linearGradient id="revenue-bar" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#1d4ed8" />
+            <stop offset="100%" stopColor="#38bdf8" />
+          </linearGradient>
+          <linearGradient id="revenue-bar-active" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%" stopColor="#db2777" />
+            <stop offset="100%" stopColor="#f59e0b" />
+          </linearGradient>
+        </defs>
         {ticks.map((tick) => (
           <g key={tick}>
             <line
@@ -77,14 +88,15 @@ export function RevenueChart({
           const x = MARGIN.left + band * index + (band - barWidth) / 2;
           const top = y(value);
           const height = MARGIN.top + plotHeight - top;
-          const radius = Math.min(4, height);
+          const radius = Math.min(6, height);
           return (
             <g key={point.period}>
               {value > 0 && (
                 // Rounded at the data end only; the bar stands square on the baseline.
                 <path
                   d={`M${x},${top + height} V${top + radius} Q${x},${top} ${x + radius},${top} H${x + barWidth - radius} Q${x + barWidth},${top} ${x + barWidth},${top + radius} V${top + height} Z`}
-                  className={active === index ? "fill-action-700" : "fill-action-600"}
+                  fill={active === index ? "url(#revenue-bar-active)" : "url(#revenue-bar)"}
+                  className="transition-[fill] duration-150"
                 />
               )}
               {/* The peak is labelled directly; every other value is one hover away. */}
@@ -134,7 +146,7 @@ export function RevenueChart({
       {shown && active !== null && (
         <div
           role="status"
-          className="pointer-events-none absolute top-0 z-10 -translate-x-1/2 rounded-md border border-line bg-page px-3 py-2 text-xs shadow-[0_8px_20px_-10px_rgb(28_34_39/0.4)]"
+          className="pointer-events-none absolute top-0 z-10 -translate-x-1/2 rounded-lg border border-action-200 bg-page/95 px-3 py-2 text-xs shadow-[0_12px_28px_-12px_rgb(37_99_235/0.5)] backdrop-blur-sm"
           style={{
             left: `${Math.min(88, Math.max(12, ((MARGIN.left + band * active + band / 2) / WIDTH) * 100))}%`,
           }}

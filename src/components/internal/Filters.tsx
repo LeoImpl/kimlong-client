@@ -19,14 +19,14 @@ export function FilterBar({
       action={action}
       method="get"
       className={cn(
-        "mb-4 flex flex-wrap items-end gap-3 rounded-lg border border-line bg-page p-3",
+        "internal-panel mb-4 flex flex-wrap items-end gap-3 rounded-lg border border-line bg-page p-3",
         className,
       )}
     >
       {children}
       <button
         type="submit"
-        className="inline-flex h-10 items-center gap-2 rounded-md bg-navy px-4 text-sm font-semibold text-white transition-colors hover:bg-navy-hover"
+        className="inline-flex h-10 items-center gap-2 rounded-md bg-linear-to-r from-action-500 to-[#06b6d4] px-4 text-sm font-semibold text-white shadow-[0_6px_16px_-8px_rgb(37_99_235/0.85)] transition-[filter,transform] hover:-translate-y-px hover:brightness-110"
       >
         <Search className="size-4" strokeWidth={1.75} aria-hidden />
         Lọc

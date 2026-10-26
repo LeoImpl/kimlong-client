@@ -17,18 +17,18 @@ import { internalRoutes } from "@/lib/internal/routes";
 export default function InternalAppLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="lg:flex lg:min-h-dvh">
-      <aside className="bg-navy text-white lg:sticky lg:top-0 lg:flex lg:h-dvh lg:w-60 lg:shrink-0 lg:flex-col">
+      <aside className="internal-sidebar text-white lg:sticky lg:top-0 lg:flex lg:h-dvh lg:w-60 lg:shrink-0 lg:flex-col">
         <div className="flex items-center justify-between gap-3 px-4 py-3 lg:block lg:px-5 lg:py-5">
           <Link href={internalRoutes.dashboard} className="flex items-center gap-2.5">
             <span
-              className="flex h-8 w-10 items-center justify-center rounded border border-brand-500 font-display text-[17px] font-semibold text-brand-300"
+              className="flex size-10 items-center justify-center rounded-xl bg-linear-to-br from-[#1d4ed8] via-[#3b82f6] to-[#06b6d4] font-display text-[17px] font-bold text-white shadow-[0_6px_18px_-6px_rgb(59_130_246/0.75)]"
               aria-hidden
             >
               KL
             </span>
             <span className="leading-none">
               <span className="block font-display text-xl font-semibold text-white">Kim Long</span>
-              <span className="mt-0.5 block text-xs text-white/60">Nội bộ kinh doanh</span>
+              <span className="mt-0.5 block text-xs text-white/65">Nội bộ kinh doanh</span>
             </span>
           </Link>
         </div>
@@ -37,7 +37,7 @@ export default function InternalAppLayout({ children }: Readonly<{ children: Rea
             <Navigation />
           </Suspense>
         </div>
-        <div className="hidden border-t border-white/10 px-4 py-4 lg:block">
+        <div className="mx-3 mb-3 hidden rounded-xl border border-white/10 bg-white/6 px-3 py-3 backdrop-blur-sm lg:block">
           <Suspense fallback={<Skeleton className="h-10 bg-white/10" />}>
             <UserPanel />
           </Suspense>
@@ -48,7 +48,7 @@ export default function InternalAppLayout({ children }: Readonly<{ children: Rea
           {children}
         </main>
         {/* On a phone the user panel sits under the page instead of in the sidebar. */}
-        <div className="border-t border-line px-4 py-4 lg:hidden">
+        <div className="border-t border-line bg-page/70 px-4 py-4 lg:hidden">
           <Suspense fallback={null}>
             <UserPanel light />
           </Suspense>
@@ -75,7 +75,13 @@ async function UserPanel({ light = false }: { light?: boolean }) {
   const me = await getMe();
   return (
     <div className="flex items-center justify-between gap-3">
-      <div className="min-w-0">
+      <span
+        className="flex size-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-[#06b6d4] to-[#2563eb] text-sm font-bold text-white"
+        aria-hidden
+      >
+        {initials(me.name)}
+      </span>
+      <div className="min-w-0 flex-1">
         <p className={`truncate text-sm font-semibold ${light ? "text-ink" : "text-white"}`}>
           {me.name}
         </p>
@@ -93,4 +99,13 @@ async function UserPanel({ light = false }: { light?: boolean }) {
       />
     </div>
   );
+}
+
+/** "Nguyễn Văn An" → "NA": first and last word, which is how Vietnamese names are abbreviated on a badge. */
+function initials(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return "?";
+  const first = words[0].charAt(0);
+  const last = words.length > 1 ? words[words.length - 1].charAt(0) : "";
+  return (first + last).toUpperCase();
 }

@@ -634,3 +634,108 @@ html {
     outline-offset: 1px;
   }
 }
+
+/**
+ * The staff area's own look ("dải màu"): the public site stays a quiet steel nameplate, but the sales team lives in
+ * /noi-bo all day and asked for a livelier room. The theme is scoped to `.theme-internal` (the /noi-bo layout), so
+ * it only redefines tokens there: every shared component (Button, Badge, Table, Alert) picks the new colours up
+ * without a second set of classes. Blue is what you press, the sidebar is deep ocean blue, and each area of
+ * the app has its own hue (see `internalHues` in InternalNav) so a page is recognised by colour before it is read.
+ * Status colours keep their meaning, just brighter. Text contrast stays AA: action-600 carries white at 5.2:1.
+ */
+@layer base {
+  .theme-internal {
+    --color-action-50: #eff6ff;
+    --color-action-100: #dbeafe;
+    --color-action-200: #bfdbfe;
+    --color-action-500: #3b82f6;
+    --color-action-600: #2563eb;
+    --color-action-700: #1d4ed8;
+    --color-action-800: #1e40af;
+
+    /* Brass turns to a warm sunset orange: still "the highlight", now with some heat. */
+    --color-brand-50: #fff6ed;
+    --color-brand-100: #ffead4;
+    --color-brand-200: #ffd0a6;
+    --color-brand-300: #ffb36e;
+    --color-brand-400: #ff9442;
+    --color-brand-500: #f2761c;
+    --color-brand-600: #d45d0d;
+    --color-brand-700: #ad4a0c;
+    --color-brand-800: #8a3b10;
+    --color-brand-900: #6e3010;
+
+    --color-navy: #0f1e4d;
+    --color-navy-hover: #1c2f6b;
+
+    --color-canvas: #f1f5fc;
+    --color-surface: #f2f7ff;
+    --color-ink: #13203f;
+    --color-body: #2a3654;
+    --color-muted: #4d5a78;
+    --color-line: #dce5f3;
+    --color-line-strong: #bccbe3;
+
+    --color-success: #0f7a4f;
+    --color-success-soft: #e3f8ee;
+    --color-warning: #a35200;
+    --color-warning-soft: #fff1dc;
+    --color-danger: #c0263d;
+    --color-danger-soft: #ffe9ec;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    /* Soft colour clouds behind the work: fixed, so they stay put while a long table scrolls. */
+    background-color: var(--color-canvas);
+    background-image:
+      radial-gradient(42rem 30rem at 100% -5%, rgb(59 130 246 / 0.15), transparent 70%),
+      radial-gradient(36rem 26rem at 15% 105%, rgb(20 184 166 / 0.1), transparent 70%),
+      radial-gradient(30rem 22rem at 60% 45%, rgb(242 118 28 / 0.06), transparent 70%);
+    background-attachment: fixed;
+  }
+
+  .theme-internal ::selection {
+    background-color: var(--color-action-200);
+  }
+}
+
+@layer components {
+  /* The sidebar: deep ocean blue with two glows, a bright blue one up top and a cyan one under the menu. */
+  .internal-sidebar {
+    background-color: var(--color-navy);
+    background-image:
+      radial-gradient(18rem 14rem at 0% 0%, rgb(59 130 246 / 0.55), transparent 70%),
+      radial-gradient(16rem 16rem at 100% 85%, rgb(6 182 212 / 0.3), transparent 70%),
+      linear-gradient(180deg, #13296b 0%, #0f1e4d 55%, #0b2a4f 100%);
+  }
+
+  /* A panel in the staff area floats a little: white card, soft blue shadow, rounder corners. The selector also
+     catches the area's ad-hoc white cards (tables, stat tiles) so every card sits on the canvas the same way. */
+  .internal-panel,
+  .theme-internal :where(.rounded-lg.border.bg-page) {
+    box-shadow:
+      0 1px 2px rgb(19 32 63 / 0.05),
+      0 12px 32px -18px rgb(37 99 235 / 0.22);
+  }
+
+  /* The title of a page carries a short rainbow rule under it, in the hue of its area. */
+  .internal-title-rule {
+    background: linear-gradient(90deg, var(--hue, #2563eb), #06b6d4 60%, #10b981);
+  }
+
+  /* Gradient text for the big numbers on the dashboard. Both ends are dark shades of the tile's hue (the light end
+     of a tile gradient is too pale for text on white), so the figure stays at 4.5:1 or better. */
+  .text-gradient {
+    background: linear-gradient(
+      100deg,
+      var(--hue-to),
+      color-mix(in srgb, var(--hue-from) 55%, var(--color-ink))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}

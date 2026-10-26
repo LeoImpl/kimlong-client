@@ -39,7 +39,7 @@ export default async function WebRequestsPage({ searchParams }: PageProps<"/noi-
           <div
             role="group"
             aria-label="Phạm vi"
-            className="inline-flex rounded-md border border-line-strong p-0.5"
+            className="inline-flex rounded-full border border-line bg-surface p-0.5"
           >
             {[
               { label: "Đang chờ", href: internalRoutes.webRequests, active: !all },
@@ -50,8 +50,10 @@ export default async function WebRequestsPage({ searchParams }: PageProps<"/noi-
                 href={option.href}
                 aria-current={option.active ? "true" : undefined}
                 className={cn(
-                  "rounded px-3 py-1 text-sm font-medium",
-                  option.active ? "bg-navy text-white" : "text-body hover:bg-surface",
+                  "rounded-full px-3.5 py-1 text-sm font-medium transition-colors",
+                  option.active
+                    ? "bg-linear-to-r from-action-500 to-[#06b6d4] text-white shadow-[0_4px_12px_-4px_rgb(37_99_235/0.75)]"
+                    : "text-body hover:bg-page hover:text-action-700",
                 )}
               >
                 {option.label}
